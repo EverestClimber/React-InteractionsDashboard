@@ -8,7 +8,7 @@ import injectReducer from 'utils/injectReducer';
 import reducer from './reducer';
 // import saga from './saga';
 
-export class HomePage extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+export class Dashboard extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   render() {
     return (
       <div></div>
@@ -16,7 +16,7 @@ export class HomePage extends React.PureComponent { // eslint-disable-line react
   }
 }
 
-HomePage.propTypes = {};
+Dashboard.propTypes = {};
 
 export function mapDispatchToProps() {
   return {};
@@ -33,4 +33,4 @@ export default compose(
   withReducer,
   // withSaga,
   withConnect,
-)(HomePage);
+)(Dashboard);

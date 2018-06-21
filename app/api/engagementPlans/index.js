@@ -37,3 +37,27 @@ export function patchEngagementPlan(id, engagementPlan) {
 
   return axios(config);
 }
+
+export function deleteEngagementPlan(id) {
+  const config = {
+    method: 'DELETE',
+    url: `/engagement-plans/${id}`,
+  };
+
+  return axios(config);
+}
+
+export function approveEngagementPlan(id, user, year, engagementListItems, hcpObjectives) {
+  const config = {
+    method: 'POST',
+    url: `/engagement-plans/${id}/approve/`,
+    data: {
+      user,
+      year,
+      engagement_list_items: engagementListItems,
+      hcp_objectives: hcpObjectives,
+    },
+  };
+
+  return axios(config);
+}

@@ -19,6 +19,11 @@ import 'sanitize.css/sanitize.css';
 
 // Import root app
 import App from 'containers/App';
+// import * as auth from 'api/auth';
+// import * as plan from 'api/engagementPlans';
+//
+// window.auth = auth;
+// window.plan = plan;
 
 // Import Language Provider
 import LanguageProvider from 'containers/LanguageProvider';

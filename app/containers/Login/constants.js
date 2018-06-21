@@ -1,7 +1,3 @@
-/*
- *
- * Login constants
- *
- */
+import { createActionTypes } from 'utils/actions';
 
-export const DEFAULT_ACTION = 'app/Login/DEFAULT_ACTION';
+export const loginActionTypes = createActionTypes('login');

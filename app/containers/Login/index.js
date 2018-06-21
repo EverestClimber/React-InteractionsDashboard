@@ -2,25 +2,38 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
-import { compose } from 'redux';
+import { compose, bindActionCreators } from 'redux';
 
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
 import makeSelectLogin from './selectors';
 import reducer from './reducer';
 import saga from './saga';
+import { loginActions } from './actions';
 
 export class Login extends React.Component {
+  handleSubmit = (e) => {
+    e.preventDefault();
+
+    const email = this.emailInput.value.trim();
+    const password = this.passwordInput.value.trim();
+
+    this.props.loginActions.request(email, password);
+  };
+
   render() {
     return (
-      <div>
-      </div>
+      <form onSubmit={this.handleSubmit}>
+        <input ref={(c) => { this.emailInput = c; }} type="email" placeholder="Email" />
+        <input ref={(c) => { this.passwordInput = c; }} type="password" placeholder="Password" />
+        <button type="submit">Submit</button>
+      </form>
     );
   }
 }
 
 Login.propTypes = {
-  dispatch: PropTypes.func.isRequired,
+  loginActions: PropTypes.object,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -29,7 +42,7 @@ const mapStateToProps = createStructuredSelector({
 
 function mapDispatchToProps(dispatch) {
   return {
-    dispatch,
+    loginActions: bindActionCreators(loginActions, dispatch),
   };
 }
 

@@ -1,15 +1,15 @@
-/*
- *
- * Login actions
- *
- */
+import { loginActionTypes } from './constants';
 
-import {
-  DEFAULT_ACTION,
-} from './constants';
-
-export function defaultAction() {
-  return {
-    type: DEFAULT_ACTION,
-  };
-}
+export const loginActions = {
+  request: (email, password) => ({
+    type: loginActionTypes.request,
+    payload: { email, password },
+  }),
+  success: () => ({
+    type: loginActionTypes.success,
+  }),
+  error: (message) => ({
+    type: loginActionTypes.error,
+    payload: { message },
+  }),
+};

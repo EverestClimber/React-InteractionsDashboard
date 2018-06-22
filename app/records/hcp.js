@@ -1,6 +1,6 @@
 import { Record, List } from 'immutable';
 
-const hcp = Record({
+const Hcp = Record({
   id: undefined,
   first_name: '',
   last_name: '',
@@ -12,4 +12,4 @@ const hcp = Record({
   tas: new List(),
 });
 
-export default hcp;
+export default Hcp;

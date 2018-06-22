@@ -9,11 +9,21 @@ export function getInteractions() {
   return axios(config);
 }
 
-export function postInteraction(user) {
+export function postInteraction(interaction) {
   const config = {
-    method: 'GET',
+    method: 'POST',
     url: '/interactions/',
-    data: { user },
+    data: interaction,
+  };
+
+  return axios(config);
+}
+
+export function patchInteraction(interaction) {
+  const config = {
+    method: 'PATCH',
+    url: '/interactions/',
+    data: interaction,
   };
 
   return axios(config);

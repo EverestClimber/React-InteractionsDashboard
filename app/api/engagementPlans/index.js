@@ -47,15 +47,21 @@ export function deleteEngagementPlan(id) {
   return axios(config);
 }
 
-export function approveEngagementPlan(id, user, year, engagementListItems, hcpObjectives) {
+export function approveEngagementPlan(
+  id,
+  approveAllEngagementListItems,
+  approveAllHcpObjectives,
+  engagementListItems,
+  hcpObjectives
+) {
   const config = {
     method: 'POST',
     url: `/engagement-plans/${id}/approve/`,
     data: {
-      user,
-      year,
-      engagement_list_items: engagementListItems,
-      hcp_objectives: hcpObjectives,
+      engagement_list_items: approveAllEngagementListItems,
+      hcp_objectives: approveAllHcpObjectives,
+      engagement_list_items_ids: engagementListItems,
+      hcp_objectives_ids: hcpObjectives,
     },
   };
 

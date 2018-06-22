@@ -1,9 +1,12 @@
 import { Record } from 'immutable';
 
-const user = Record({
-  user_id: undefined,
-  email: null,
-  username: null,
+const User = Record({
+  id: undefined,
+  email: '',
+  group_names: [],
+  permissions: [],
+  affiliate_groups: [],
+  tas: [],
 });
 
-export default user;
+export default User;

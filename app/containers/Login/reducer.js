@@ -1,10 +1,5 @@
-/*
- *
- * Login reducer
- *
- */
-
 import { fromJS } from 'immutable';
+
 import {
   DEFAULT_ACTION,
 } from './constants';

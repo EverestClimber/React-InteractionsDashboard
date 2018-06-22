@@ -1,6 +1,6 @@
 import axios from '../config';
 
-export function obtainToken(email, password) {
+export function postObtainToken(email, password) {
   const config = {
     method: 'POST',
     url: '/token/obtain/',
@@ -13,7 +13,7 @@ export function obtainToken(email, password) {
   return axios(config);
 }
 
-export function refreshToken() {
+export function postRefreshToken() {
   const token = localStorage.getItem('token');
   const config = {
     method: 'POST',
@@ -24,12 +24,24 @@ export function refreshToken() {
   return axios(config);
 }
 
-export function verifyToken() {
+export function postVerifyToken() {
   const token = localStorage.getItem('token');
   const config = {
     method: 'POST',
     url: '/token/verify/',
     data: { token },
+  };
+
+  return axios(config);
+}
+
+export function getSelf(token) {
+  const config = {
+    method: 'GET',
+    url: '/self/',
+    headers: {
+      Authorization: `JWT ${token}`,
+    },
   };
 
   return axios(config);

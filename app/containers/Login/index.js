@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose, bindActionCreators } from 'redux';
+import { Field, reduxForm } from 'redux-form/immutable';
 
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
@@ -11,29 +12,31 @@ import reducer from './reducer';
 import saga from './saga';
 import { loginActions } from './actions';
 
-export class Login extends React.Component {
-  handleSubmit = (e) => {
-    e.preventDefault();
+export const Login = (props) => {
+  const { handleSubmit } = props;
 
-    const email = this.emailInput.value.trim();
-    const password = this.passwordInput.value.trim();
-
-    this.props.loginActions.request(email, password);
-  };
-
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <input ref={(c) => { this.emailInput = c; }} type="email" placeholder="Email" />
-        <input ref={(c) => { this.passwordInput = c; }} type="password" placeholder="Password" />
-        <button type="submit">Submit</button>
-      </form>
-    );
-  }
-}
+  return (
+    <form onSubmit={handleSubmit}>
+      <Field
+        type="email"
+        name="email"
+        placeholder="Email"
+        component="input"
+      />
+      <Field
+        type="password"
+        name="password"
+        placeholder="Password"
+        component="input"
+      />
+      <button type="submit">Submit</button>
+    </form>
+  );
+};
 
 Login.propTypes = {
-  loginActions: PropTypes.object,
+  // loginActions: PropTypes.object,
+  handleSubmit: PropTypes.func,
 };
 
 const mapStateToProps = createStructuredSelector({
@@ -55,4 +58,10 @@ export default compose(
   withReducer,
   withSaga,
   withConnect,
+  reduxForm({
+    form: 'login',
+    onSubmit: (data, dispatch, props) => {
+      props.loginActions.request(data.email, data.password);
+    },
+  }),
 )(Login);

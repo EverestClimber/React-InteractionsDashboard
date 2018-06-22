@@ -9,6 +9,15 @@ export function getHCPs() {
   return axios(config);
 }
 
+export function getHCP(id) {
+  const config = {
+    method: 'GET',
+    url: `/hcps/${id}/`,
+  };
+
+  return axios(config);
+}
+
 export function postHCP(hcp) {
   const config = {
     method: 'POST',

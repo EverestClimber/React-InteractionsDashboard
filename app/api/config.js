@@ -1,7 +1,4 @@
 import axios from 'axios';
-import { push } from 'react-router-redux';
-
-import { store } from '../app';
 
 function createAxiosInstance(unauthorizedCallback) {
   const baseURL = process.env.NODE_ENV === 'development'
@@ -20,7 +17,6 @@ function createAxiosInstance(unauthorizedCallback) {
       const unauthorizedStatus = 401;
 
       if (status === unauthorizedStatus) {
-        // @todo: dispatch logout event instead of manual local storage cleaning
         unauthorizedCallback();
       }
 
@@ -33,7 +29,7 @@ function createAxiosInstance(unauthorizedCallback) {
 
 function logout() {
   localStorage.removeItem('token');
-  store.dispatch(push('/login'));
+  window.location.pathname = '/login';
 }
 
 const instance = createAxiosInstance(logout);

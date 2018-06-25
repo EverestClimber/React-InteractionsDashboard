@@ -13,17 +13,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter, push } from 'react-router-redux';
-import FontFaceObserver from 'fontfaceobserver';
 import createHistory from 'history/createBrowserHistory';
 import 'sanitize.css/sanitize.css';
 
 // Import root app
 import App from 'containers/App';
-// import * as auth from 'api/auth';
-// import * as plan from 'api/engagementPlans';
-//
-// window.auth = auth;
-// window.plan = plan;
 
 // Import Language Provider
 import LanguageProvider from 'containers/LanguageProvider';
@@ -40,17 +34,6 @@ import './assets/scss/index.scss';
 
 // Import i18n messages
 import { translationMessages } from './i18n';
-
-// Observe loading of Open Sans (to remove open sans, remove the <link> tag in
-// the index.html file and this observer)
-const openSansObserver = new FontFaceObserver('Open Sans', {});
-
-// When Open Sans is loaded, add a font-family using Open Sans to the body
-openSansObserver.load().then(() => {
-  document.body.classList.add('fontLoaded');
-}, () => {
-  document.body.classList.remove('fontLoaded');
-});
 
 // Create redux store with history
 const initialState = {};

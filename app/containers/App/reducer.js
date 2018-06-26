@@ -1,15 +1,16 @@
-import { fromJS } from 'immutable';
+import { fromJS, Map } from 'immutable';
 
 import User from 'records/user';
 import { SET_USER, LOGOUT, LOADING } from './constants';
 
-const initialState = fromJS({
+const initialState = new Map({
   user: new User(),
   ui: fromJS({
     loading: false,
   }),
 });
 
+// { type: SOME_ACTION, payload: 'test' }
 function appReducer(state = initialState, action) {
   switch (action.type) {
     case SET_USER:

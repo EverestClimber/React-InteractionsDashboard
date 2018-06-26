@@ -1,3 +1,5 @@
-body {
-  margin: 0;
-}
+@import "_vendor/bootstrap.min.css";
+
+@import "_common/index";
+@import "_components/index";
+@import "_views/index";

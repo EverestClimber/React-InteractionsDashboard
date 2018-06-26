@@ -14,7 +14,9 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter, push } from 'react-router-redux';
 import createHistory from 'history/createBrowserHistory';
+
 import 'sanitize.css/sanitize.css';
+import 'assets/scss/index.scss';
 
 // Import root app
 import App from 'containers/App';
@@ -29,8 +31,6 @@ import 'file-loader?name=[name].[ext]!./.htaccess'; // eslint-disable-line impor
 /* eslint-enable import/no-webpack-loader-syntax */
 
 import configureStore from './configureStore';
-
-import './assets/scss/index.scss';
 
 // Import i18n messages
 import { translationMessages } from './i18n';

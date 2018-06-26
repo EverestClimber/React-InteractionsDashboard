@@ -1,3 +1,4 @@
+
 export function createActionTypes(action) {
   const actionConstant = action
     .split(' ')

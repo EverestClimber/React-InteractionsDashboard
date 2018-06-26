@@ -39,7 +39,7 @@ module.exports = (options) => ({
       {
         test: /\.scss$/,
         exclude: /node_modules/,
-        loader: ExtractTextPlugin.extract(['css-loader', 'sass-loader']),
+        loader: ['css-hot-loader'].concat(ExtractTextPlugin.extract(['css-loader', 'sass-loader'])),
       },
       {
         // Preprocess 3rd party .css files located in node_modules

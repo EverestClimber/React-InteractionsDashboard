@@ -49,19 +49,15 @@ export function deleteEngagementPlan(id) {
 
 export function approveEngagementPlan(
   id,
-  approveAllEngagementListItems,
-  approveAllHcpObjectives,
-  engagementListItems,
-  hcpObjectives
+  approveAllHCPItems,
+  approveHCPItemsIds
 ) {
   const config = {
     method: 'POST',
     url: `/engagement-plans/${id}/approve/`,
     data: {
-      engagement_list_items: approveAllEngagementListItems,
-      hcp_objectives: approveAllHcpObjectives,
-      engagement_list_items_ids: engagementListItems,
-      hcp_objectives_ids: hcpObjectives,
+      hcp_items: approveAllHCPItems,
+      hcp_items_ids: approveHCPItemsIds,
     },
   };
 

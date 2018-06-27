@@ -8,8 +8,8 @@ const EngagementPlan = Record({
   year: moment().format('YYYY-MM-DD'),
   approved: undefined,
   approved_at: undefined,
-  engagement_list_items: new List(),
-  hcp_objectives: new List(),
+  hcp_items: new List(),
+  project_items: new List(),
   created_at: undefined,
   updated_at: undefined,
 });

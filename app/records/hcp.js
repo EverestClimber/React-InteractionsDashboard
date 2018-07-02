@@ -1,6 +1,6 @@
 import { Record, List } from 'immutable';
 
-const Hcp = Record({
+const HCP = Record({
   id: undefined,
   first_name: '',
   last_name: '',
@@ -12,4 +12,12 @@ const Hcp = Record({
   tas: new List(),
 });
 
-export default Hcp;
+HCP.fromApiObject = (obj) => {
+  let hcp = new HCP(obj);
+  hcp = hcp.set('affiliate_groups', new List(hcp.get('affiliate_groups')));
+  hcp = hcp.set('tas', new List(hcp.get('tas')));
+
+  return hcp;
+};
+
+export default HCP;

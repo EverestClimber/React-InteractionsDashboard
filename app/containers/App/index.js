@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import Loader from 'containers/Loader';
 import Dashboard from 'containers/Dashboard';
 import Login from 'containers/Login';
+import RecordInteraction from 'containers/RecordInteraction';
 import NotFound from 'containers/NotFound';
 
 import injectSaga from 'utils/injectSaga';
@@ -16,6 +17,7 @@ import { refreshToken } from './actions';
 export class App extends React.PureComponent {
   static propTypes = {
     refreshToken: PropTypes.func,
+    userId: PropTypes.number,
   };
 
   componentDidMount() {
@@ -34,24 +36,34 @@ export class App extends React.PureComponent {
   }
 
   render() {
+    const { userId } = this.props;
     return (
       <React.Fragment>
         <Loader />
-        <Switch>
+        {userId && <Switch>
           <Route exact path="/" component={Dashboard} />
           <Route exact path="/login" component={Login} />
+          <Route exact path="/record-interaction" component={RecordInteraction} />
           <Route path="" component={NotFound} />
-        </Switch>
+        </Switch>}
       </React.Fragment>
     );
   }
 }
 
-const mapDispatchToProps = (dispatch) => bindActionCreators({
-  refreshToken,
-}, dispatch);
+function mapStateToProps(state) {
+  return {
+    userId: state.get('global').get('user').get('id'),
+  };
+}
 
-const withConnect = connect(null, mapDispatchToProps);
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    refreshToken,
+  }, dispatch);
+}
+
+const withConnect = connect(mapStateToProps, mapDispatchToProps);
 const withSaga = injectSaga({ key: 'global', saga });
 
 export default withRouter(compose(

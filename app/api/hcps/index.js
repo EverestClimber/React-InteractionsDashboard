@@ -1,9 +1,10 @@
 import axios from '../config';
 
-export function getHCPs() {
+export function getHCPs(params) {
   const config = {
     method: 'GET',
     url: '/hcps/',
+    params,
   };
 
   return axios(config);
@@ -23,6 +24,16 @@ export function postHCP(hcp) {
     method: 'POST',
     url: '/hcps/',
     data: hcp,
+  };
+
+  return axios(config);
+}
+
+export function getHCPObjectives(params) {
+  const config = {
+    method: 'GET',
+    url: '/hcp-objectives/',
+    params,
   };
 
   return axios(config);

@@ -5,6 +5,7 @@ import { createStructuredSelector } from 'reselect';
 import { compose, bindActionCreators } from 'redux';
 import { Field, reduxForm } from 'redux-form/immutable';
 import { Button } from 'reactstrap';
+import { Helmet } from 'react-helmet';
 
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
@@ -17,21 +18,26 @@ export const Login = (props) => {
   const { handleSubmit } = props;
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Field
-        type="email"
-        name="email"
-        placeholder="Email"
-        component="input"
-      />
-      <Field
-        type="password"
-        name="password"
-        placeholder="Password"
-        component="input"
-      />
-      <Button>Submit</Button>
-    </form>
+    <div>
+      <Helmet>
+        <title>OTSK - Login</title>
+      </Helmet>
+      <form onSubmit={handleSubmit}>
+        <Field
+          type="email"
+          name="email"
+          placeholder="Email"
+          component="input"
+        />
+        <Field
+          type="password"
+          name="password"
+          placeholder="Password"
+          component="input"
+        />
+        <Button>Submit</Button>
+      </form>
+    </div>
   );
 };
 

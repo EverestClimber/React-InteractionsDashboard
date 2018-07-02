@@ -9,6 +9,15 @@ export function getInteractions() {
   return axios(config);
 }
 
+export function getInteractionOutcomes() {
+  const config = {
+    method: 'GET',
+    url: '/interaction-outcomes/',
+  };
+
+  return axios(config);
+}
+
 export function postInteraction(interaction) {
   const config = {
     method: 'POST',

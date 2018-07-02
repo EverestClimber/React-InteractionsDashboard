@@ -1,5 +1,7 @@
 import { Record, List } from 'immutable';
 
+import Deliverable from './deliverable';
+
 // can be used both for hcp and project objectives
 const Objective = Record({
   id: undefined,
@@ -11,5 +13,18 @@ const Objective = Record({
   created_at: undefined,
   updated_at: undefined,
 });
+
+Objective.fromApiObject = (obj) => {
+  let objective = new Objective(obj);
+
+  objective = objective.set(
+    'deliverables',
+    new List(objective.get('deliverables').map(
+      (deliverable) => new Deliverable(deliverable)
+    ))
+  );
+
+  return objective;
+};
 
 export default Objective;

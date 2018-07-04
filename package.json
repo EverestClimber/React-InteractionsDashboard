@@ -232,6 +232,7 @@
     "lodash": "4.17.4",
     "minimist": "1.2.0",
     "moment": "^2.22.2",
+    "popper.js": "^1.14.3",
     "prop-types": "15.5.10",
     "react": "^16.4.0",
     "react-bootstrap": "^0.32.1",

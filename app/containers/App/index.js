@@ -51,8 +51,11 @@ export class App extends React.PureComponent {
         <Switch>
           <Route exact path={routes.LOGIN} component={Login} />
           {user && [
+            // React.Fragment doesn't work with Route component
+            // don't forget to specify unique key for a route
             <Route key={routes.DASHBOARD} exact path={routes.DASHBOARD} component={Dashboard} />,
             <Route key={routes.RECORD_INTERACTION} exact path={routes.RECORD_INTERACTION} component={RecordInteraction} />,
+            <Route key={routes.NOT_FOUND} path={routes.NOT_FOUND} component={NotFound} />,
             <Route key={routes.NOT_FOUND} path={routes.NOT_FOUND} component={NotFound} />,
           ]}
         </Switch>

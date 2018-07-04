@@ -16,10 +16,13 @@ import {
   fetchInteractionActions,
   recordInteractionActions,
 } from './actions';
+import { setLoading } from '../App/actions';
 
 function* fetchRecordIntegrationSaga(action) {
   const { userId } = action;
   const query = { user: userId };
+
+  yield put(setLoading(true));
 
   try {
     const [
@@ -54,9 +57,11 @@ function* fetchRecordIntegrationSaga(action) {
       )),
     };
 
+    yield put(setLoading(false));
     yield put(fetchInteractionActions.success(interaction));
   } catch (error) {
     yield put(fetchInteractionActions.error(error.message));
+    yield put(setLoading(false));
   }
 }
 

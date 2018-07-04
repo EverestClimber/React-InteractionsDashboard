@@ -3,3 +3,8 @@
 @import "_common/index";
 @import "_components/index";
 @import "_views/index";
+
+body {
+  min-height: 100vh;
+  background: #f3f3f4;
+}

@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { compose, bindActionCreators } from 'redux';
 import { Field, reduxForm } from 'redux-form/immutable';
-import { Button } from 'reactstrap';
 import { Helmet } from 'react-helmet';
 
 import injectSaga from 'utils/injectSaga';
@@ -35,7 +34,7 @@ export const Login = (props) => {
           placeholder="Password"
           component="input"
         />
-        <Button>Submit</Button>
+        <button type="submit">Submit</button>
       </form>
     </div>
   );

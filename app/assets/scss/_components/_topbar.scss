@@ -1,0 +1,106 @@
+$topbar-container-width: 1464px;
+$nav-font-size: 13px;
+
+.topbar {
+  height: 74px;
+  padding: 0 60px;
+  background: $n-white;
+  border-bottom: 1px solid $n-grey-light;
+
+  &__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: $topbar-container-width;
+    height: 100%;
+    margin: 0 auto;
+  }
+
+  &__section {
+    display: flex;
+    align-items: center;
+  }
+
+  &__logo,
+  &__nav {
+    display: inline-block;
+  }
+
+  &__logo {
+    width: 120px;
+    height: 46px;
+    background: url(../images/svg/logo.svg) center center no-repeat;
+  }
+
+  &__nav {
+    margin-left: 65px;
+  }
+
+  &__logout {
+    margin-left: 36px;
+    font-size: $nav-font-size;
+    color: $n-black;
+    font-weight: lighter;
+
+    &:active,
+    &:visited,
+    &:focus,
+    &:hover {
+      text-decoration: none;
+      color: $n-black;
+    }
+  }
+}
+
+.topbar-nav {
+  &__item {
+    font-size: $nav-font-size;
+    color: $n-black;
+    line-height: 13px;
+    font-weight: lighter;
+
+    &:not(:first-child) {
+      margin-left: 42px;
+    }
+
+    &:active,
+    &:visited,
+    &:focus,
+    &:hover {
+      text-decoration: none;
+      color: $n-black;
+    }
+
+    &:hover,
+    &--active {
+      padding-bottom: 6px;
+      border-bottom: 1px solid $n-black;
+    }
+  }
+}
+
+.topbar-user {
+  &__name,
+  &__ta {
+    text-decoration: none;
+    color: $n-black;
+    font-weight: lighter;
+    margin: 0;
+  }
+
+  &__name {
+    font-size: rem(14); // 14px
+    line-height: 23px;
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: $n-black;
+    }
+  }
+
+  &__ta {
+    font-size: 11px;
+    line-height: 11px;
+  }
+}

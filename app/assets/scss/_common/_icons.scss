@@ -1,0 +1,22 @@
+.nav-icon {
+  display: inline-block;
+  width: 13px;
+  height: 13px;
+  margin-bottom: -2px;
+
+  &--left {
+    margin-right: 5px;
+  }
+
+  &--right {
+    margin-right: 5px;
+  }
+
+  &__logout {
+    background: url(../images/svg/icon-logout.svg) center center no-repeat;
+  }
+
+  &__folder {
+    background: url(../images/svg/icon-folder.svg) center center no-repeat;
+  }
+}

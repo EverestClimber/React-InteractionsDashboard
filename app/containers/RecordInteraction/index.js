@@ -5,7 +5,6 @@ import { compose, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { Field, reduxForm } from 'redux-form/immutable';
-import { Button } from 'reactstrap';
 
 import Interaction from 'records/interaction';
 import injectSaga from 'utils/injectSaga';
@@ -221,7 +220,7 @@ export class RecordInteraction extends React.PureComponent { // eslint-disable-l
               component="textarea"
             />
           </div>
-          <Button type="submit">Save</Button>
+          <button type="submit">Save</button>
         </form>
       </div>
     );

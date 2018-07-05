@@ -1,6 +1,6 @@
-# Don't check auto-generated stuff into git
+# Don't check auto-generated stuff into git (EXCEPT built version)
 coverage
-build
+#build
 node_modules
 stats.json
 

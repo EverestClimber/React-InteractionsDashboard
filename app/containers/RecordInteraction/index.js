@@ -57,6 +57,8 @@ export class RecordInteraction extends React.PureComponent { // eslint-disable-l
           <title>OTSK - Record Interaction</title>
         </Helmet>
 
+        <h2>Record Interaction</h2>
+
         <form onSubmit={handleSubmit}>
 
           <LabeledField
@@ -162,6 +164,8 @@ export class RecordInteraction extends React.PureComponent { // eslint-disable-l
 
           <Button type="submit" bsStyle="primary">Save</Button>
         </form>
+
+        <br /><br />
       </Grid>
     );
   }
@@ -201,6 +205,9 @@ export default compose(
   withConnect,
   reduxForm({
     form: 'recordInteraction',
+    initialValues: {
+      resources: [],  // to quench warning
+    },
     onSubmit: (data, dispatch, props) => {
       props.recordInteraction(new Interaction(data));
     },

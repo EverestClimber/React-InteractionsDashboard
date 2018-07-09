@@ -8,11 +8,6 @@ export const FormControl = ({ input, type, ...rest }) => { // eslint-disable-lin
   const componentClassByType = {
     select: 'select', textarea: 'textarea',
   };
-  // react-bootstrap's FormControl expects empty value for multiple select
-  // to be [] not undefined
-  // if (type === 'select' && rest.multiple && !rest.value) {
-  //   rest.value = [];  // eslint-disable-line
-  // }
   return (
     <BS.FormControl
       {...input}

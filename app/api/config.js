@@ -2,7 +2,7 @@ import axios from 'axios';
 
 function createAxiosInstance(unauthorizedCallback) {
   const baseURL = process.env.NODE_ENV === 'development'
-    ? 'https://interactions.dev.deepsine.com/api/v1'
+    ? 'http://localhost:8000/api/v1'
     : 'https://interactions.dev.deepsine.com/api/v1';
 
   const token = localStorage.getItem('token');

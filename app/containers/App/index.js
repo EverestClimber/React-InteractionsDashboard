@@ -9,7 +9,7 @@ import Dashboard from 'containers/Dashboard';
 import Login from 'containers/Login';
 import RecordInteraction from 'containers/RecordInteraction';
 import NotFound from 'containers/NotFound';
-import TopBar from 'components/TopBar';
+// import TopBar from 'components/TopBar';
 
 import routes from 'routes';
 import injectSaga from 'utils/injectSaga';
@@ -46,7 +46,7 @@ export class App extends React.PureComponent {
 
     return (
       <React.Fragment>
-        {this.tokenExist && <TopBar />}
+        {/* {this.tokenExist && <TopBar />} */}
         <Loader />
         <Switch>
           <Route exact path={routes.LOGIN} component={Login} />

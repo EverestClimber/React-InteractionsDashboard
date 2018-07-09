@@ -4,33 +4,22 @@ import { List } from 'immutable';
 import { compose, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
-import { Field, reduxForm } from 'redux-form/immutable';
-
+import { reduxForm, formValueSelector } from 'redux-form/immutable';
+import {
+  Grid, Button,
+} from 'react-bootstrap';
 import Interaction from 'records/interaction';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
 import reducer from './reducer';
 import saga from './saga';
+import { LabeledField } from '../../components/forms';
 
 import {
   fetchInteractionActions,
   recordInteractionActions,
 } from './actions';
 
-const renderCheckbox = ({ name, label, ...rest }) => {
-  const { input } = rest;
-  return (
-    <label htmlFor={name}>
-      <input type="checkbox" id={name} name={name} {...input} />
-      {label}
-    </label>
-  );
-};
-
-renderCheckbox.propTypes = {
-  name: PropTypes.string,
-  label: PropTypes.string,
-};
 
 export class RecordInteraction extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
@@ -41,6 +30,9 @@ export class RecordInteraction extends React.PureComponent { // eslint-disable-l
     hcpObjectives: PropTypes.instanceOf(List),
     projects: PropTypes.instanceOf(List),
     resources: PropTypes.instanceOf(List),
+    originOfInteraction: PropTypes.string,
+    isJointVisit: PropTypes.string,
+    isAdverseEvent: PropTypes.string,
   };
 
   componentDidMount() {
@@ -54,187 +46,140 @@ export class RecordInteraction extends React.PureComponent { // eslint-disable-l
       hcpObjectives,
       projects,
       resources,
+      originOfInteraction,
+      isJointVisit,
+      isAdverseEvent,
     } = this.props;
+
     return (
-      <div>
+      <Grid>
         <Helmet>
           <title>OTSK - Record Interaction</title>
         </Helmet>
+
         <form onSubmit={handleSubmit}>
-          <div>
-            <span>HCP</span>
-            <Field
-              name="hcp_id"
-              component="select"
-            >
-              {hcps.map((hcp) => (
-                <option
-                  key={hcp.get('id') + hcp.get('last_name')}
-                  value={hcp.get('id')}
-                >
-                  {`${hcp.get('first_name')} ${hcp.get('last_name')}`}
-                </option>
-              ))}
-            </Field>
-          </div>
-          <div>
-            <span>Resources</span>
-            <Field
-              name="resource"
-              component="select"
-            >
-              {resources.map((resource) => (
-                <option
-                  key={resource.get('id') + resource.get('name')}
-                  value={resource.get('id')}
-                >
-                  {resource.get('name')}
-                </option>
-              ))}
-            </Field>
-          </div>
-          <div>
-            <span>HCP Objective</span>
-            <Field
-              name="hcp_objective_id"
-              component="select"
-            >
-              {hcpObjectives.map((objective) => (
-                <option
-                  key={objective.get('id')}
-                  value={objective.get('id')}
-                >
-                  {objective.get('description')}
-                </option>
-              ))}
-            </Field>
-          </div>
-          <div>
-            <span>Type of Interaction</span>
-            <Field
-              name="type_of_interaction"
-              component="select"
-            >
-              {Interaction.typeOfInteraction.map((type) => (
-                <option
-                  key={type.value}
-                  value={type.value}
-                >
-                  {type.name}
-                </option>
-              ))}
-            </Field>
-          </div>
-          <div>
-            <span>Project</span>
-            <Field
-              name="project_id"
-              component="select"
-            >
-              {projects.map((project) => (
-                <option
-                  key={project.get('id')}
-                  value={project.get('id')}
-                >
-                  {project.get('title')}
-                </option>
-              ))}
-            </Field>
-          </div>
-          <div>
-            <span>Origin of Interaction</span>
-            <Field
-              name="origin_of_interaction"
-              component="select"
-            >
-              {Interaction.originOfInteraction.map((type) => (
-                <option
-                  key={type.value}
-                  value={type.value}
-                >
-                  {type.name}
-                </option>
-              ))}
-            </Field>
-            <Field
-              type="text"
+
+          <LabeledField
+            name="hcp_id"
+            type="select"
+            label="HCP"
+            options={hcps.map((hcp) => [
+              hcp.id,
+              `${hcp.first_name} ${hcp.last_name}`,
+            ])}
+            // validationState="error"
+            helpText="Please select the HCP you interacted with"
+          />
+
+          <LabeledField
+            name="resources"
+            type="select"
+            label="Resources"
+            options={resources.map((it) => [it.id, it.title])}
+            multiple
+          />
+
+          <LabeledField
+            name="hcp_objective_id"
+            type="select"
+            label="HCP Objective"
+            options={hcpObjectives.map((it) => [
+              it.id,
+              it.description])}
+          />
+
+          <LabeledField
+            name="type_of_interaction"
+            type="select"
+            label="Type of Interaction"
+            options={Object.entries(Interaction.type_of_interaction_choices)}
+          />
+
+          <LabeledField
+            name="project_id"
+            type="select"
+            label="Projects"
+            options={projects.map((it) => [it.id, it.title])}
+          />
+
+          <LabeledField
+            name="origin_of_interaction"
+            type="select"
+            label="Origin of Interaction"
+            options={Object.entries(Interaction.origin_of_interaction_choices)}
+          />
+
+          {originOfInteraction === 'other' && (
+            <LabeledField
               name="origin_of_interaction_other"
-              placeholder="Origin Other"
-              component="input"
-            />
-          </div>
-          <div>
-            <Field
-              name="consent"
-              component={renderCheckbox}
-              label="HCP Consent Received"
-            />
-          </div>
-          <div>
-            <Field
-              name="purpose"
               type="text"
-              placeholder="Purpose"
-              component="input"
-            />
-          </div>
-          <div>
-            <Field
-              name="is_joint_visit"
-              component={renderCheckbox}
-              label="Joint Visit"
-            />
-            <Field
+              placeholder="Other origin of interaction"
+            />)}
+
+          <LabeledField
+            name="purpose"
+            type="text"
+            label="Purpose"
+          />
+
+          <LabeledField
+            name="is_joint_visit"
+            type="checkbox"
+            label="Joint Visit"
+          />
+
+          {isJointVisit && (
+            <LabeledField
               name="joint_visit_with"
               type="text"
-              placeholder="Who With"
-              component="input"
-            />
-          </div>
-          <div>
-            <Field
-              name="is_adverse_event"
-              component={renderCheckbox}
-              label="Adverse Event"
-            />
-          </div>
-          <div>
-            <Field
-              name="appropriate_procedures_followed"
-              component={renderCheckbox}
+              label="Joint visit with"
+            />)}
+
+          <LabeledField
+            name="is_adverse_event"
+            type="checkbox"
+            label="Adverse Event"
+          />
+
+          {isAdverseEvent && (
+            <LabeledField
+              name="appropriate_pv_procedures_followed"
+              type="checkbox"
               label="Appropriate PV Procedures Followed"
-            />
-          </div>
-          <div>
-            <Field
-              name="is_follow_up_required"
-              component={renderCheckbox}
-              label="Follow up required"
-            />
-          </div>
-          <div>
-            <Field
-              name="description"
-              type="text"
-              placeholder="Description"
-              component="textarea"
-            />
-          </div>
-          <button type="submit">Save</button>
+            />)}
+
+          <LabeledField
+            name="is_follow_up_required"
+            type="checkbox"
+            label="Follow up required"
+          />
+
+          <LabeledField
+            name="description"
+            type="textarea"
+            label="Description"
+          />
+
+          <Button type="submit" bsStyle="primary">Save</Button>
         </form>
-      </div>
+      </Grid>
     );
   }
 }
+
+const selector = formValueSelector('recordInteraction');
 
 function mapStateToProps(state) {
   const recordInteractionState = state.get('recordInteraction');
   return {
     userId: state.get('global').get('user').get('id'),
-    hcps: recordInteractionState.get('hcps'),
-    hcpObjectives: recordInteractionState.get('hcpObjectives'),
-    projects: recordInteractionState.get('projects'),
-    resources: recordInteractionState.get('resources'),
+    hcps: recordInteractionState.get('hcps').toJS(),
+    hcpObjectives: recordInteractionState.get('hcpObjectives').toJS(),
+    projects: recordInteractionState.get('projects').toJS(),
+    resources: recordInteractionState.get('resources').toJS(),
+    originOfInteraction: selector(state, 'origin_of_interaction'),
+    isJointVisit: selector(state, 'is_joint_visit'),
+    isAdverseEvent: selector(state, 'is_adverse_event'),
   };
 }
 

@@ -2,32 +2,35 @@ import { Record } from 'immutable';
 
 const Interaction = Record({
   id: undefined,
+  // relationships
   hcp_id: null,
-  description: null,
-  purpose: null,
   hcp_objective_id: null,
   project_id: null,
   resources: [],
   outcomes: [],
+  // fields
+  description: null,
+  purpose: null,
   is_joint_visit: false,
   joint_visit_with: null,
   origin_of_interaction: null,
   origin_of_interaction_other: null,
+  type_of_interaction: null,
   is_adverse_event: false,
-  appropriate_procedures_followed: false,
+  appropriate_pv_procedures_followed: false,
   is_follow_up_required: false,
 });
 
-Interaction.originOfInteraction = [
-  { name: 'Medical Info Enquiry', value: 'medinfo_enquiry' },
-  { name: 'Engagement Plan', value: 'engagement_plan' },
-  { name: 'Other', value: 'other' },
-];
+Interaction.origin_of_interaction_choices = {
+  medinfo_enquiry: 'Medical Info Enquiry',
+  engagement_plan: 'Engagement Plan',
+  other: 'Other',
+};
 
-Interaction.typeOfInteraction = [
-  { name: 'Phone', value: 'phone' },
-  { name: 'Face To Face', value: 'face_to_face' },
-  { name: 'Other', value: 'other' },
-];
+Interaction.type_of_interaction_choices = {
+  phone: 'Phone',
+  face_to_face: 'Face To Face',
+  other: 'Other',
+};
 
 export default Interaction;

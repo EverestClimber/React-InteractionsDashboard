@@ -18,9 +18,10 @@ import {
 } from './actions';
 import { setLoading } from '../App/actions';
 
-function* fetchRecordIntegrationSaga(action) {
-  const { userId } = action;
-  const query = { user: userId };
+
+function* fetchRecordIntegrationSaga(action) {  // eslint-disable-line 
+  // const { userId } = action;
+  // const query = { user: userId };
 
   yield put(setLoading(true));
 
@@ -32,10 +33,11 @@ function* fetchRecordIntegrationSaga(action) {
       projectsResponse,
       outcomesResponse,
     ] = yield [
-      call(getHCPs, query),
-      call(getHCPObjectives, query),
-      call(getResources, query),
-      call(getProjects, query),
+      // call(getHCPs, query),
+      call(getHCPs),
+      call(getHCPObjectives),
+      call(getResources),
+      call(getProjects),
       call(getInteractionOutcomes),
     ];
 
@@ -60,6 +62,7 @@ function* fetchRecordIntegrationSaga(action) {
     yield put(setLoading(false));
     yield put(fetchInteractionActions.success(interaction));
   } catch (error) {
+    console.log('=== API error:', error);
     yield put(fetchInteractionActions.error(error.message));
     yield put(setLoading(false));
   }

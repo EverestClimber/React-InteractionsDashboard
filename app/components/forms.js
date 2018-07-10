@@ -1,5 +1,4 @@
 import React from 'react';
-import { Field } from 'redux-form/immutable';
 import * as BS from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
@@ -9,11 +8,14 @@ export const FormControl = ({ input, type, ...rest }) => { // eslint-disable-lin
     select: 'select', textarea: 'textarea',
   };
   return (
-    <BS.FormControl
-      {...input}
-      componentClass={componentClassByType[type] || 'input'}
-      {...rest}
-    />
+    <React.Fragment>
+      <BS.FormControl
+        {...input}
+        componentClass={componentClassByType[type] || 'input'}
+        {...rest}
+      />
+      {/* <pre>{JSON.stringify(rest.meta, null, 2)}</pre> */}
+    </React.Fragment>
   );
 };
 
@@ -31,72 +33,78 @@ export const Radio = ({ input, children, ...rest }) => ( // eslint-disable-line 
 );
 
 
-export class LabeledField extends React.PureComponent {
+export const Options = ({ choices }) => choices.map(([val, text]) => ( // eslint-disable-line react/prop-types
+  <option key={val} value={val}>
+    {text}
+  </option>
+));
+
+
+export class LabeledFormControl extends React.PureComponent {
   static propTypes = {
-    name: PropTypes.string,
-    id: PropTypes.string,
+    input: PropTypes.object,
     type: PropTypes.string,
+    meta: PropTypes.object,
     label: PropTypes.string,
-    options: PropTypes.array,
     helpText: PropTypes.string,
-    validationState: PropTypes.string,
-  }
+    children: PropTypes.node,
+  };
 
   render() {
     const {
-      name,
-      id,
+      input,
       type,
+      meta,
       label,
-      options,
       helpText,
-      validationState,
+      children,
       ...rest
     } = this.props;
 
     let field;
     if (type === 'checkbox') {
       field = (
-        <Field name={name} component={Checkbox} {...rest}>
+        <BS.Checkbox {...input}>
           {label}
-        </Field>
+        </BS.Checkbox>
       );
     } else if (type === 'radio') {
       field = (
-        <Field name={name} component={Radio} {...rest}>
+        <BS.Radio {...input}>
           {label}
-        </Field>
+        </BS.Radio>
       );
     } else {
-      let fieldChildren = null;
-      if (type === 'select' && options.length) {
-        fieldChildren = options.map(([val, text]) => (
-          <option key={val} value={val}>
-            {text}
-          </option>
-        ));
-      }
+      const componentClassByType = {
+        select: 'select', textarea: 'textarea',
+      };
 
       field = (
         <React.Fragment>
           <BS.ControlLabel>{label}</BS.ControlLabel>
-          <Field
-            name={name}
-            type={type}
-            component={FormControl}
+          <BS.FormControl
+            {...input}
+            componentClass={componentClassByType[type] || 'input'}
             {...rest}
           >
-            {fieldChildren}
-          </Field>
+            {children}
+          </BS.FormControl>
           <BS.FormControl.Feedback />
+          {/* <pre>{JSON.stringify(meta, null, 2)}</pre> */}
         </React.Fragment>
       );
     }
 
     return (
-      <BS.FormGroup controlId={id || name} validationState={validationState}>
+      <BS.FormGroup
+        controlId={input.id || input.name}
+        validationState={(meta.touched && meta.error) ? 'error' : null}
+      >
         {field}
         <BS.HelpBlock>{helpText}</BS.HelpBlock>
+        {meta.touched && meta.error && (
+          <BS.Alert bsStyle="danger">{meta.error}</BS.Alert>
+        )}
       </BS.FormGroup>
     );
   }

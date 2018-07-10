@@ -1,9 +1,12 @@
 import { fromJS, List } from 'immutable';
 import {
   fetchInteractionActionTypes,
+  recordInteractionActionTypes,
 } from './constants';
 
+
 const initialState = fromJS({
+  serverError: '',
   hcps: new List(),
   hcpObjectives: new List(),
   projects: new List(),
@@ -27,6 +30,12 @@ function recordInteractionReducer(state = initialState, action) {
         projects,
         resources,
         outcomes,
+      });
+    }
+    case recordInteractionActionTypes.error: {
+      window.scrollTo(0, 0);
+      return state.merge({
+        serverError: action.message,
       });
     }
     default:

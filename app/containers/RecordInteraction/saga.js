@@ -7,7 +7,7 @@ import Objective from 'records/objective';
 import { getResources } from 'api/resources';
 import { getProjects } from 'api/projects';
 import { getHCPs, getHCPObjectives } from 'api/hcps';
-import { postInteraction, getInteractionOutcomes } from 'api/interactions';
+import { postInteraction } from 'api/interactions';
 import {
   fetchInteractionActionTypes,
   recordInteractionActionTypes,
@@ -19,7 +19,7 @@ import {
 import { setLoading } from '../App/actions';
 
 
-function* fetchRecordIntegrationSaga(action) {  // eslint-disable-line 
+function* fetchRecordIntegrationSaga(action) {  // eslint-disable-line
   // const { userId } = action;
   // const query = { user: userId };
 
@@ -31,14 +31,12 @@ function* fetchRecordIntegrationSaga(action) {  // eslint-disable-line
       hcpObjectivesResponse,
       resourcesResponse,
       projectsResponse,
-      outcomesResponse,
     ] = yield [
       // call(getHCPs, query),
       call(getHCPs),
       call(getHCPObjectives),
       call(getResources),
       call(getProjects),
-      call(getInteractionOutcomes),
     ];
 
     const interaction = {
@@ -54,9 +52,6 @@ function* fetchRecordIntegrationSaga(action) {  // eslint-disable-line
       projects: new List(projectsResponse.data.map(
         (project) => Project.fromApiObject(project))
       ),
-      outcomes: new List(outcomesResponse.data.map(
-        (outcome) => new Map(outcome)
-      )),
     };
 
     yield put(setLoading(false));
@@ -71,7 +66,7 @@ function* fetchRecordIntegrationSaga(action) {  // eslint-disable-line
 function* recordInteractionSaga(action) {
   const { interaction } = action;
   try {
-    yield call(postInteraction, interaction.toJS());
+    yield call(postInteraction, interaction.toApiData());
     yield put(recordInteractionActions.success());
   } catch (error) {
     yield put(recordInteractionActions.error(error.message));

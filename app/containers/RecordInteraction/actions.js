@@ -3,6 +3,7 @@ import {
   recordInteractionActionTypes,
 } from './constants';
 
+
 export const fetchInteractionActions = {
   request: (userId) => ({
     type: fetchInteractionActionTypes.request,

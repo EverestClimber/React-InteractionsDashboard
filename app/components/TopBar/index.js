@@ -41,10 +41,10 @@ export class TopBar extends React.PureComponent { // eslint-disable-line react/p
           <div className="topbar__section">
             <div className="topbar__logo"></div>
             <div className="topbar__nav topbar-nav">
-              {this.renderRoute('MSL Dashboard', routes.DASHBOARD, 'folder')}
-              {this.renderRoute('HCP Directory', routes.HCP_DIRECTORY, 'folder')}
-              {this.renderRoute('Record Interaction', routes.RECORD_INTERACTION, 'folder')}
-              {this.renderRoute('Report', routes.REPORT, 'folder')}
+              {this.renderRoute('MSL Dashboard', routes.DASHBOARD.path, 'folder')}
+              {this.renderRoute('HCP Directory', routes.HCP_DIRECTORY.path, 'folder')}
+              {this.renderRoute('Record Interaction', routes.RECORD_INTERACTION.path, 'folder')}
+              {this.renderRoute('Report', routes.REPORT.path, 'folder')}
             </div>
           </div>
           <div className="topbar__section">

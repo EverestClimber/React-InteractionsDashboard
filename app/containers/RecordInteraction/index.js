@@ -23,6 +23,7 @@ import {
 
 export class RecordInteraction extends React.PureComponent {
   static propTypes = {
+    match: PropTypes.object,
     handleSubmit: PropTypes.func,
     fetchRecordInteraction: PropTypes.func,
     userId: PropTypes.number,
@@ -42,6 +43,7 @@ export class RecordInteraction extends React.PureComponent {
 
   render() {
     const {
+      match,
       handleSubmit,
       hcps,
       hcpObjectives,
@@ -60,6 +62,8 @@ export class RecordInteraction extends React.PureComponent {
         </Helmet>
 
         <h2>Record Interaction</h2>
+
+        <p>For Engagement Plan #{match.params.id}</p>
 
         {serverError && (
           <Alert bsStyle="danger">

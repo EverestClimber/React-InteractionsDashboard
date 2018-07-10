@@ -1,10 +1,17 @@
 import { takeEvery, call, put } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
+import { List } from 'immutable';
 
 import User from 'records/user';
+import AffiliateGroup from 'records/affiliateGroup';
+import TherapeuticArea from 'records/therapeuticArea';
 import { getSelf, postRefreshToken } from 'api/auth';
+import { getAffiliateGroups } from 'api/affiliateGroups';
+import { getTherapeuticAreas } from 'api/therapeuticAreas';
+
 import { LOGOUT, REFRESH_TOKEN } from './constants';
-import { setUser, setLoading } from './actions';
+import { setUser, setLoading, fetchCommonDataActions } from './actions';
+
 
 function* refreshTokenSaga() {
   const token = localStorage.getItem('token');
@@ -40,6 +47,40 @@ function* getCurrentUserSaga() {
   }
 }
 
+function* getCommonDataSaga() {
+
+  console.log('~~~ in getCommonDataSaga');
+
+  yield put(setLoading(true));
+
+  try {
+    const [
+      therapeuticAreasResponse,
+      affiliateGroupsResponse,
+    ] = yield [
+      call(getTherapeuticAreas),
+      call(getAffiliateGroups),
+    ];
+
+    const commonData = {
+      therapeuticAreas: new List(therapeuticAreasResponse.data.map(
+        (ta) => TherapeuticArea.fromApiData(ta)
+      )),
+      affiliateGroups: new List(affiliateGroupsResponse.data.map(
+        (affiliateGroup) => AffiliateGroup.fromApiData(affiliateGroup)
+      )),
+    };
+
+    yield put(setLoading(false));
+    console.log('--- common data:', commonData);
+    yield put(fetchCommonDataActions.success(commonData));
+
+  } catch (error) {
+    yield put(fetchCommonDataActions.error(error.message));
+    yield put(setLoading(false));
+  }
+}
+
 function* logoutSaga() {
   localStorage.removeItem('token');
 
@@ -48,6 +89,7 @@ function* logoutSaga() {
 
 export default function* appRootSaga() {
   yield call(getCurrentUserSaga);
+  yield call(getCommonDataSaga);
 
   yield takeEvery(REFRESH_TOKEN, refreshTokenSaga);
   yield takeEvery(LOGOUT, logoutSaga);

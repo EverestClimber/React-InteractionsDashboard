@@ -56,8 +56,8 @@ function* fetchRecordIntegrationSaga(action) {  // eslint-disable-line
 
     yield put(setLoading(false));
     yield put(fetchInteractionActions.success(interaction));
+
   } catch (error) {
-    console.log('=== API error:', error);
     yield put(fetchInteractionActions.error(error.message));
     yield put(setLoading(false));
   }

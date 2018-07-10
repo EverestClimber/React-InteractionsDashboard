@@ -32,12 +32,14 @@ function recordInteractionReducer(state = initialState, action) {
         outcomes,
       });
     }
+
     case recordInteractionActionTypes.error: {
       window.scrollTo(0, 0);
       return state.merge({
         serverError: action.message,
       });
     }
+
     default:
       return state;
   }

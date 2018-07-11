@@ -39,7 +39,7 @@ export const recordInteractionActions = {
 };
 
 
-export const getHCPObjectivesForHCPActions = makeActionCreators('FETCH_HCPOBJECTIVES_FOR_HCP', {
+export const fetchHCPObjectives = makeActionCreators('FETCH_HCPOBJECTIVES', {
   request: (hcpId) => ({ hcpId }),
   success: (payload) => ({ payload }),
   error: (message) => ({ message }),

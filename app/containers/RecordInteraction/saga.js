@@ -15,7 +15,7 @@ import {
 import {
   fetchInteractionActions,
   recordInteractionActions,
-  getHCPObjectivesForHCPActions,
+  fetchHCPObjectives,
 } from './actions';
 import { setLoading } from '../App/actions';
 
@@ -85,10 +85,10 @@ function* getHCPObjectivesForHCPSaga(action) {
       (objective) => HCPObjective.fromApiObject(objective)
     ));
 
-    yield put(getHCPObjectivesForHCPActions.success(hcpObjectives));
+    yield put(fetchHCPObjectives.success(hcpObjectives));
 
   } catch (error) {
-    yield put(getHCPObjectivesForHCPActions.error(error.message));
+    yield put(fetchHCPObjectives.error(error.message));
   }
 }
 
@@ -105,6 +105,6 @@ function* recordInteractionSaga(action) {
 
 export default function* recordInteractionRootSaga() {
   yield takeLatest(fetchInteractionActionTypes.request, fetchRecordIntegrationSaga);
-  yield takeLatest(getHCPObjectivesForHCPActions.request.type, getHCPObjectivesForHCPSaga);
+  yield takeLatest(fetchHCPObjectives.request.type, getHCPObjectivesForHCPSaga);
   yield takeLatest(recordInteractionActionTypes.request, recordInteractionSaga);
 }

@@ -31,15 +31,11 @@ export class TopBar extends React.PureComponent { // eslint-disable-line react/p
     const { user } = this.props;
     const email = user.get('email');
 
-    // @todo: get therapeutic areas from user instance
-    // const ta = user.get('ta').map((ta) => `${ta.charAt(0).toUpperCase()}${ta.slice(1)}`).join(', ');
-    const ta = 'Psychiatry, Speciality';
-
     return (
       <div className="topbar">
         <div className="topbar__container">
           <div className="topbar__section">
-            <div className="topbar__logo"></div>
+            <div className="topbar__logo" />
             <div className="topbar__nav topbar-nav">
               {this.renderRoute('MSL Dashboard', routes.DASHBOARD.path, 'folder')}
               {this.renderRoute('HCP Directory', routes.HCP_DIRECTORY.path, 'folder')}
@@ -52,14 +48,14 @@ export class TopBar extends React.PureComponent { // eslint-disable-line react/p
               <Link to={routes.PROFILE} className="topbar-user__name">
                 {email}
               </Link>
-              <p className="topbar-user__ta">{ta}</p>
+              <p className="topbar-user__ta">{user.ta_names.join(', ')}</p>
             </div>
             <Button
               className="topbar__logout"
               bsStyle="link"
               onClick={this.props.logout}
             >
-              <i className="nav-icon nav-icon__logout nav-icon--left"></i>
+              <i className="nav-icon nav-icon__logout nav-icon--left" />
               Log Out
             </Button>
           </div>

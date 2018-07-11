@@ -1,7 +1,8 @@
-import { fromJS, Map, List } from 'immutable';
+import { fromJS, Map, OrderedMap } from 'immutable';
 
 import User from 'records/User';
-import { SET_USER, LOGOUT, LOADING, fetchCommonDataActionTypes } from './constants';
+import { SET_USER, LOGOUT, LOADING } from './constants';
+import { fetchCommonDataActions } from './actions';
 
 
 const initialState = new Map({
@@ -9,8 +10,8 @@ const initialState = new Map({
   ui: fromJS({
     loading: false,
   }),
-  therapeuticAreas: new List(),
-  affiliateGroups: new List(),
+  therapeuticAreas: new OrderedMap(),
+  affiliateGroups: new OrderedMap(),
 });
 
 
@@ -25,14 +26,18 @@ function appReducer(state = initialState, action) {
     case LOADING:
       return state.updateIn(['ui', 'loading'], () => action.loading);
 
-    case fetchCommonDataActionTypes.success: {
-      const {
-        affiliateGroups,
-        therapeuticAreas,
-      } = action.payload;
+    case fetchCommonDataActions.success.type: {
+      const { affiliateGroups, therapeuticAreas } = action.payload;
+      const affiliateGroupsById = new OrderedMap(affiliateGroups.map((it) => [it.id, it]));
+      const therapeuticAreasById = new OrderedMap(therapeuticAreas.map((it) => [it.id, it]));
       return state.merge({
-        affiliateGroups,
-        therapeuticAreas,
+        user: User.fromApiData(
+          state.get('user').toApiData(),
+          therapeuticAreasById,
+          affiliateGroupsById
+        ),
+        affiliateGroups: affiliateGroupsById,
+        therapeuticAreas: therapeuticAreasById,
       });
     }
 

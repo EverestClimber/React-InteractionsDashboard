@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import { fromJS, List } from 'immutable';
 import { compose, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
@@ -63,7 +62,8 @@ export class RecordInteraction extends React.PureComponent {
 
         <h2>Record Interaction</h2>
 
-        <p>For Engagement Plan #{match.params.id}</p>
+        <p>For Engagement Plan #{match.params.engagementPlanId}</p>
+        <p>For HCP #{match.params.hcpId}</p>
 
         {serverError && (
           <Alert bsStyle="danger">
@@ -289,7 +289,8 @@ function mapStateToProps(state) {
     // local
     serverError: recordInteractionState.get('serverError'),
     hcps: recordInteractionState.get('hcps').toJS(),
-    hcpObjectives: recordInteractionState.get('hcpObjectives').toJS(),
+    hcpObjectives: [],
+    // hcpObjectives: recordInteractionState.get('hcpObjectives').toJS(),
     projects: recordInteractionState.get('projects').toJS(),
     resources: recordInteractionState.get('resources').toJS(),
     originOfInteraction: selector(state, 'origin_of_interaction'),

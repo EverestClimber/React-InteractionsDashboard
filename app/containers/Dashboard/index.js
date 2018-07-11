@@ -29,13 +29,21 @@ export class Dashboard extends React.PureComponent { // eslint-disable-line reac
 
         <h4>WIP:</h4>
 
-        <Link to={routes.RECORD_INTERACTION.path}>
-          <Button>Record Interaction</Button>
-        </Link>
-        {' '}
-        <Link to={routes.RECORD_INTERACTION_FOR_EP.make(1)}>
-          <Button>Record Interaction for EP #1</Button>
-        </Link>
+        <p>
+          <Link to={routes.RECORD_INTERACTION.path}>
+            <Button>Record Interaction</Button>
+          </Link>
+        </p>
+        <p>
+          <Link to={routes.RECORD_INTERACTION_FOR_EP.make(1)}>
+            <Button>Record Interaction for EP #1</Button>
+          </Link>
+        </p>
+        <p>
+          <Link to={routes.RECORD_INTERACTION_FOR_HCP.make(2)}>
+            <Button>Record Interaction for HCP #2</Button>
+          </Link>
+        </p>
 
       </Grid>
     );

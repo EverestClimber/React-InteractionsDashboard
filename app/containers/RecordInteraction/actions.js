@@ -1,13 +1,17 @@
+import { makeActionCreators } from 'utils/actions';
 import {
   fetchInteractionActionTypes,
   recordInteractionActionTypes,
 } from './constants';
+// import makeSelectRecordInteraction from "./selectors";
 
 
 export const fetchInteractionActions = {
-  request: (userId) => ({
+  request: (userId, engagementPlanId, hcpId) => ({
     type: fetchInteractionActionTypes.request,
     userId,
+    engagementPlanId,
+    hcpId,
   }),
   // payload - { hcps, hcpObjectives, projects, resources, outcomes }
   success: (payload) => ({
@@ -33,3 +37,10 @@ export const recordInteractionActions = {
     message,
   }),
 };
+
+
+export const getHCPObjectivesForHCPActions = makeActionCreators('FETCH_HCPOBJECTIVES_FOR_HCP', {
+  request: (hcpId) => ({ hcpId }),
+  success: (payload) => ({ payload }),
+  error: (message) => ({ message }),
+});

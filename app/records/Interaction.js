@@ -1,5 +1,9 @@
 /* eslint-disable camelcase */
-import { Record } from 'immutable';
+import { Record, List } from 'immutable';
+import HCP from './HCP';
+import { HCPObjective } from './HCPObjective';
+import Project from './Project';
+
 
 class Interaction extends Record({
   id: undefined,
@@ -11,7 +15,7 @@ class Interaction extends Record({
   hcp_objective: null,
   project_id: null,
   project: null,
-  resources: [],
+  resources: new List(),
   // fields
   time_of_interaction: '',
   description: '',
@@ -27,11 +31,13 @@ class Interaction extends Record({
   appropriate_pv_procedures_followed: null,
   outcome: '',
   is_follow_up_required: false,
+  created_at: undefined,
 }) {
   static READ_ONLY_FIELDS = [
     'hcp',
     'hcp_objective',
     'project',
+    'created_at',
   ];
 
   static origin_of_interaction_choices = {
@@ -57,6 +63,15 @@ class Interaction extends Record({
       delete data[f];
     }
     return data;
+  }
+
+  static fromApiData(data) {
+    let interaction = new Interaction(data);
+    interaction = interaction.set('resources', new List(interaction.resources));
+    interaction = interaction.set('hcp', HCP.fromApiData(interaction.hcp));
+    interaction = interaction.set('hcp_objective', HCPObjective.fromApiData(interaction.hcp_objective));
+    interaction = interaction.set('project', Project.fromApiData(interaction.project));
+    return interaction;
   }
 }
 

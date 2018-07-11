@@ -1,9 +1,9 @@
 import { takeLatest, call, put } from 'redux-saga/effects';
 import { List, Map } from 'immutable';
 
-import HCP from 'records/hcp';
-import Project from 'records/project';
-import Objective from 'records/objective';
+import HCP from 'records/HCP';
+import Project from 'records/Project';
+import { HCPObjective } from 'records/HCPObjective';
 import { getResources } from 'api/resources';
 import { getProjects } from 'api/projects';
 import { getHCP, getHCPs, getHCPObjectives } from 'api/hcps';
@@ -34,18 +34,18 @@ function* fetchRecordIntegrationSaga(action) {  // eslint-disable-line
     let hcps;
     if (hcpId) {
       const hcpResponse = yield call(getHCP, hcpId);
-      hcps = new List([HCP.fromApiObject(hcpResponse.data)]);
+      hcps = new List([HCP.fromApiData(hcpResponse.data)]);
 
     } else if (engagementPlanId) {
       const hcpsResponse = yield call(getHCPs, { engagement_plan: engagementPlanId });
       hcps = new List(hcpsResponse.data.map(
-        (hcp) => HCP.fromApiObject(hcp)
+        (hcp) => HCP.fromApiData(hcp)
       ));
 
     } else {
       const hcpsResponse = yield call(getHCPs, { engagement_plan: engagementPlanId });
       hcps = new List(hcpsResponse.data.map(
-        (hcp) => HCP.fromApiObject(hcp)
+        (hcp) => HCP.fromApiData(hcp)
       ));
     }
 
@@ -82,7 +82,7 @@ function* getHCPObjectivesForHCPSaga(action) {
   try {
     const res = yield call(getHCPObjectives, { hcp: hcpId });
     const hcpObjectives = new List(res.data.map(
-      (objective) => Objective.fromApiObject(objective)
+      (objective) => HCPObjective.fromApiObject(objective)
     ));
 
     yield put(getHCPObjectivesForHCPActions.success(hcpObjectives));

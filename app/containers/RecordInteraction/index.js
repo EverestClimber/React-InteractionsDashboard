@@ -7,7 +7,7 @@ import { reduxForm, formValueSelector, Field } from 'redux-form/immutable';
 import {
   Grid, Button, Alert,
 } from 'react-bootstrap';
-import Interaction from 'records/interaction';
+import Interaction from 'records/Interaction';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
 import reducer from './reducer';

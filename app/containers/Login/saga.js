@@ -1,7 +1,7 @@
 import { takeLatest, call, put } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
 
-import User from 'records/user';
+import User from 'records/User';
 import { postObtainToken, getSelf } from '../../api/auth';
 import { loginActionTypes } from './constants';
 import { loginActions } from './actions';
@@ -19,7 +19,7 @@ function* loginSaga(action) {
 
     const selfResponse = yield call(getSelf, token);
 
-    const user = new User(selfResponse.data);
+    const user = User.fromApiData(selfResponse.data);
     yield put(setUser(user));
     yield put(setLoading(false));
 

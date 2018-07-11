@@ -1,6 +1,6 @@
 import { fromJS, Map, List } from 'immutable';
 
-import User from 'records/user';
+import User from 'records/User';
 import { SET_USER, LOGOUT, LOADING, fetchCommonDataActionTypes } from './constants';
 
 

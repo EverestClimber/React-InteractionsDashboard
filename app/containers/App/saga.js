@@ -2,9 +2,9 @@ import { takeEvery, call, put } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
 import { List } from 'immutable';
 
-import User from 'records/user';
-import AffiliateGroup from 'records/affiliateGroup';
-import TherapeuticArea from 'records/therapeuticArea';
+import User from 'records/User';
+import AffiliateGroup from 'records/AffiliateGroup';
+import TherapeuticArea from 'records/TherapeuticArea';
 import { getSelf, postRefreshToken } from 'api/auth';
 import { getAffiliateGroups } from 'api/affiliateGroups';
 import { getTherapeuticAreas } from 'api/therapeuticAreas';

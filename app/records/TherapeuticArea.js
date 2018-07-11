@@ -1,7 +1,8 @@
 /* eslint-disable camelcase */
 import { Record } from 'immutable';
 
-class TherapeuticArea extends Record({
+
+export default class TherapeuticArea extends Record({
   id: undefined,
   name: '',
 }) {
@@ -12,5 +13,3 @@ class TherapeuticArea extends Record({
     return new TherapeuticArea(data);
   }
 }
-
-export default TherapeuticArea;

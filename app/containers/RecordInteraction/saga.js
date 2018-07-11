@@ -1,54 +1,32 @@
 import { takeLatest, call, put } from 'redux-saga/effects';
-import { List, Map } from 'immutable';
+import { List } from 'immutable';
 
 import HCP from 'records/HCP';
 import Project from 'records/Project';
+import Resource from 'records/Resource';
 import { HCPObjective } from 'records/HCPObjective';
 import { getResources } from 'api/resources';
 import { getProjects } from 'api/projects';
-import { getHCP, getHCPs, getHCPObjectives } from 'api/hcps';
+import {
+  // getHCP,
+  getHCPs,
+  getHCPObjectives,
+} from 'api/hcps';
 import { postInteraction } from 'api/interactions';
+
 import {
-  fetchInteractionActionTypes,
-  recordInteractionActionTypes,
-} from './constants';
-import {
-  fetchInteractionActions,
+  fetchInteractionRecordingRequiredDataActions,
+  searchHCPActions,
+  fetchHCPObjectivesActions,
   recordInteractionActions,
-  fetchHCPObjectives,
 } from './actions';
 import { setLoading } from '../App/actions';
 
 
-function* fetchRecordIntegrationSaga(action) {  // eslint-disable-line
-  const {
-    // userId,
-    engagementPlanId,
-    hcpId,
-  } = action;
-  // const query = { user: userId };
-
+function* fetchInteractionRecordingRequiredDataSaga() {
   yield put(setLoading(true));
 
   try {
-    let hcps;
-    if (hcpId) {
-      const hcpResponse = yield call(getHCP, hcpId);
-      hcps = new List([HCP.fromApiData(hcpResponse.data)]);
-
-    } else if (engagementPlanId) {
-      const hcpsResponse = yield call(getHCPs, { engagement_plan: engagementPlanId });
-      hcps = new List(hcpsResponse.data.map(
-        (hcp) => HCP.fromApiData(hcp)
-      ));
-
-    } else {
-      const hcpsResponse = yield call(getHCPs, { engagement_plan: engagementPlanId });
-      hcps = new List(hcpsResponse.data.map(
-        (hcp) => HCP.fromApiData(hcp)
-      ));
-    }
-
     const [
       resourcesResponse,
       projectsResponse,
@@ -58,43 +36,54 @@ function* fetchRecordIntegrationSaga(action) {  // eslint-disable-line
     ];
 
     const payload = {
-      hcps,
       resources: new List(resourcesResponse.data.map(
-        (resource) => new Map(resource)
+        (resourceData) => Resource.fromApiData(resourceData)
       )),
       projects: new List(projectsResponse.data.map(
-        (project) => Project.fromApiObject(project)
+        (projectData) => Project.fromApiData(projectData)
       )),
     };
 
     yield put(setLoading(false));
-    yield put(fetchInteractionActions.success(payload));
+    yield put(fetchInteractionRecordingRequiredDataActions.success(payload));
 
   } catch (error) {
-    yield put(fetchInteractionActions.error(error.message));
+    yield put(fetchInteractionRecordingRequiredDataActions.error(error.message));
     yield put(setLoading(false));
   }
 }
 
 
-function* getHCPObjectivesForHCPSaga(action) {
-  const { hcpId } = action;
+function* searchHCPsSaga({ search }) {
+  try {
+    const res = yield call(getHCPs, { search });
+    const hcps = new List(res.data.map(
+      (hcpData) => HCP.fromApiData(hcpData))
+    );
+    yield put(searchHCPActions.success(hcps));
+
+  } catch (error) {
+    yield put(searchHCPActions.error(error.message));
+  }
+}
+
+
+function* fetchHCPObjectivesSaga({ hcpId }) {
   try {
     const res = yield call(getHCPObjectives, { hcp: hcpId });
     const hcpObjectives = new List(res.data.map(
       (objective) => HCPObjective.fromApiObject(objective)
     ));
 
-    yield put(fetchHCPObjectives.success(hcpObjectives));
+    yield put(fetchHCPObjectivesActions.success(hcpObjectives));
 
   } catch (error) {
-    yield put(fetchHCPObjectives.error(error.message));
+    yield put(fetchHCPObjectivesActions.error(error.message));
   }
 }
 
 
-function* recordInteractionSaga(action) {
-  const { interaction } = action;
+function* recordInteractionSaga({ interaction }) {
   try {
     yield call(postInteraction, interaction.toApiData());
     yield put(recordInteractionActions.success());
@@ -103,8 +92,10 @@ function* recordInteractionSaga(action) {
   }
 }
 
+
 export default function* recordInteractionRootSaga() {
-  yield takeLatest(fetchInteractionActionTypes.request, fetchRecordIntegrationSaga);
-  yield takeLatest(fetchHCPObjectives.request.type, getHCPObjectivesForHCPSaga);
-  yield takeLatest(recordInteractionActionTypes.request, recordInteractionSaga);
+  yield call(fetchInteractionRecordingRequiredDataSaga);
+  yield takeLatest(searchHCPActions.request.type, searchHCPsSaga);
+  yield takeLatest(fetchHCPObjectivesActions.request.type, fetchHCPObjectivesSaga);
+  yield takeLatest(recordInteractionActions.request.type, recordInteractionSaga);
 }

@@ -1,8 +1,8 @@
 import { fromJS, List } from 'immutable';
 import {
-  fetchInteractionActionTypes,
-  recordInteractionActionTypes,
-} from './constants';
+  recordInteractionActions,
+  fetchInteractionRecordingRequiredDataActions,
+} from './actions';
 
 
 const initialState = fromJS({
@@ -11,29 +11,22 @@ const initialState = fromJS({
   hcpObjectives: new List(),
   projects: new List(),
   resources: new List(),
-  outcomes: new List(),
 });
 
 function recordInteractionReducer(state = initialState, action) {
   switch (action.type) {
-    case fetchInteractionActionTypes.success: {
+    case fetchInteractionRecordingRequiredDataActions.success.type: {
       const {
-        hcps,
-        hcpObjectives,
         projects,
         resources,
-        outcomes,
       } = action.payload;
       return state.merge({
-        hcps,
-        hcpObjectives,
         projects,
         resources,
-        outcomes,
       });
     }
 
-    case recordInteractionActionTypes.error: {
+    case recordInteractionActions.error.type: {
       window.scrollTo(0, 0);
       return state.merge({
         serverError: action.message,

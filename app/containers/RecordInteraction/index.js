@@ -4,9 +4,7 @@ import { compose, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { reduxForm, formValueSelector, Field } from 'redux-form/immutable';
-import {
-  Grid, Button, Alert,
-} from 'react-bootstrap';
+import { Grid, Button, Alert } from 'react-bootstrap';
 import Interaction from 'records/Interaction';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
@@ -15,7 +13,8 @@ import saga from './saga';
 import { LabeledFormControl, Options } from '../../components/forms';
 
 import {
-  fetchInteractionActions,
+  searchHCPActions,
+  fetchHCPObjectivesActions,
   recordInteractionActions,
 } from './actions';
 
@@ -24,8 +23,9 @@ export class RecordInteraction extends React.PureComponent {
   static propTypes = {
     match: PropTypes.object,
     handleSubmit: PropTypes.func,
-    fetchRecordInteraction: PropTypes.func,
-    userId: PropTypes.number,
+    // searchHCPs: PropTypes.func,
+    // fetchHCPObjectives: PropTypes.func,
+    // userId: PropTypes.number,
     hcps: PropTypes.array,
     hcpObjectives: PropTypes.array,
     projects: PropTypes.array,
@@ -36,9 +36,9 @@ export class RecordInteraction extends React.PureComponent {
     serverError: PropTypes.string,
   };
 
-  componentDidMount() {
-    this.props.fetchRecordInteraction(this.props.userId);
-  }
+  // componentDidMount() {
+  //   this.props.fetchInteractionRecordingRequiredData(this.props.userId);
+  // }
 
   render() {
     const {
@@ -285,12 +285,11 @@ function mapStateToProps(state) {
   const recordInteractionState = state.get('recordInteraction');
   return {
     // global
-    userId: state.get('global').get('user').get('id'),
+    // userId: state.get('global').get('user').get('id'),
     // local
     serverError: recordInteractionState.get('serverError'),
     hcps: recordInteractionState.get('hcps').toJS(),
-    hcpObjectives: [],
-    // hcpObjectives: recordInteractionState.get('hcpObjectives').toJS(),
+    hcpObjectives: recordInteractionState.get('hcpObjectives').toJS(),
     projects: recordInteractionState.get('projects').toJS(),
     resources: recordInteractionState.get('resources').toJS(),
     originOfInteraction: selector(state, 'origin_of_interaction'),
@@ -301,8 +300,10 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    fetchRecordInteraction: fetchInteractionActions.request,
+    // fetchInteractionRecordingRequiredData: fetchInteractionRecordingRequiredDataActions.request,
+    searchHCPs: searchHCPActions.request,
     recordInteraction: recordInteractionActions.request,
+    fetchHCPObjectives: fetchHCPObjectivesActions.request,
   }, dispatch);
 }
 
@@ -323,7 +324,6 @@ export default compose(
     },
     validate,
     onSubmit: (data, dispatch, props) => {
-      // debugger;
       props.recordInteraction(new Interaction(data));
     },
   }),

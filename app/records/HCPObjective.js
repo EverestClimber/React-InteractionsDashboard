@@ -32,7 +32,7 @@ export class HCPObjective extends Record({
 
   static fromApiData(data) {
     let objective = new HCPObjective(data);
-    objective = objective.set('deliverabled', objective.deliverables.map(
+    objective = objective.set('deliverables', objective.deliverables.map(
       (deliverableData) => HCPDeliverable.fromApiData(deliverableData)
     ));
     return objective;

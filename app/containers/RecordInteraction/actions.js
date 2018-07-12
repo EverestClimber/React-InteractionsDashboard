@@ -8,11 +8,21 @@ export const recordInteractionActions = makeActionCreators('RECORD_INTERACTION',
 });
 
 
-export const searchHCPActions = makeActionCreators(
+export const searchHCPsActions = makeActionCreators(
   'RECORD_INTERACTION/SEARCH_HCPS',
   {
     request: (search) => ({ search }),
     success: (hcps) => ({ hcps }),
+    error: (message) => ({ message }),
+  }
+);
+
+
+export const fetchHCPActions = makeActionCreators(
+  'RECORD_INTERACTION/FETCH_HCP',
+  {
+    request: (hcpId) => ({ hcpId }),
+    success: (hcp) => ({ hcp }),
     error: (message) => ({ message }),
   }
 );

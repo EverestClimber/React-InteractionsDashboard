@@ -60,6 +60,7 @@ export class App extends React.PureComponent {
       <React.Fragment>
         {this.tokenExist && <TopBar />}
         <Loader />
+        {/* <pre>{JSON.stringify(queryString.parse(this.props.location.search), null, 2)}</pre> */}
         <Switch>
           <Route exact path={routes.LOGIN.path} component={Login} />
           {user && (

@@ -14,6 +14,8 @@ class HCP extends Record({
   last_name: '',
   email: '',
   phone: '',
+  city: '',
+  country: '',
   contact_person_first_name: '',
   contact_person_last_name: '',
   contact_person_email: '',
@@ -44,12 +46,12 @@ class HCP extends Record({
     hcp = hcp.set('tas', new List(hcp.tas));
     if (tasById) {
       hcp = hcp.set('ta_names', new List(hcp.tas.map(
-        (taId) => tasById.get(taId, '')
+        (taId) => tasById.getIn([taId, 'name'], '')
       )));
     }
     if (affiliateGroupsById) {
       hcp = hcp.set('affiliate_group_names', new List(hcp.affiliate_groups.map(
-        (agId) => affiliateGroupsById.get(agId, '')
+        (agId) => affiliateGroupsById.getIn([agId, 'name'], '')
       )));
     }
     return hcp;

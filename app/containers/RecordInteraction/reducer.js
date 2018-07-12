@@ -1,12 +1,16 @@
 import { fromJS, List } from 'immutable';
 import {
-  recordInteractionActions,
   fetchInteractionRecordingRequiredDataActions,
+  searchHCPsActions,
+  fetchHCPActions,
+  fetchHCPObjectivesActions,
+  recordInteractionActions,
 } from './actions';
 
 
 const initialState = fromJS({
   serverError: '',
+  hcp: null,
   hcps: new List(),
   hcpObjectives: new List(),
   projects: new List(),
@@ -32,6 +36,15 @@ function recordInteractionReducer(state = initialState, action) {
         serverError: action.message,
       });
     }
+
+    case searchHCPsActions.success.type:
+      return state.merge({ hcps: action.hcps });
+
+    case fetchHCPActions.success.type:
+      return state.merge({ hcp: action.hcp });
+
+    case fetchHCPObjectivesActions.success.type:
+      return state.merge({ hcpObjectives: action.hcpObjectives });
 
     default:
       return state;

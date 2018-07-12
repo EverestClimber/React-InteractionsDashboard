@@ -30,6 +30,8 @@ class Interaction extends Record({
   is_adverse_event: false,
   appropriate_pv_procedures_followed: null,
   outcome: '',
+  follow_up_date: undefined,
+  follow_up_notes: '',
   is_follow_up_required: false,
   created_at: undefined,
 }) {

@@ -1,4 +1,4 @@
-import { takeLatest, call, put } from 'redux-saga/effects';
+import { takeLatest, call, select, put } from 'redux-saga/effects';
 import { List } from 'immutable';
 
 import HCP from 'records/HCP';
@@ -8,17 +8,19 @@ import { HCPObjective } from 'records/HCPObjective';
 import { getResources } from 'api/resources';
 import { getProjects } from 'api/projects';
 import {
-  // getHCP,
+  getHCP,
   getHCPs,
   getHCPObjectives,
 } from 'api/hcps';
 import { postInteraction } from 'api/interactions';
+import { selectGlobal } from 'containers/App/selectors';
 
 import {
   fetchInteractionRecordingRequiredDataActions,
-  searchHCPActions,
+  searchHCPsActions,
   fetchHCPObjectivesActions,
   recordInteractionActions,
+  fetchHCPActions,
 } from './actions';
 import { setLoading } from '../App/actions';
 
@@ -57,13 +59,35 @@ function* fetchInteractionRecordingRequiredDataSaga() {
 function* searchHCPsSaga({ search }) {
   try {
     const res = yield call(getHCPs, { search });
+
+    const globalState = yield select(selectGlobal);
+    const tasById = globalState.get('therapeuticAreas');
+    const affiliateGroupsById = globalState.get('affiliateGroups');
+
     const hcps = new List(res.data.map(
-      (hcpData) => HCP.fromApiData(hcpData))
+      (hcpData) => HCP.fromApiData(hcpData, tasById, affiliateGroupsById))
     );
-    yield put(searchHCPActions.success(hcps));
+    yield put(searchHCPsActions.success(hcps));
 
   } catch (error) {
-    yield put(searchHCPActions.error(error.message));
+    yield put(searchHCPsActions.error(error.message));
+  }
+}
+
+
+function* fetchHCPSaga({ hcpId }) {
+  try {
+    const res = yield call(getHCP, hcpId);
+
+    const globalState = yield select(selectGlobal);
+    const tasById = globalState.get('therapeuticAreas');
+    const affiliateGroupsById = globalState.get('affiliateGroups');
+
+    const hcp = HCP.fromApiData(res.data, tasById, affiliateGroupsById);
+    yield put(fetchHCPActions.success(hcp));
+
+  } catch (error) {
+    yield put(fetchHCPActions.error(error.message));
   }
 }
 
@@ -72,7 +96,7 @@ function* fetchHCPObjectivesSaga({ hcpId }) {
   try {
     const res = yield call(getHCPObjectives, { hcp: hcpId });
     const hcpObjectives = new List(res.data.map(
-      (objective) => HCPObjective.fromApiObject(objective)
+      (objectiveData) => HCPObjective.fromApiData(objectiveData)
     ));
 
     yield put(fetchHCPObjectivesActions.success(hcpObjectives));
@@ -94,8 +118,12 @@ function* recordInteractionSaga({ interaction }) {
 
 
 export default function* recordInteractionRootSaga() {
-  yield call(fetchInteractionRecordingRequiredDataSaga);
-  yield takeLatest(searchHCPActions.request.type, searchHCPsSaga);
+  yield takeLatest(
+    fetchInteractionRecordingRequiredDataActions.request.type,
+    fetchInteractionRecordingRequiredDataSaga
+  );
+  yield takeLatest(searchHCPsActions.request.type, searchHCPsSaga);
+  yield takeLatest(fetchHCPActions.request.type, fetchHCPSaga);
   yield takeLatest(fetchHCPObjectivesActions.request.type, fetchHCPObjectivesSaga);
   yield takeLatest(recordInteractionActions.request.type, recordInteractionSaga);
 }

@@ -28,7 +28,7 @@ export class ProjectObjective extends Record({
 
   static fromApiData(data) {
     let objective = new ProjectObjective(data);
-    objective = objective.set('deliverabled', objective.deliverables.map(
+    objective = objective.set('deliverables', objective.deliverables.map(
       (deliverableData) => ProjectDeliverable.fromApiData(deliverableData)
     ));
     return objective;

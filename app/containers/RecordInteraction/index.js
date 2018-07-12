@@ -1,3 +1,4 @@
+import * as queryString from 'query-string';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { compose, bindActionCreators } from 'redux';
@@ -11,6 +12,7 @@ import {
   Button,
   Panel,
   FormControl,
+  Table,
 } from 'react-bootstrap';
 import Interaction from 'records/Interaction';
 import injectSaga from 'utils/injectSaga';
@@ -20,20 +22,139 @@ import saga from './saga';
 import { LabeledFormControl, Options } from '../../components/forms';
 
 import {
-  searchHCPActions,
+  searchHCPsActions,
+  fetchHCPActions,
   fetchHCPObjectivesActions,
-  recordInteractionActions,
+  recordInteractionActions, fetchInteractionRecordingRequiredDataActions,
 } from './actions';
 
 
-export class RecordInteraction extends React.PureComponent {
+class HCPSelector extends React.Component {
   static propTypes = {
-    // match: PropTypes.object,
+    // supplied by Field
+    input: PropTypes.object, // { onChange, value, ...}
+    // meta: PropTypes.object, // { error, ... }
+    // other
+    hcps: PropTypes.array,
+    hcp: PropTypes.object,
+    searchHCPs: PropTypes.func,
+    fetchHCP: PropTypes.func,
+    onHCPSelected: PropTypes.func,
+  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchHCPsText: '',
+    };
+  }
+
+  componentDidMount() {
+    console.log('=== props', this.props);
+    const hcpId = this.props.input.value;
+    if (hcpId) {
+      this.props.fetchHCP(hcpId);
+    }
+  }
+
+  handleSearchHCPsInputChange = (event) => {
+    this.setState({ searchHCPsText: event.target.value });
+  };
+
+  searchHCPsKeyPressed = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      console.log('...will search for HCPs');
+      this.props.searchHCPs(this.state.searchHCPsText);
+    }
+  };
+
+  handleHCPSelection = (event) => {
+    // console.log('=== props:', this.props);
+    const hcpId = event.target.value;
+    this.props.input.onChange(hcpId);
+    this.props.fetchHCP(hcpId);
+    this.props.onHCPSelected(hcpId);
+  };
+
+  render() {
+    const { hcps, hcp } = this.props;
+
+    return (
+      <div className="HCPSelector">
+        <Row>
+          <Col sm={10}>
+            <FormControl
+              type="text"
+              placeholder="Search HCPs ..."
+              onChange={this.handleSearchHCPsInputChange}
+              onKeyPress={this.searchHCPsKeyPressed}
+            />
+          </Col>
+          <Col sm={2}>
+            <Button type="submit" block>Add HCP</Button>
+          </Col>
+        </Row>
+        <br />
+
+        <Row>
+          <Col xs={12}>
+            <Table bordered condensed hover>
+              <tbody>
+                {hcps.map((it) => (
+                  <tr key={it.id}>
+                    <td>
+                      <input type="radio" name="hcp" value={it.id} onChange={this.handleHCPSelection} />
+                    </td>
+                    <td>{it.first_name} {it.last_name}</td>
+                    <td>{it.institution_name}</td>
+                    <td>{it.city}, {it.country}</td>
+                    <td>{it.ta_names.join(', ')}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Col>
+        </Row>
+        <br />
+
+        {hcp && (
+          <Row>
+            <Col xs={12}>
+              <Table bordered condensed hover>
+                <tbody>
+                  <tr key={hcp.id}>
+                    <td>{hcp.id}</td>
+                    <td>{hcp.first_name} {hcp.last_name}</td>
+                    <td>{hcp.institution_name}</td>
+                    <td>{hcp.city}, {hcp.country}</td>
+                    <td>{hcp.ta_names.join(', ')}</td>
+                  </tr>
+                </tbody>
+              </Table>
+            </Col>
+          </Row>
+        )}
+      </div>
+    );
+  }
+}
+
+
+export class RecordInteraction extends React.Component { // eslint-disable-line react/no-multi-comp
+  static propTypes = {
+    // location: PropTypes.object,
+    urlQuery: PropTypes.object,
+    submitting: PropTypes.bool,
+    pristine: PropTypes.bool,
     handleSubmit: PropTypes.func,
-    // searchHCPs: PropTypes.func,
-    // fetchHCPObjectives: PropTypes.func,
+    searchHCPs: PropTypes.func,
+    fetchHCP: PropTypes.func,
+    fetchHCPObjectives: PropTypes.func,
+    fetchInteractionRecordingRequiredData: PropTypes.func,
     // userId: PropTypes.number,
-    // hcps: PropTypes.array,
+    hcps: PropTypes.array,
+    hcp: PropTypes.object,
     hcpObjectives: PropTypes.array,
     projects: PropTypes.array,
     resources: PropTypes.array,
@@ -43,15 +164,25 @@ export class RecordInteraction extends React.PureComponent {
     // serverError: PropTypes.string,
   };
 
-  // componentDidMount() {
-  //   this.props.fetchInteractionRecordingRequiredData(this.props.userId);
-  // }
+  componentDidMount() {
+    this.props.fetchInteractionRecordingRequiredData();
+    const hcpId = parseInt(this.props.urlQuery.hcp, 10);
+    if (hcpId) {
+      this.props.fetchHCP(hcpId);
+      this.props.fetchHCPObjectives(hcpId);
+    }
+  }
 
   render() {
     const {
-      // match,
+      submitting,
+      pristine,
       handleSubmit,
-      // hcps,
+      searchHCPs,
+      fetchHCP,
+      fetchHCPObjectives,
+      hcps,
+      hcp,
       hcpObjectives,
       projects,
       resources,
@@ -71,19 +202,15 @@ export class RecordInteraction extends React.PureComponent {
 
         <form onSubmit={handleSubmit}>
 
-          <Row>
-            <Col sm={10}>
-              <FormControl
-                type="text"
-                placeholder="Search HCPs ..."
-              />
-            </Col>
-            <Col sm={2}>
-              <Button type="submit" block>Add HCP</Button>
-            </Col>
-          </Row>
-
-          <br />
+          <Field
+            name="hcp_id"
+            component={HCPSelector}
+            hcps={hcps}
+            hcp={hcp}
+            searchHCPs={searchHCPs}
+            fetchHCP={fetchHCP}
+            onHCPSelected={fetchHCPObjectives}
+          />
 
           <Row>
             <Col xs={12}>
@@ -340,9 +467,16 @@ export class RecordInteraction extends React.PureComponent {
           <Row>
             <Col xs={12}>
 
-              <Button type="submit">Back</Button>
+              <Button>Back</Button>
               {' '}
-              <Button type="submit" bsStyle="primary" disabled>Save</Button>
+              <Button
+                type="submit"
+                disables=""
+                bsStyle="primary"
+                disabled={pristine || submitting}
+              >
+                Save
+              </Button>
 
             </Col>
           </Row>
@@ -355,33 +489,37 @@ export class RecordInteraction extends React.PureComponent {
   }
 }
 
-const validate = (values) => {
+const validate = (values) => { // eslint-disable-line no-unused-vars
   // debugger;
-  console.log('... VALIDATING:', values);
+  // console.log('... VALIDATING:', values);
   const errors = {};
-  if (!values.hcp_id) {
-    errors.hcp_id = 'An HCP must be selected';
-  }
-  // if (!values.purpose) {
-  //   errors.purpose = 'Please specify a purpose';
+  // if (!values.hcp_id) {
+  //   errors.hcp_id = 'An HCP must be selected';
   // }
-  errors.purpose = 'WRONG';
+  // // if (!values.purpose) {
+  // //   errors.purpose = 'Please specify a purpose';
+  // // }
+  // errors.purpose = 'WRONG';
   return errors;
 };
 
 const selector = formValueSelector('recordInteraction');
 
-function mapStateToProps(state) {
+function mapStateToProps(state, ownProps) {
   const recordInteractionState = state.get('recordInteraction');
   return {
+    // url query
+    urlQuery: queryString.parse(ownProps.location.search),
     // global
     // userId: state.get('global').get('user').get('id'),
     // local
     serverError: recordInteractionState.get('serverError'),
     hcps: recordInteractionState.get('hcps').toJS(),
+    hcp: recordInteractionState.get('hcp') && recordInteractionState.get('hcp').toJS(),
     hcpObjectives: recordInteractionState.get('hcpObjectives').toJS(),
     projects: recordInteractionState.get('projects').toJS(),
     resources: recordInteractionState.get('resources').toJS(),
+    // form selectors
     originOfInteraction: selector(state, 'origin_of_interaction'),
     isJointVisit: selector(state, 'is_joint_visit'),
     isAdverseEvent: selector(state, 'is_adverse_event'),
@@ -390,8 +528,9 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    // fetchInteractionRecordingRequiredData: fetchInteractionRecordingRequiredDataActions.request,
-    searchHCPs: searchHCPActions.request,
+    searchHCPs: searchHCPsActions.request,
+    fetchHCP: fetchHCPActions.request,
+    fetchInteractionRecordingRequiredData: fetchInteractionRecordingRequiredDataActions.request,
     recordInteraction: recordInteractionActions.request,
     fetchHCPObjectives: fetchHCPObjectivesActions.request,
   }, dispatch);
@@ -414,6 +553,8 @@ export default compose(
     },
     validate,
     onSubmit: (data, dispatch, props) => {
+      // data.outcome = 'follow_up';
+      // data.description = '...';
       props.recordInteraction(new Interaction(data));
     },
   }),

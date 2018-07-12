@@ -59,7 +59,7 @@ export class App extends React.PureComponent {
               <Route path={routes.NOT_FOUND.path} component={NotFound} />
             </Switch>
           )}
-          <Route kpath={routes.NOT_FOUND.path} component={NotFound} />
+          <Route path={routes.NOT_FOUND.path} component={NotFound} />
         </Switch>
       </React.Fragment>
     );

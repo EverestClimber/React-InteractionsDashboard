@@ -89,7 +89,8 @@ function* logoutSaga() {
 
 export default function* appRootSaga() {
   yield call(getCurrentUserSaga);
-  yield call(getCommonDataSaga);
+
+  yield takeEvery(fetchCommonDataActions.request.type, getCommonDataSaga);
 
   yield takeEvery(REFRESH_TOKEN, refreshTokenSaga);
   yield takeEvery(LOGOUT, logoutSaga);

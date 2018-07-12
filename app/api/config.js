@@ -1,4 +1,5 @@
 import axios from 'axios';
+import routes from 'routes';
 
 function createAxiosInstance(unauthorizedCallback) {
   const baseURL = process.env.NODE_ENV === 'development'
@@ -29,7 +30,9 @@ function createAxiosInstance(unauthorizedCallback) {
 
 function logout() {
   localStorage.removeItem('token');
-  window.location.pathname = '/login';
+  if (window.location.pathname !== routes.LOGIN.path) {
+    window.location.pathname = routes.LOGIN.path;
+  }
 }
 
 const instance = createAxiosInstance(logout);

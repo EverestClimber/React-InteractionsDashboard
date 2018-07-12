@@ -12,6 +12,11 @@ export const setLoading = (loading) => ({ type: LOADING, loading });
 export const refreshToken = () => ({ type: REFRESH_TOKEN });
 export const logout = () => ({ type: LOGOUT });
 
+export const getCurrentUserActions = makeActionCreators('GET_CURRENT_USER', {
+  request: () => ({}),
+  error: (message) => ({ message }),
+});
+
 export const fetchCommonDataActions = makeActionCreators('FETCH_COMMON_DATA', {
   request: () => ({}),
   success: (payload) => ({ payload }),

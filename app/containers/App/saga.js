@@ -10,7 +10,12 @@ import { getAffiliateGroups } from 'api/affiliateGroups';
 import { getTherapeuticAreas } from 'api/therapeuticAreas';
 
 import { LOGOUT, REFRESH_TOKEN } from './constants';
-import { setUser, setLoading, fetchCommonDataActions } from './actions';
+import {
+  setLoading,
+  setUser,
+  getCurrentUserActions,
+  fetchCommonDataActions,
+} from './actions';
 
 
 function* refreshTokenSaga() {
@@ -36,12 +41,13 @@ function* getCurrentUserSaga() {
 
     try {
       const response = yield call(getSelf, token);
-
-      const user = new User(response.data);
-      yield put(setUser(user));
+      const user = User.fromApiData(response.data);
 
       yield put(setLoading(false));
+      yield put(setUser(user));
+
     } catch (error) {
+      yield put(getCurrentUserActions.error(error.message));
       yield put(setLoading(false));
     }
   }
@@ -88,10 +94,8 @@ function* logoutSaga() {
 }
 
 export default function* appRootSaga() {
-  yield call(getCurrentUserSaga);
-
+  yield takeEvery(getCurrentUserActions.request.type, getCurrentUserSaga);
   yield takeEvery(fetchCommonDataActions.request.type, getCommonDataSaga);
-
   yield takeEvery(REFRESH_TOKEN, refreshTokenSaga);
   yield takeEvery(LOGOUT, logoutSaga);
 }

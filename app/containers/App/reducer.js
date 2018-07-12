@@ -17,8 +17,18 @@ const initialState = new Map({
 
 function appReducer(state = initialState, action) {
   switch (action.type) {
-    case SET_USER:
-      return state.set('user', action.payload.user);
+    case SET_USER: {
+      const affiliateGroupsById = state.get('affiliateGroups');
+      const therapeuticAreasById = state.get('therapeuticAreas');
+      const user = (affiliateGroupsById.size || therapeuticAreasById.size)
+        ? User.fromApiData(
+          action.payload.user.toApiData(),
+          affiliateGroupsById,
+          therapeuticAreasById
+        )
+        : action.payload.user;
+      return state.set('user', user);
+    }
 
     case LOGOUT:
       return state.set('user', null);

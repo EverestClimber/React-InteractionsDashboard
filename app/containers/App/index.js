@@ -21,15 +21,8 @@ import {
 } from './actions';
 
 
-// function getCurrentRoute(router, routes) {
-//     const currentRoute = routes.filter(route => route.path && router.isActive(route.path, true));
-//     return currentRoute[0];
-// }
-
-
 export class App extends React.PureComponent {
   static propTypes = {
-    match: PropTypes.object,
     refreshToken: PropTypes.func,
     fetchCommonData: PropTypes.func,
     getCurrentUser: PropTypes.func,
@@ -66,7 +59,6 @@ export class App extends React.PureComponent {
     return (
       <React.Fragment>
         {this.tokenExist && <TopBar />}
-        <pre>{JSON.stringify(this.props.match, null, true)}</pre>
         <Loader />
         <Switch>
           <Route exact path={routes.LOGIN.path} component={Login} />

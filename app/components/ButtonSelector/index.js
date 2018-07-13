@@ -34,7 +34,6 @@ export class ButtonsSelector extends React.Component { // eslint-disable-line
       options,
       disabled,
       meta,
-      ...rest
     } = this.props;
 
     return (
@@ -46,9 +45,8 @@ export class ButtonsSelector extends React.Component { // eslint-disable-line
             <IconButton
               className={i === this.state.selectedIdx && 'IconButton--active'}
               key={opt.value}
-              value={opt.value}
               disabled={disabled}
-              {...rest}
+              {...opt}
               onClick={(ev) => this.handleBtnClick(ev, i, opt.value)}
             />
           ))}

@@ -17,9 +17,10 @@ import {
 import Interaction from 'records/Interaction';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
+import { LabeledFormControl, Options } from 'components/forms';
+import { ButtonsSelector } from 'components/ButtonSelector';
 import reducer from './reducer';
 import saga from './saga';
-import { LabeledFormControl, Options } from '../../components/forms';
 
 import {
   searchHCPsActions,
@@ -226,23 +227,33 @@ export class RecordInteraction extends React.Component { // eslint-disable-line 
 
                       <Field
                         name="type_of_interaction"
-                        component={LabeledFormControl}
-                        type="select"
-                        label="Type of Interaction"
-                      >
-                        <option disabled value="">Pick an option</option>
-                        <Options
-                          choices={Object.entries(Interaction.type_of_interaction_choices)}
-                        />
-                      </Field>
+                        component={ButtonsSelector}
+                        // disabled
+                        options={[
+                          {
+                            icon: 'icon-interaction-phone',
+                            label: 'Phone',
+                            value: 'phone',
+                          },
+                          {
+                            icon: 'icon-interaction-face',
+                            label: 'Face',
+                            value: 'face_to_face',
+                          },
+                          {
+                            icon: 'icon-interaction-email',
+                            label: 'Email',
+                            value: 'email',
+                          },
+                        ]}
+                      />
 
                       <Field
                         name="origin_of_interaction"
                         component={LabeledFormControl}
                         type="select"
-                        label="Origin of Interaction"
                       >
-                        <option disabled value="">Pick an option</option>
+                        <option disabled value="">Select Origin of Interaction</option>
                         <Options
                           choices={Object.entries(Interaction.origin_of_interaction_choices)}
                         />
@@ -494,8 +505,8 @@ export class RecordInteraction extends React.Component { // eslint-disable-line 
 }
 
 const validate = (values) => { // eslint-disable-line no-unused-vars
-  // debugger;
-  // console.log('... VALIDATING:', values);
+                               // debugger;
+                               // console.log('... VALIDATING:', values);
   const errors = {};
   // if (!values.hcp_id) {
   //   errors.hcp_id = 'An HCP must be selected';

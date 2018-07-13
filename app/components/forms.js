@@ -81,7 +81,9 @@ export class LabeledFormControl extends React.PureComponent {
 
       field = (
         <React.Fragment>
-          <BS.ControlLabel>{label}</BS.ControlLabel>
+          {label && (
+            <BS.ControlLabel>{label}</BS.ControlLabel>
+          )}
           <BS.FormControl
             {...input}
             componentClass={componentClassByType[type] || 'input'}

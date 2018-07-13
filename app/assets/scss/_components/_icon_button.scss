@@ -1,0 +1,36 @@
+
+
+.IconButton {
+  height: 45px;
+  padding: 2px;
+  border-radius: 4px !important;
+  text-align: center;
+  min-width: 45px;
+  background: $s-icon-btn-bg;
+  border-color: $s-icon-btn-border;
+  color: $s-icon-btn-text-color;
+  &, .btn-group > &.btn {
+    margin: 0 8px;
+  }
+  &__icon {
+    display: block;
+    font-size: 24px;
+    margin-top: -4px;
+
+  }
+  &__label {
+    font-size: 12px;
+    margin-top: -3px;
+  }
+
+  &[disabled] {
+    color: $s-icon-btn-disabled-text-color;
+    background: $s-icon-btn-disabled-bg;
+  }
+
+  &.IconButton--active {
+    background: $s-icon-btn-active-bg;
+    color: $s-icon-btn-active-text-color;
+    border-color: $s-icon-btn-active-bg;
+  }
+}

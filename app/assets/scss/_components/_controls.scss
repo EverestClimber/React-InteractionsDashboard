@@ -42,7 +42,10 @@ $ctrl-height: 36px;
   &:focus {
     background: $s-ctrl-focused-bg;
   }
-  //@include placeholder {
-  //  color: $s-placeholder-color;
-  //}
+  @include placeholder {
+    color: $s-placeholder-color;
+  }
+  option[disabled] {
+    color: $s-placeholder-color;
+  }
 }

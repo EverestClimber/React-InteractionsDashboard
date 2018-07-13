@@ -5,12 +5,12 @@ import PropTypes from 'prop-types';
 import { IconButton } from '../buttons';
 
 
-export class ButtonsSelector extends React.Component { // eslint-disable-line
+export class ButtonsSelector extends React.Component {
   static propTypes = {
     input: PropTypes.object,
     options: PropTypes.array,
     disabled: PropTypes.bool,
-    meta: PropTypes.string,
+    meta: PropTypes.object,
   };
 
   constructor(props) {

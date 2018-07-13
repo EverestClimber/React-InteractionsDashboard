@@ -49,3 +49,39 @@ $ctrl-height: 36px;
     color: $s-placeholder-color;
   }
 }
+
+label.checkbox,
+label.checkbox-inline {
+  position: relative;
+  overflow: hidden;
+}
+
+input[type="checkbox"] {
+  &:before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 1020px;
+    width: 14px;
+    height: 14px;
+    border: 1px solid $s-cb-box-border;
+    border-radius: 3px;
+  }
+  position: relative;
+  left: -1000px;
+
+  &:checked {
+    &:before {
+      display: block;
+      background: $s-cb-box-active-bg;
+    }
+    &:after {
+      content: '\2714';
+      font-size: 12px;
+      position: absolute;
+      left: 1022px;
+      top: -3px;
+      color: $s-cb-box-active-mark;
+    }
+  }
+}

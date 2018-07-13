@@ -19,6 +19,7 @@ import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
 import { LabeledFormControl, Options } from 'components/forms';
 import { ButtonsSelector } from 'components/ButtonSelector';
+import { ChoiceSelector } from 'components/ChoiceSelector';
 import reducer from './reducer';
 import saga from './saga';
 
@@ -228,7 +229,6 @@ export class RecordInteraction extends React.Component { // eslint-disable-line 
                       <Field
                         name="type_of_interaction"
                         component={ButtonsSelector}
-                        // disabled
                         options={[
                           {
                             icon: 'icon-interaction-phone',
@@ -272,6 +272,12 @@ export class RecordInteraction extends React.Component { // eslint-disable-line 
                     <Col xs={6}>
                       <Row>
                         <Col xs={6}>
+
+                          <Field
+                            name="is_proactive"
+                            component={ChoiceSelector}
+                            choices={[[true, 'Proactive'], [false, 'Reactive']]}
+                          />
 
                           <Field
                             name="is_proactive"
@@ -488,7 +494,7 @@ export class RecordInteraction extends React.Component { // eslint-disable-line 
                 type="submit"
                 disables=""
                 bsStyle="primary"
-                disabled_={pristine || submitting}
+                disabled={pristine || submitting}
               >
                 Save
               </Button>

@@ -1,3 +1,21 @@
 $n-white: #fff;
 $n-black: #000;
-$n-grey-light: #e7eaec;
+$n-blue: #5679bc;
+$n-darkest: #676a6c;
+$n-grey: #a4a6a7;
+$n-grey-light: #e6e8eb;
+$n-grey-lighter: #f3f3f4;
+$n-yellow: #f9ffbc;
+
+$s-border-light: $n-grey-light;
+$s-body-bg: $n-grey-lighter;
+$s-text-color: $n-darkest;
+
+$s-btn-border: $n-blue;
+$s-btn-text-color: $n-blue;
+$s-btn-primary-bg: $n-blue;
+$s-btn-primary-text-color: $n-white;
+$s-placeholder-color: $n-grey;
+$s-ctrl-bg: $n-grey-lighter;
+$s-ctrl-primary-bg: $n-white;
+$s-ctrl-focused-bg: $n-yellow;

@@ -89,10 +89,14 @@ class HCPSelector extends React.Component {
               placeholder="Search HCPs ..."
               onChange={this.handleSearchHCPsInputChange}
               onKeyPress={this.searchHCPsKeyPressed}
+              className="form-control--primary"
             />
           </Col>
           <Col sm={2}>
-            <Button type="submit" block>Add HCP</Button>
+            <Button type="submit" block>
+              <span className="fi-icon icon-nav-hcps" />
+              {' '}New HCP
+            </Button>
           </Col>
         </Row>
         <br />
@@ -473,7 +477,7 @@ export class RecordInteraction extends React.Component { // eslint-disable-line 
                 type="submit"
                 disables=""
                 bsStyle="primary"
-                disabled={pristine || submitting}
+                disabled_={pristine || submitting}
               >
                 Save
               </Button>

@@ -2,4 +2,12 @@
 
 body {
   font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+  color: $s-text-color;
+}
+
+h2 {
+  font-size: rem(16);
+  text-align: center;
+  margin: rem(25) auto rem(20) auto;
 }

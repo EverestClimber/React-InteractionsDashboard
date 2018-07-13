@@ -1,0 +1,48 @@
+$ctrl-height: 36px;
+
+.btn {
+  height: $ctrl-height;
+  padding: 6px 10px;
+  &, &:hover {
+    border-color: $s-btn-border;
+    color: $s-btn-text-color;
+  }
+  &:hover {
+    background: $n-white;
+  }
+  &:not(.btn-block) {
+    margin-right: 15px;
+  }
+  center &:not(.btn-block) {
+    margin-left: 7.5px;
+    margin-right: 7.5px;
+  }
+
+  .fi-icon {
+    position: relative;
+    top: 6px;
+    font-size: 24px;
+    line-height: 10px;
+  }
+}
+
+.btn-primary {
+  background: $s-btn-primary-bg;
+  color: $s-btn-primary-text-color;
+}
+
+.form-control {
+  height: $ctrl-height;
+  padding: 6px 15px;
+  border-color: $s-border-light;
+  background: $s-ctrl-bg;
+  &--primary {
+    background: $s-ctrl-primary-bg;
+  }
+  &:focus {
+    background: $s-ctrl-focused-bg;
+  }
+  //@include placeholder {
+  //  color: $s-placeholder-color;
+  //}
+}

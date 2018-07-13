@@ -16,7 +16,6 @@ import { ConnectedRouter, push } from 'react-router-redux';
 import createHistory from 'history/createBrowserHistory';
 
 // import 'sanitize.css/sanitize.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import 'assets/scss/index.scss';
 
 // Import root app

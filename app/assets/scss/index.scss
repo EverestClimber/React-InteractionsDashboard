@@ -1,8 +1,13 @@
+// customizations:
+// - no glyphicons
+// - @grid-gutter-width: 15px (vs. original 30px)
+@import "_vendor/bootstrap.css";
+//@import "../fonts/otsk-interactions-20180712/style.css";
 @import "_common/index";
 @import "_components/index";
 @import "_views/index";
 
 body {
   min-height: 100vh;
-  background: #f3f3f4;
+  background: $s-body-bg;
 }

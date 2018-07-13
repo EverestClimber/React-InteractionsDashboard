@@ -1,4 +1,4 @@
-import * as queryString from 'query-string';
+import * as qs from 'qs';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { compose, bindActionCreators } from 'redux';
@@ -513,7 +513,7 @@ function mapStateToProps(state, ownProps) {
   const recordInteractionState = state.get('recordInteraction');
   return {
     // url query
-    urlQuery: queryString.parse(ownProps.location.search),
+    urlQuery: qs.parse(ownProps.location.search),
     // global
     // userId: state.get('global').get('user').get('id'),
     // local

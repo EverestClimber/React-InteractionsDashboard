@@ -236,7 +236,7 @@
     "moment": "^2.22.2",
     "popper.js": "^1.14.3",
     "prop-types": "15.5.10",
-    "query-string": "^6.1.0",
+    "qs": "^6.5.2",
     "react": "^16.4.0",
     "react-bootstrap": "^0.32.1",
     "react-dom": "^16.4.0",

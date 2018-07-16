@@ -7,6 +7,8 @@
   $s-consent-no-text: $n-red;
   $s-consent-no-border: $n-red;
 
+  position: relative;
+
   &__location {
     [class^="icon-"] {
       font-size: rem(28);
@@ -21,17 +23,33 @@
   }
 
   &__ListHCPs {
-    position: relative;
-    background: $n-white;
-    margin: 0 0 15px 0;
-    color: $n-darkest;
-    min-height: 150px;
-    max-height: 240px;
-    border: 1px solid $n-grey-light;
-    border-radius: 4px;
-    box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.15);
 
     &__container {
+      padding: 0 15px 0 0;
+      position: absolute;
+      z-index: 100;
+      top: 40px;
+      pointer-events: none;
+      width: calc(100% + 15px);
+
+      @media (max-width: 768px) {
+        top: 34px;
+      }
+    }
+
+    &__content {
+      position: relative;
+      background: $n-white;
+      margin: 0 0 15px 0;
+      color: $n-darkest;
+      height: 240px;
+      border: 1px solid $n-grey-light;
+      border-radius: 4px;
+      box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.15);
+      pointer-events: auto;
+    }
+
+    &__box {
       position: absolute;
       left: 0;
       top: 15px;

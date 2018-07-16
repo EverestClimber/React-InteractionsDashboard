@@ -25,6 +25,9 @@ import {
 import { setLoading } from '../App/actions';
 
 
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+
 function* fetchInteractionRecordingRequiredDataSaga() {
   yield put(setLoading(true));
 
@@ -57,6 +60,9 @@ function* fetchInteractionRecordingRequiredDataSaga() {
 
 
 function* searchHCPsSaga({ search }) {
+  // debounce
+  yield delay(500);
+
   try {
     const res = yield call(getHCPs, { search });
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Grid,
   Col,
   Row,
   Panel,
@@ -22,12 +23,10 @@ export default class HCPSelector extends React.Component {
     onHCPSelected: PropTypes.func,
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      searchHCPsText: '',
-    };
-  }
+  state = {
+    searchHCPsText: '',
+    showList: false,
+  };
 
   componentDidMount() {
     console.log('=== props', this.props);
@@ -40,6 +39,7 @@ export default class HCPSelector extends React.Component {
 
   handleSearchHCPsInputChange = (event) => {
     this.setState({ searchHCPsText: event.target.value });
+    this.props.searchHCPs(event.target.value);
   };
 
   searchHCPsKeyPressed = (event) => {
@@ -48,6 +48,17 @@ export default class HCPSelector extends React.Component {
       console.log('...will search for HCPs');
       this.props.searchHCPs(this.state.searchHCPsText);
     }
+  };
+
+  searchHCPsFocused = () => {
+    this.setState({ showList: true });
+  };
+
+  searchHCPsBlured = () => {
+    setTimeout(
+      () => this.setState({ showList: false }),
+      250
+    );
   };
 
   handleHCPSelection = (hcpId) => {
@@ -68,6 +79,8 @@ export default class HCPSelector extends React.Component {
               placeholder="Search HCPs ..."
               onChange={this.handleSearchHCPsInputChange}
               onKeyPress={this.searchHCPsKeyPressed}
+              onFocus={this.searchHCPsFocused}
+              onBlur={this.searchHCPsBlured}
               className="form-control--primary"
             />
           </Col>
@@ -80,7 +93,9 @@ export default class HCPSelector extends React.Component {
         </Row>
         <br />
 
-        <ListHCPs hcps={hcps} handleSelect={this.handleHCPSelection} />
+        {(this.state.showList && hcps && hcps.length) ? (
+          <ListHCPs hcps={hcps} handleSelect={this.handleHCPSelection} />
+        ) : null}
 
         {hcp && <SelectedHCP hcp={hcp} handleRemove={() => this.handleHCPSelection(null)} />}
       </div>
@@ -90,44 +105,50 @@ export default class HCPSelector extends React.Component {
 
 
 const ListHCPs = ({ hcps, handleSelect }) => ( // eslint-disable-line react/prop-types
-  <div className="HCPSelector__ListHCPs">
-    <div className="HCPSelector__ListHCPs__container">
-      <div className="HCPSelector__ListHCPs__list">
-        {hcps.map((hcp) => (
-          <div
-            key={hcp.id}
-            className="HCPSelector__ListHCPs__HCP"
-            role="button"
-            tabIndex={0}
-            onClick={() => handleSelect(hcp.id)}
-          >
-            <div className="HCPSelector__ListHCPs__HCP__name">
-              {hcp.first_name} {hcp.last_name}
-            </div>
+  <Grid className="HCPSelector__ListHCPs__container">
+    <Row>
+      <Col sm={10}>
+        <div className="HCPSelector__ListHCPs__content">
+          <div className="HCPSelector__ListHCPs__box">
+            <div className="HCPSelector__ListHCPs__list">
+              {hcps.map((hcp) => (
+                <div
+                  key={hcp.id}
+                  className="HCPSelector__ListHCPs__HCP"
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => handleSelect(hcp.id)}
+                >
+                  <div className="HCPSelector__ListHCPs__HCP__name">
+                    {hcp.first_name} {hcp.last_name}
+                  </div>
 
-            <div className="HCPSelector__ListHCPs__HCP__institution">
-              {hcp.institution_name}
-            </div>
+                  <div className="HCPSelector__ListHCPs__HCP__institution">
+                    {hcp.institution_name}
+                  </div>
 
-            <div className="HCPSelector__ListHCPs__HCP__location HCPSelector__location">
-              <span className="icon-hcp-location" />
-              <span className="HCPSelector__location__city">
-                {hcp.city}
-              </span>
-              {', '}
-              <span className="HCPSelector__location__country">
-                {hcp.country}
-              </span>
-            </div>
+                  <div className="HCPSelector__ListHCPs__HCP__location HCPSelector__location">
+                    <span className="icon-hcp-location" />
+                    <span className="HCPSelector__location__city">
+                      {hcp.city}
+                    </span>
+                    {', '}
+                    <span className="HCPSelector__location__country">
+                      {hcp.country}
+                    </span>
+                  </div>
 
-            <div className="HCPSelector__ListHCPs__HCP__tas">
-              {hcp.ta_names.join(', ')}
+                  <div className="HCPSelector__ListHCPs__HCP__tas">
+                    {hcp.ta_names.join(', ')}
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        ))}
-      </div>
-    </div>
-  </div>
+        </div>
+      </Col>
+    </Row>
+  </Grid>
 );
 
 

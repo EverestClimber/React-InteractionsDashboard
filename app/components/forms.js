@@ -1,5 +1,6 @@
 import React from 'react';
 import * as BS from 'react-bootstrap';
+import Select from 'react-select';
 import PropTypes from 'prop-types';
 
 
@@ -38,6 +39,16 @@ export const Options = ({ choices }) => choices.map(([val, text]) => ( // eslint
     {text}
   </option>
 ));
+
+
+export const SearchSelect = ({ options, input: { value, onChange }, ...rest }) => ( // eslint-disable-line react/prop-types
+  <Select
+    value={options.find((opt) => String(opt.value) === String(value))}
+    onChange={(selectedOption) => onChange(selectedOption.value)}
+    options={options}
+    {...rest}
+  />
+);
 
 
 export class LabeledFormControl extends React.PureComponent {

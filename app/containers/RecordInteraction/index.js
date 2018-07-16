@@ -14,12 +14,15 @@ import {
   FormControl,
   Table,
 } from 'react-bootstrap';
+import Select from 'react-select';
+
 import Interaction from 'records/Interaction';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
-import { LabeledFormControl, Options } from 'components/forms';
+import { SearchSelect, LabeledFormControl, Options } from 'components/forms';
 import { ButtonsSelector } from 'components/ButtonSelector';
 import { ChoiceSelector } from 'components/ChoiceSelector';
+
 import reducer from './reducer';
 import saga from './saga';
 
@@ -170,6 +173,10 @@ export class RecordInteraction extends React.Component { // eslint-disable-line 
     // serverError: PropTypes.string,
   };
 
+  state = {
+    selectedOption: '',
+  };
+
   componentDidMount() {
     this.props.fetchInteractionRecordingRequiredData();
     const hcpId = parseInt(this.props.urlQuery.hcp, 10);
@@ -178,6 +185,14 @@ export class RecordInteraction extends React.Component { // eslint-disable-line 
       this.props.fetchHCPObjectives(hcpId);
     }
   }
+
+  handleChange = (selectedOption) => {
+    this.setState({ selectedOption });
+    // selectedOption can be null when the `x` (close) button is clicked
+    if (selectedOption) {
+      console.log(`Selected: ${selectedOption.label}`);
+    }
+  };
 
   render() {
     const {
@@ -205,6 +220,27 @@ export class RecordInteraction extends React.Component { // eslint-disable-line 
         </Helmet>
 
         <h2>Record Interaction</h2>
+
+        <hr />
+        <Select
+          name="form-field-name"
+          value={this.state.selectedOption}
+          onChange={this.handleChange}
+          options={[
+            { value: 'one', label: 'One' },
+            { value: 'two', label: 'Two' },
+          ]}
+        />
+        <hr />
+        <Field
+          name="test_select"
+          component={SearchSelect}
+          options={[
+            { value: 'one', label: 'First' },
+            { value: 'two', label: 'Second' },
+          ]}
+        />
+        <hr />
 
         <form onSubmit={handleSubmit}>
 
@@ -329,6 +365,16 @@ export class RecordInteraction extends React.Component { // eslint-disable-line 
                 <Panel.Body>
                   <Row>
                     <Col xs={6}>
+
+                      <Field
+                        name="hcp_objective_id"
+                        component={SearchSelect}
+                        options={hcpObjectives.map((it) => ({
+                          value: String(it.id),
+                          label: it.description,
+                        }))}
+                      />
+                      <hr />
 
                       <Field
                         name="hcp_objective_id"

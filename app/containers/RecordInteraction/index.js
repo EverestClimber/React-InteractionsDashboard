@@ -128,6 +128,7 @@ export class RecordInteraction extends React.Component {
               <Panel>
                 <Panel.Heading>Interaction</Panel.Heading>
                 <Panel.Body>
+
                   <Row>
                     <Col xs={6}>
 
@@ -153,6 +154,38 @@ export class RecordInteraction extends React.Component {
                         ]}
                       />
 
+                    </Col>
+                    <Col xs={6}>
+
+                      <Row>
+                        <Col xs={6}>
+
+                          <Field
+                            name="is_proactive"
+                            component={ChoiceSelector}
+                            choices={[[true, 'Proactive'], [false, 'Reactive']]}
+                          />
+
+                        </Col>
+                        <Col xs={6}>
+
+                          <Field
+                            name="time_of_interaction"
+                            component={FlatpickrDateTime}
+                            label="Time of interaction"
+                            className="form-control"
+                            data-enable-time
+                          />
+
+                        </Col>
+                      </Row>
+
+                    </Col>
+                  </Row>
+
+                  <Row>
+                    <Col xs={6}>
+
                       <Field
                         name="origin_of_interaction"
                         component={LabeledFormControl}
@@ -175,46 +208,7 @@ export class RecordInteraction extends React.Component {
 
                     </Col>
                     <Col xs={6}>
-                      <Row>
-                        <Col xs={6}>
 
-                          <Field
-                            name="is_proactive"
-                            component={ChoiceSelector}
-                            choices={[[true, 'Proactive'], [false, 'Reactive']]}
-                          />
-
-                          <Field
-                            name="is_proactive"
-                            component={LabeledFormControl}
-                            type="select"
-                            label="Proactive or reactive?"
-                          >
-                            <option disabled value="">Select</option>
-                            <Options
-                              choices={[[true, 'Proactive'], [false, 'Reactive']]}
-                            />
-                          </Field>
-
-                        </Col>
-                        <Col xs={6}>
-
-                          <Field
-                            name="time_of_interaction"
-                            component={LabeledFormControl}
-                            type="datetime-local"
-                            label="Time of interaction"
-                          />
-
-                          <Field
-                            name="time_of_interaction"
-                            component={FlatpickrDateTime}
-                            label="Time of interaction"
-                            className="form-control"
-                          />
-
-                        </Col>
-                      </Row>
                       <Row>
                         <Col xs={12}>
 
@@ -222,13 +216,14 @@ export class RecordInteraction extends React.Component {
                             name="purpose"
                             component={LabeledFormControl}
                             type="text"
-                            label="Purpose"
+                            placeholder="Enter purpose of interaction"
                           />
 
                         </Col>
                       </Row>
                     </Col>
                   </Row>
+
                 </Panel.Body>
               </Panel>
             </Col>
@@ -244,42 +239,26 @@ export class RecordInteraction extends React.Component {
 
                       <Field
                         name="hcp_objective_id"
+                        placeholder="Select HCP Objective"
                         component={SearchSelect}
                         options={hcpObjectives.map((it) => ({
-                          value: String(it.id),
+                          value: it.id,
                           label: it.description,
                         }))}
                       />
-                      <hr />
-
-                      <Field
-                        name="hcp_objective_id"
-                        component={LabeledFormControl}
-                        type="select"
-                        label="HCP Objective"
-                      >
-                        <option disabled value="">Select a HCP Objective</option>
-                        <Options
-                          choices={hcpObjectives.map((it) => [
-                            it.id,
-                            it.description])}
-                        />
-                      </Field>
 
                     </Col>
                     <Col xs={6}>
 
                       <Field
                         name="project_id"
-                        component={LabeledFormControl}
-                        type="select"
-                        label="Project"
-                      >
-                        <option disabled value="">Select a Project</option>
-                        <Options
-                          choices={projects.map((it) => [it.id, it.title])}
-                        />
-                      </Field>
+                        placeholder="Select Project"
+                        component={SearchSelect}
+                        options={projects.map((it) => ({
+                          value: it.id,
+                          label: it.title,
+                        }))}
+                      />
 
                     </Col>
                   </Row>
@@ -291,25 +270,22 @@ export class RecordInteraction extends React.Component {
           <Row>
             <Col xs={12}>
               <Panel>
-                <Panel.Heading>resources</Panel.Heading>
+                <Panel.Heading>Resources</Panel.Heading>
                 <Panel.Body>
                   <Row>
-                    <Col xs={6}>
+                    <Col xs={12}>
 
                       <Field
                         name="resources"
-                        component={LabeledFormControl}
-                        type="select"
-                        label="Projects"
-                        multiple
-                      >
-                        <Options
-                          choices={resources.map((it) => [it.id, it.title])}
-                        />
-                      </Field>
+                        placeholder="Resources Used"
+                        component={SearchSelect}
+                        options={resources.map((it) => ({
+                          value: it.id,
+                          label: it.title,
+                        }))}
+                        isMulti
+                      />
 
-                    </Col>
-                    <Col xs={6}>
                     </Col>
                   </Row>
                   <Row>
@@ -317,8 +293,8 @@ export class RecordInteraction extends React.Component {
 
                       <Field
                         name="is_adverse_event"
-                        component={LabeledFormControl}
-                        type="checkbox"
+                        component={ChoiceSelector}
+                        choices={[[true, 'Yes'], [false, 'No']]}
                         label="Adverse Event"
                       />
 
@@ -336,8 +312,8 @@ export class RecordInteraction extends React.Component {
 
                       <Field
                         name="is_joint_visit"
-                        component={LabeledFormControl}
-                        type="checkbox"
+                        component={ChoiceSelector}
+                        choices={[[true, 'Yes'], [false, 'No']]}
                         label="Joint Visit"
                       />
 
@@ -368,16 +344,16 @@ export class RecordInteraction extends React.Component {
           <Row>
             <Col xs={12}>
               <Panel>
-                <Panel.Heading>outcome & follow-up</Panel.Heading>
+                <Panel.Heading>Outcome & Follow-up</Panel.Heading>
                 <Panel.Body>
                   <Row>
                     <Col xs={3}>
 
                       <Field
                         name="follow_up_date"
-                        component={LabeledFormControl}
-                        type="text"
-                        label="Follow-up date"
+                        component={FlatpickrDateTime}
+                        className="form-control"
+                        placeholder="Follow-up Date"
                       />
 
                     </Col>
@@ -387,7 +363,7 @@ export class RecordInteraction extends React.Component {
                         name="follow_up_notes"
                         component={LabeledFormControl}
                         type="text"
-                        label="Follow-up notes"
+                        placeholder="Follow-up notes"
                       />
 
                     </Col>
@@ -433,8 +409,8 @@ export class RecordInteraction extends React.Component {
 }
 
 const validate = (values) => { // eslint-disable-line no-unused-vars
-                               // debugger;
-                               // console.log('... VALIDATING:', values);
+  // debugger;
+  // console.log('... VALIDATING:', values);
   const errors = {};
   // if (!values.hcp_id) {
   //   errors.hcp_id = 'An HCP must be selected';

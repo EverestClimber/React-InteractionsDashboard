@@ -42,14 +42,36 @@ export const Options = ({ choices }) => choices.map(([val, text]) => ( // eslint
 ));
 
 
-export const SearchSelect = ({ options, input: { value, onChange }, ...rest }) => { // eslint-disable-line
+export const SearchSelect = ({ options, input: { value, onChange }, isMulti, ...rest }) => { // eslint-disable-line
   // NOTE: react-select's Select expects the value to be of form
   //  `{label, value}` or `null` (NOT undefined! if it receives undefined, it keeps
   //  showing the old selected value instead!)
+
+  const onSelectChange = (selected) => {
+    if (!isMulti) {
+      onChange(selected.value);
+    } else {
+      onChange(selected.map((opt) => opt.value));
+    }
+  };
+
+  let selectValue;
+  if (!isMulti) {
+    selectValue = options.find((opt) => String(opt.value) === String(value)) || null;
+  } else {
+    selectValue = value.map((v) => options.find(
+      (opt) => String(opt.value) === String(v)
+    )).filter((x) => x);
+    if (!selectValue.length) {
+      selectValue = null;
+    }
+  }
+
   return (<Select
-    value={options.find((opt) => String(opt.value) === String(value)) || null}
-    onChange={(selectedOption) => onChange(selectedOption.value)}
+    value={selectValue}
+    onChange={onSelectChange}
     options={options}
+    isMulti={isMulti}
     {...rest}
   />);
 };
@@ -57,7 +79,6 @@ export const SearchSelect = ({ options, input: { value, onChange }, ...rest }) =
 
 export const FlatpickrDateTime = ({ options, input: { value, onChange }, ...rest }) => ( // eslint-disable-line react/prop-types
   <Flatpickr
-    data-enable-time
     value={value}
     onChange={onChange}
     {...rest}

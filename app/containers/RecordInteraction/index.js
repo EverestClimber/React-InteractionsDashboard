@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { compose, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
-import { reduxForm, formValueSelector, Field } from 'redux-form/immutable';
+import { reduxForm, formValueSelector, Field, change } from 'redux-form/immutable';
 import {
   Grid,
   Col,
@@ -477,7 +477,11 @@ function mapDispatchToProps(dispatch) {
     fetchHCP: fetchHCPActions.request,
     fetchInteractionRecordingRequiredData: fetchInteractionRecordingRequiredDataActions.request,
     recordInteraction: recordInteractionActions.request,
-    fetchHCPObjectives: fetchHCPObjectivesActions.request,
+    fetchHCPObjectives: (hcpId) => {
+      console.log('-- WILL DISPATCH:', change('recordInteraction', 'hcp_objective_id', ''));
+      dispatch(change('recordInteraction', 'hcp_objective_id', ''));
+      return fetchHCPObjectivesActions.request(hcpId);
+    },
   }, dispatch);
 }
 

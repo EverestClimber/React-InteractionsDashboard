@@ -42,14 +42,17 @@ export const Options = ({ choices }) => choices.map(([val, text]) => ( // eslint
 ));
 
 
-export const SearchSelect = ({ options, input: { value, onChange }, ...rest }) => ( // eslint-disable-line react/prop-types
-  <Select
-    value={options.find((opt) => String(opt.value) === String(value))}
+export const SearchSelect = ({ options, input: { value, onChange }, ...rest }) => { // eslint-disable-line
+  // NOTE: react-select's Select expects the value to be of form
+  //  `{label, value}` or `null` (NOT undefined! if it receives undefined, it keeps
+  //  showing the old selected value instead!)
+  return (<Select
+    value={options.find((opt) => String(opt.value) === String(value)) || null}
     onChange={(selectedOption) => onChange(selectedOption.value)}
     options={options}
     {...rest}
-  />
-);
+  />);
+};
 
 
 export const FlatpickrDateTime = ({ options, input: { value, onChange }, ...rest }) => ( // eslint-disable-line react/prop-types

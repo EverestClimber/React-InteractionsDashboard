@@ -3,7 +3,6 @@ import {
   Col,
   Row,
   Panel,
-  Table,
   FormControl,
   Button,
 } from 'react-bootstrap';
@@ -35,6 +34,7 @@ export default class HCPSelector extends React.Component {
     const hcpId = this.props.input.value;
     if (hcpId) {
       this.props.fetchHCP(hcpId);
+      this.props.onHCPSelected(hcpId);
     }
   }
 
@@ -50,9 +50,7 @@ export default class HCPSelector extends React.Component {
     }
   };
 
-  handleHCPSelection = (event) => {
-    // console.log('=== props:', this.props);
-    const hcpId = event.target.value;
+  handleHCPSelection = (hcpId) => {
     this.props.input.onChange(hcpId);
     this.props.fetchHCP(hcpId);
     this.props.onHCPSelected(hcpId);
@@ -82,58 +80,97 @@ export default class HCPSelector extends React.Component {
         </Row>
         <br />
 
-        <Row>
-          <Col xs={12}>
-            <Table bordered condensed hover>
-              <tbody>
-                {hcps.map((it) => (
-                  <tr key={it.id}>
-                    <td>
-                      <input type="radio" name="hcp" value={it.id} onChange={this.handleHCPSelection} />
-                    </td>
-                    <td>{it.first_name} {it.last_name}</td>
-                    <td>{it.institution_name}</td>
-                    <td>{it.city}, {it.country}</td>
-                    <td>{it.ta_names.join(', ')}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </Col>
-        </Row>
-        <br />
+        <ListHCPs hcps={hcps} handleSelect={this.handleHCPSelection} />
 
-        {hcp && <SelectedHCP hcp={hcp} />}
+        {hcp && <SelectedHCP hcp={hcp} handleRemove={() => this.handleHCPSelection(null)} />}
       </div>
     );
   }
 }
 
 
-const SelectedHCP = ({ hcp }) => ( // eslint-disable-line react/prop-types
-  <Panel className="HCPSelector__SelectedHCP">
+const ListHCPs = ({ hcps, handleSelect }) => ( // eslint-disable-line react/prop-types
+  <div className="HCPSelector__ListHCPs">
+    <div className="HCPSelector__ListHCPs__container">
+      <div className="HCPSelector__ListHCPs__list">
+        {hcps.map((hcp) => (
+          <div
+            key={hcp.id}
+            className="HCPSelector__ListHCPs__HCP"
+            role="button"
+            tabIndex={0}
+            onClick={() => handleSelect(hcp.id)}
+          >
+            <div className="HCPSelector__ListHCPs__HCP__name">
+              {hcp.first_name} {hcp.last_name}
+            </div>
+
+            <div className="HCPSelector__ListHCPs__HCP__institution">
+              {hcp.institution_name}
+            </div>
+
+            <div className="HCPSelector__ListHCPs__HCP__location HCPSelector__location">
+              <span className="icon-hcp-location" />
+              <span className="HCPSelector__location__city">
+                {hcp.city}
+              </span>
+              {', '}
+              <span className="HCPSelector__location__country">
+                {hcp.country}
+              </span>
+            </div>
+
+            <div className="HCPSelector__ListHCPs__HCP__tas">
+              {hcp.ta_names.join(', ')}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
+
+const SelectedHCP = ({ hcp, handleRemove }) => ( // eslint-disable-line react/prop-types
+  <Panel
+    className={`HCPSelector__SelectedHCP HCPSelector__SelectedHCP--${hcp.has_consented ? 'consentYes' : 'consentNo'}`}
+  >
     <Panel.Body>
       <div className="HCPSelector__SelectedHCP__heading">
         <span className="HCPSelector__SelectedHCP__name">
           Dr. {hcp.first_name} {hcp.last_name}
         </span>
-        <span className={`HCPSelector__SelectedHCP__consent HCPSelector__SelectedHCP__consent--${hcp.has_consented ? 'yes' : 'no'}`}>
+        <span
+          className={`HCPSelector__SelectedHCP__consent HCPSelector__SelectedHCP__consent--${hcp.has_consented ? 'yes' : 'no'}`}
+        >
           <span className={hcp.has_consented ? 'icon-consent-yes' : 'icon-consent-no'} />
+          <span className="HCPSelector__SelectedHCP__consent__label">
+            {hcp.has_consented ? '' : 'NO CONSENT'}
+          </span>
         </span>
-        <div className="HCPSelector__SelectedHCP__institution_name">
-          {hcp.institution_name}
-        </div>
-        <div className="HCPSelector__SelectedHCP__location">
-          <div className="HCPSelector__SelectedHCP__location__city">
-            {hcp.city}
-          </div>
-          <div className="HCPSelector__SelectedHCP__location__country">
-            {hcp.country}
-          </div>
-        </div>
-        <div className="HCPSelector__SelectedHCP__tas">
-          {hcp.ta_names.join(', ')}
-        </div>
+        <span
+          className="HCPSelector__SelectedHCP__remove icon-delete"
+          role="button"
+          tabIndex={0}
+          onClick={handleRemove}
+        />
+      </div>
+      <div className="HCPSelector__SelectedHCP__location HCPSelector__location">
+        <span className="icon-hcp-location" />
+        <span className="HCPSelector__SelectedHCP__location__city">
+          {hcp.city}
+        </span>
+        {', '}
+        <span className="HCPSelector__SelectedHCP__location__country">
+          {hcp.country}
+        </span>
+      </div>
+      <div className="HCPSelector__SelectedHCP__tas">
+        {hcp.ta_names.join(', ')}
+      </div>
+      <div className="HCPSelector__SelectedHCP__institution_name">
+        <span className="icon-hcp-hospital" />{' '}
+        {hcp.institution_name}
       </div>
     </Panel.Body>
   </Panel>

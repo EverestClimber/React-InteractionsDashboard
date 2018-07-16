@@ -1,6 +1,13 @@
 
-
 .IconButton {
+  $s-icon-btn-bg: $n-white;
+  $s-icon-btn-text-color: $n-grey;
+  $s-icon-btn-border: $n-grey-light;
+  $s-icon-btn-active-bg: $n-blue;
+  $s-icon-btn-active-text-color: $n-white;
+  $s-icon-btn-disabled-bg: $n-grey-lighter;
+  $s-icon-btn-disabled-text-color: $n-grey-darker;
+
   height: 45px;
   padding: 2px;
   border-radius: 4px !important;

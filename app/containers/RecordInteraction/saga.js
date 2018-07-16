@@ -76,6 +76,11 @@ function* searchHCPsSaga({ search }) {
 
 
 function* fetchHCPSaga({ hcpId }) {
+  if (!hcpId) {
+    yield put(fetchHCPActions.success(null));
+    return;
+  }
+
   try {
     const res = yield call(getHCP, hcpId);
 
@@ -93,6 +98,11 @@ function* fetchHCPSaga({ hcpId }) {
 
 
 function* fetchHCPObjectivesSaga({ hcpId }) {
+  if (!hcpId) {
+    yield put(fetchHCPObjectivesActions.success(new List()));
+    return;
+  }
+
   try {
     const res = yield call(getHCPObjectives, { hcp: hcpId });
     const hcpObjectives = new List(res.data.map(

@@ -1,0 +1,144 @@
+
+.HCPSelector {
+  $s-text: $n-grey;
+  $s-name-text: $n-blue;
+  $s-consent-yes-text: $n-green;
+  $s-consent-yes-border: $n-green;
+  $s-consent-no-text: $n-red;
+  $s-consent-no-border: $n-red;
+
+  &__location {
+    [class^="icon-"] {
+      font-size: rem(28);
+      position: relative;
+      top: 4px;
+      line-height: 10px;
+    }
+    &__city {
+    }
+    &__country {
+    }
+  }
+
+  &__ListHCPs {
+    position: relative;
+    background: $n-white;
+    margin: 0 0 15px 0;
+    color: $n-darkest;
+    min-height: 150px;
+    max-height: 240px;
+    border: 1px solid $n-grey-light;
+    border-radius: 4px;
+    box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.15);
+
+    &__container {
+      position: absolute;
+      left: 0;
+      top: 15px;
+      width: 100%;
+      height: calc(100% - 30px);
+      overflow-y: scroll;
+      border-radius: 4px;
+    }
+
+    &__list {
+      width: auto;
+    }
+    &__HCP {
+      clear: both;
+      cursor: pointer;
+      border-bottom: 1px solid $n-grey-light;
+      &:last-of-type {
+        border-bottom: 0;
+      }
+      &:hover {
+        background: $n-grey-light;
+      }
+      > * {
+        display: inline-block;
+        padding: 10px 15px;
+      }
+      &__name {
+        min-width: 200px;
+      }
+      &__institution {
+        min-width: 250px;
+      }
+      &__location {
+        min-width: 150px;
+      }
+      &__tas {
+      }
+    }
+  }
+
+  &__SelectedHCP {
+    position: relative;
+    border: 1px solid;
+    color: $s-text;
+    &--consentYes {
+      border-color: $s-consent-yes-border;
+    }
+    &--consentNo {
+      border-color: $s-consent-no-border;
+    }
+    &__heading {
+      margin: 5px 0 0 0;
+    }
+    &__remove {
+      font-size: rem(30);
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      cursor: pointer;
+    }
+    &__consent {
+      &__label {
+        position: relative;
+        top: rem(-5);
+        font-size: rem(10);
+        line-height: rem(20);
+      }
+      [class^="icon-"] {
+        line-height: 10px;
+      }
+    }
+    &__name {
+      font-size: rem(16);
+      color: $s-name-text;
+    }
+    &__consent {
+      position: relative;
+      top: 5px;
+      font-size: rem(24);
+      line-height: 10px;
+      margin-left: 2px;
+      &--yes {
+        color: $s-consent-yes-text;
+      }
+      &--no {
+        color: $s-consent-no-text;
+      }
+    }
+    &__institution_name {
+      padding-top: rem(20);
+      [class^="icon-"] {
+        font-size: rem(26);
+        position: relative;
+        top: 4px;
+        line-height: 10px;
+        margin-left: -10px;
+      }
+    }
+    &__location {
+      text-align: right;
+      float: right;
+      clear: right;
+    }
+    &__tas {
+      text-align: right;
+      float: right;
+      clear: right;
+    }
+  }
+}

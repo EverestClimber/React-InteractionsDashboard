@@ -7,6 +7,8 @@ $n-grey: #a4a6a7;
 $n-grey-light: #e6e8eb;
 $n-grey-lighter: #f3f3f4;
 $n-yellow: #f9ffbc;
+$n-green: #55bd79;
+$n-red: #ba0d2b;
 
 $s-border-light: $n-grey-light;
 $s-body-bg: $n-grey-lighter;
@@ -22,16 +24,9 @@ $s-ctrl-bg-disabled: $n-grey-lighter;
 $s-ctrl-primary-bg: $n-white;
 $s-ctrl-focused-bg: $n-yellow;
 
-$s-icon-btn-bg: $n-white;
-$s-icon-btn-text-color: $n-grey;
-$s-icon-btn-border: $n-grey-light;
-$s-icon-btn-active-bg: $n-blue;
-$s-icon-btn-active-text-color: $n-white;
-$s-icon-btn-disabled-bg: $n-grey-lighter;
-$s-icon-btn-disabled-text-color: $n-grey-darker;
-
 $s-cb-box-bg: $n-white;
 $s-cb-box-border: $n-blue;
 $s-cb-box-active-bg: $n-blue;
 $s-cb-box-active-border: $n-blue;
 $s-cb-box-active-mark: $n-white;
+

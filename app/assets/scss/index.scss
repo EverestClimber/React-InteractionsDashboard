@@ -9,6 +9,10 @@
 @import "_components/index";
 @import "_views/index";
 
+* {
+  @include scrollbars;
+}
+
 body {
   min-height: 100vh;
   background: $s-body-bg;

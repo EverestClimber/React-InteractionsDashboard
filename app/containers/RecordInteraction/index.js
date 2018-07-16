@@ -14,12 +14,11 @@ import {
   FormControl,
   Table,
 } from 'react-bootstrap';
-import Select from 'react-select';
 
 import Interaction from 'records/Interaction';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
-import { SearchSelect, LabeledFormControl, Options } from 'components/forms';
+import { FlatpickrDateTime, SearchSelect, LabeledFormControl, Options } from 'components/forms';
 import { ButtonsSelector } from 'components/ButtonSelector';
 import { ChoiceSelector } from 'components/ChoiceSelector';
 
@@ -221,27 +220,6 @@ export class RecordInteraction extends React.Component { // eslint-disable-line 
 
         <h2>Record Interaction</h2>
 
-        <hr />
-        <Select
-          name="form-field-name"
-          value={this.state.selectedOption}
-          onChange={this.handleChange}
-          options={[
-            { value: 'one', label: 'One' },
-            { value: 'two', label: 'Two' },
-          ]}
-        />
-        <hr />
-        <Field
-          name="test_select"
-          component={SearchSelect}
-          options={[
-            { value: 'one', label: 'First' },
-            { value: 'two', label: 'Second' },
-          ]}
-        />
-        <hr />
-
         <form onSubmit={handleSubmit}>
 
           <Field
@@ -333,8 +311,15 @@ export class RecordInteraction extends React.Component { // eslint-disable-line 
                           <Field
                             name="time_of_interaction"
                             component={LabeledFormControl}
-                            type="text"
+                            type="datetime-local"
                             label="Time of interaction"
+                          />
+
+                          <Field
+                            name="time_of_interaction"
+                            component={FlatpickrDateTime}
+                            label="Time of interaction"
+                            className="form-control"
                           />
 
                         </Col>
@@ -557,8 +542,8 @@ export class RecordInteraction extends React.Component { // eslint-disable-line 
 }
 
 const validate = (values) => { // eslint-disable-line no-unused-vars
-                               // debugger;
-                               // console.log('... VALIDATING:', values);
+  // debugger;
+  // console.log('... VALIDATING:', values);
   const errors = {};
   // if (!values.hcp_id) {
   //   errors.hcp_id = 'An HCP must be selected';

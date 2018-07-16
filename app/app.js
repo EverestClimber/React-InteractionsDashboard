@@ -16,7 +16,7 @@ import { ConnectedRouter, push } from 'react-router-redux';
 import createHistory from 'history/createBrowserHistory';
 
 // import 'sanitize.css/sanitize.css';
-// import 'react-select/dist/react-select.css';
+import 'flatpickr/dist/themes/material_red.css';
 import 'assets/scss/index.scss';
 
 // Import root app

@@ -2,6 +2,7 @@ import React from 'react';
 import * as BS from 'react-bootstrap';
 import Select from 'react-select';
 import PropTypes from 'prop-types';
+import Flatpickr from 'react-flatpickr';
 
 
 export const FormControl = ({ input, type, ...rest }) => { // eslint-disable-line react/prop-types
@@ -51,6 +52,16 @@ export const SearchSelect = ({ options, input: { value, onChange }, ...rest }) =
 );
 
 
+export const FlatpickrDateTime = ({ options, input: { value, onChange }, ...rest }) => ( // eslint-disable-line react/prop-types
+  <Flatpickr
+    data-enable-time
+    value={value}
+    onChange={onChange}
+    {...rest}
+  />
+);
+
+
 export class LabeledFormControl extends React.PureComponent {
   static propTypes = {
     input: PropTypes.object,
@@ -87,7 +98,8 @@ export class LabeledFormControl extends React.PureComponent {
       );
     } else {
       const componentClassByType = {
-        select: 'select', textarea: 'textarea',
+        select: 'select',
+        textarea: 'textarea',
       };
 
       field = (
@@ -98,6 +110,7 @@ export class LabeledFormControl extends React.PureComponent {
           <BS.FormControl
             {...input}
             componentClass={componentClassByType[type] || 'input'}
+            type={type}
             {...rest}
           >
             {children}

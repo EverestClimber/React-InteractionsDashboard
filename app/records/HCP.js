@@ -24,6 +24,9 @@ class HCP extends Record({
   institution_name: '',
   institution_address: '',
   contact_preference: '',
+  has_consented: false,
+  created_at: undefined,
+  updated_at: undefined,
 }) {
   static READ_ONLY_FIELDS = [
     'created_at',

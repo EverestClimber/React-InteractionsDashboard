@@ -2,7 +2,7 @@ import React from 'react';
 import * as BS from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
-import { IconButton } from '../buttons';
+import { IconButton } from './buttons';
 
 
 export class ButtonsSelector extends React.Component {

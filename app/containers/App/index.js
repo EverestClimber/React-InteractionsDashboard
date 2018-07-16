@@ -27,6 +27,7 @@ export class App extends React.PureComponent {
     fetchCommonData: PropTypes.func,
     getCurrentUser: PropTypes.func,
     user: PropTypes.object,
+    loadedCommonData: PropTypes.bool,
   };
 
   componentDidMount() {
@@ -49,31 +50,35 @@ export class App extends React.PureComponent {
     clearInterval(this.interval);
   }
 
-  get tokenExist() {
-    return !!localStorage.getItem('token');
-  }
+  // get tokenExist() {
+  //   return !!localStorage.getItem('token');
+  // }
 
   render() {
-    const { user } = this.props;
+    const { user, loadedCommonData } = this.props;
 
     return (
       <React.Fragment>
-        {this.tokenExist && <TopBar />}
+        {user && <TopBar />}
         <Loader />
         {/* <pre>{JSON.stringify(queryString.parse(this.props.location.search), null, 2)}</pre> */}
-        <Switch>
-          <Route exact path={routes.LOGIN.path} component={Login} />
-          {user && (
-            <Switch>
-              <Route exact path={routes.DASHBOARD.path} component={Dashboard} />
-              <Route exact path={routes.RECORD_INTERACTION.path} component={RecordInteraction} />
-              <Route path={routes.RECORD_INTERACTION_FOR_EP.path} component={RecordInteraction} />
-              <Route path={routes.RECORD_INTERACTION_FOR_HCP.path} component={RecordInteraction} />
-              <Route path={routes.NOT_FOUND.path} component={NotFound} />
-            </Switch>
-          )}
-          <Route path={routes.NOT_FOUND.path} component={NotFound} />
-        </Switch>
+        {loadedCommonData ? (
+          <Switch>
+            <Route exact path={routes.LOGIN.path} component={Login} />
+            {user && (
+              <Switch>
+                <Route exact path={routes.DASHBOARD.path} component={Dashboard} />
+                <Route exact path={routes.RECORD_INTERACTION.path} component={RecordInteraction} />
+                <Route path={routes.RECORD_INTERACTION_FOR_EP.path} component={RecordInteraction} />
+                <Route path={routes.RECORD_INTERACTION_FOR_HCP.path} component={RecordInteraction} />
+                <Route path={routes.NOT_FOUND.path} component={NotFound} />
+              </Switch>
+            )}
+            <Route path={routes.NOT_FOUND.path} component={NotFound} />
+          </Switch>
+        ) : (
+          <div>LOADING...</div>
+        )}
       </React.Fragment>
     );
   }
@@ -83,6 +88,7 @@ function mapStateToProps(state) {
   return {
     user: state.get('global').get('user'),
     loading: state.get('global').get('ui').get('loading'),
+    loadedCommonData: state.get('global').get('loadedCommonData'),
   };
 }
 

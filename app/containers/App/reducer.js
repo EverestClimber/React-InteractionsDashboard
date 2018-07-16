@@ -6,12 +6,15 @@ import { fetchCommonDataActions } from './actions';
 
 
 const initialState = new Map({
-  user: new User(),
+  user: null,
   ui: fromJS({
     loading: false,
   }),
-  therapeuticAreas: new OrderedMap(),
-  affiliateGroups: new OrderedMap(),
+  // therapeuticAreas: new OrderedMap(),
+  // affiliateGroups: new OrderedMap(),
+  therapeuticAreas: null,
+  affiliateGroups: null,
+  loadedCommonData: false,
 });
 
 
@@ -20,14 +23,19 @@ function appReducer(state = initialState, action) {
     case SET_USER: {
       const affiliateGroupsById = state.get('affiliateGroups');
       const therapeuticAreasById = state.get('therapeuticAreas');
-      const user = (affiliateGroupsById.size || therapeuticAreasById.size)
-        ? User.fromApiData(
+      const user = (
+        (affiliateGroupsById && affiliateGroupsById.size) ||
+        (therapeuticAreasById && therapeuticAreasById.size)
+      ) ? User.fromApiData(
           action.payload.user.toApiData(),
           affiliateGroupsById,
           therapeuticAreasById
         )
         : action.payload.user;
-      return state.set('user', user);
+      return state.merge({
+        user,
+        loadedCommonData: !!(state.get('therapeuticAreas') && state.get('affiliateGroups')),
+      });
     }
 
     case LOGOUT:
@@ -41,13 +49,16 @@ function appReducer(state = initialState, action) {
       const affiliateGroupsById = new OrderedMap(affiliateGroups.map((it) => [it.id, it]));
       const therapeuticAreasById = new OrderedMap(therapeuticAreas.map((it) => [it.id, it]));
       return state.merge({
-        user: User.fromApiData(
-          state.get('user').toApiData(),
-          therapeuticAreasById,
-          affiliateGroupsById
-        ),
+        user: state.get('user')
+          ? User.fromApiData(
+            state.get('user').toApiData(),
+            therapeuticAreasById,
+            affiliateGroupsById
+          )
+          : null,
         affiliateGroups: affiliateGroupsById,
         therapeuticAreas: therapeuticAreasById,
+        loadedCommonData: !!state.get('user'),
       });
     }
 

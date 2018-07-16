@@ -11,14 +11,13 @@ import {
   Row,
   Button,
   Panel,
-  FormControl,
-  Table,
 } from 'react-bootstrap';
 
 import Interaction from 'records/Interaction';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
 import { FlatpickrDateTime, SearchSelect, LabeledFormControl, Options } from 'components/forms';
+import HCPSelector from 'components/HCPSelector';
 import { ButtonsSelector } from 'components/ButtonSelector';
 import { ChoiceSelector } from 'components/ChoiceSelector';
 
@@ -33,125 +32,10 @@ import {
 } from './actions';
 
 
-class HCPSelector extends React.Component {
+export class RecordInteraction extends React.Component {
   static propTypes = {
-    // supplied by Field
-    input: PropTypes.object, // { onChange, value, ...}
-    // meta: PropTypes.object, // { error, ... }
-    // other
-    hcps: PropTypes.array,
-    hcp: PropTypes.object,
-    searchHCPs: PropTypes.func,
-    fetchHCP: PropTypes.func,
-    onHCPSelected: PropTypes.func,
-  };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      searchHCPsText: '',
-    };
-  }
-
-  componentDidMount() {
-    console.log('=== props', this.props);
-    const hcpId = this.props.input.value;
-    if (hcpId) {
-      this.props.fetchHCP(hcpId);
-    }
-  }
-
-  handleSearchHCPsInputChange = (event) => {
-    this.setState({ searchHCPsText: event.target.value });
-  };
-
-  searchHCPsKeyPressed = (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      console.log('...will search for HCPs');
-      this.props.searchHCPs(this.state.searchHCPsText);
-    }
-  };
-
-  handleHCPSelection = (event) => {
-    // console.log('=== props:', this.props);
-    const hcpId = event.target.value;
-    this.props.input.onChange(hcpId);
-    this.props.fetchHCP(hcpId);
-    this.props.onHCPSelected(hcpId);
-  };
-
-  render() {
-    const { hcps, hcp } = this.props;
-
-    return (
-      <div className="HCPSelector">
-        <Row>
-          <Col sm={10}>
-            <FormControl
-              type="text"
-              placeholder="Search HCPs ..."
-              onChange={this.handleSearchHCPsInputChange}
-              onKeyPress={this.searchHCPsKeyPressed}
-              className="form-control--primary"
-            />
-          </Col>
-          <Col sm={2}>
-            <Button type="submit" block>
-              <span className="fi-icon icon-nav-hcps" />
-              {' '}New HCP
-            </Button>
-          </Col>
-        </Row>
-        <br />
-
-        <Row>
-          <Col xs={12}>
-            <Table bordered condensed hover>
-              <tbody>
-                {hcps.map((it) => (
-                  <tr key={it.id}>
-                    <td>
-                      <input type="radio" name="hcp" value={it.id} onChange={this.handleHCPSelection} />
-                    </td>
-                    <td>{it.first_name} {it.last_name}</td>
-                    <td>{it.institution_name}</td>
-                    <td>{it.city}, {it.country}</td>
-                    <td>{it.ta_names.join(', ')}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </Col>
-        </Row>
-        <br />
-
-        {hcp && (
-          <Row>
-            <Col xs={12}>
-              <Table bordered condensed hover>
-                <tbody>
-                  <tr key={hcp.id}>
-                    <td>{hcp.id}</td>
-                    <td>{hcp.first_name} {hcp.last_name}</td>
-                    <td>{hcp.institution_name}</td>
-                    <td>{hcp.city}, {hcp.country}</td>
-                    <td>{hcp.ta_names.join(', ')}</td>
-                  </tr>
-                </tbody>
-              </Table>
-            </Col>
-          </Row>
-        )}
-      </div>
-    );
-  }
-}
-
-
-export class RecordInteraction extends React.Component { // eslint-disable-line react/no-multi-comp
-  static propTypes = {
-    // location: PropTypes.object,
+    therapeuticAreas: PropTypes.object,
+    affiliateGroups: PropTypes.object,
     urlQuery: PropTypes.object,
     submitting: PropTypes.bool,
     pristine: PropTypes.bool,
@@ -160,7 +44,6 @@ export class RecordInteraction extends React.Component { // eslint-disable-line 
     fetchHCP: PropTypes.func,
     fetchHCPObjectives: PropTypes.func,
     fetchInteractionRecordingRequiredData: PropTypes.func,
-    // userId: PropTypes.number,
     hcps: PropTypes.array,
     hcp: PropTypes.object,
     hcpObjectives: PropTypes.array,
@@ -179,7 +62,9 @@ export class RecordInteraction extends React.Component { // eslint-disable-line 
   componentDidMount() {
     this.props.fetchInteractionRecordingRequiredData();
     const hcpId = parseInt(this.props.urlQuery.hcp, 10);
+    console.log('--- urlQuery:', this.props.urlQuery);
     if (hcpId) {
+      console.log('--- preslected HCP:', hcpId);
       this.props.fetchHCP(hcpId);
       this.props.fetchHCPObjectives(hcpId);
     }
@@ -195,6 +80,8 @@ export class RecordInteraction extends React.Component { // eslint-disable-line 
 
   render() {
     const {
+      therapeuticAreas,
+      affiliateGroups,
       submitting,
       pristine,
       handleSubmit,
@@ -211,6 +98,10 @@ export class RecordInteraction extends React.Component { // eslint-disable-line 
       isAdverseEvent,
       // serverError,
     } = this.props;
+
+    if (!therapeuticAreas || !affiliateGroups) {
+      return 'Loading...';
+    }
 
     return (
       <Grid>
@@ -542,8 +433,8 @@ export class RecordInteraction extends React.Component { // eslint-disable-line 
 }
 
 const validate = (values) => { // eslint-disable-line no-unused-vars
-  // debugger;
-  // console.log('... VALIDATING:', values);
+                               // debugger;
+                               // console.log('... VALIDATING:', values);
   const errors = {};
   // if (!values.hcp_id) {
   //   errors.hcp_id = 'An HCP must be selected';
@@ -561,9 +452,11 @@ function mapStateToProps(state, ownProps) {
   const recordInteractionState = state.get('recordInteraction');
   return {
     // url query
-    urlQuery: qs.parse(ownProps.location.search),
+    urlQuery: qs.parse(ownProps.location.search.slice(1)),
     // global
-    // userId: state.get('global').get('user').get('id'),
+    // userId: state.get('global').getIn('user').get('id'),
+    therapeuticAreas: state.get('global').get('therapeuticAreas'),
+    affiliateGroups: state.get('global').get('affiliateGroups'),
     // local
     serverError: recordInteractionState.get('serverError'),
     hcps: recordInteractionState.get('hcps').toJS(),

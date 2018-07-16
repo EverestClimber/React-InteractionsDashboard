@@ -18,6 +18,9 @@ import {
 } from './actions';
 
 
+// const delay = (ms) => new Promise(res => setTimeout(res, ms));
+
+
 function* refreshTokenSaga() {
   const token = localStorage.getItem('token');
 
@@ -79,6 +82,7 @@ function* getCommonDataSaga() {
 
     yield put(setLoading(false));
     console.log('--- common data:', commonData);
+    // yield delay(3000);
     yield put(fetchCommonDataActions.success(commonData));
 
   } catch (error) {

@@ -9,6 +9,17 @@
 
   position: relative;
 
+  &--error {
+    .form-control--primary {
+      background: $s-error-bg;
+      border-color: $s-error-border;
+      color: $s-error-text;
+      @include placeholder {
+        color: $s-error-text;
+      }
+    }
+  }
+
   &__location {
     [class^="icon-"] {
       font-size: rem(28);

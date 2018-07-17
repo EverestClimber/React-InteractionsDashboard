@@ -421,16 +421,45 @@ export class RecordInteraction extends React.Component {
 }
 
 const validate = (values) => { // eslint-disable-line no-unused-vars
-  // debugger;
-  // console.log('... VALIDATING:', values);
   const errors = {};
-  // if (!values.hcp_id) {
-  //   errors.hcp_id = 'An HCP must be selected';
-  // }
-  // // if (!values.purpose) {
-  // //   errors.purpose = 'Please specify a purpose';
-  // // }
-  // errors.purpose = 'WRONG';
+
+  if (!values.hcp_id) {
+    errors.hcp_id = 'An HCP must be selected';
+  }
+  if (!values.type_of_interaction) {
+    errors.type_of_interaction = 'The type of interaction must be specified';
+  }
+  if (!values.origin_of_interaction) {
+    errors.origin_of_interaction = 'The origin of interaction must be specified';
+  }
+  if (values.is_proactive === undefined) {
+    errors.is_proactive = 'Specify if this is a proactive or reactive interaction';
+  }
+  if (!values.time_of_interaction) {
+    errors.time_of_interaction = 'Time of interaction must be entered';
+  }
+  if (!values.purpose) {
+    errors.purpose = 'Purpose of interaction must be specified';
+  }
+  if (values.origin_of_interaction === 'engagement_plan' && !values.hcp_objective_id) {
+    errors.hcp_objective_id = 'HCP Objective must be specified for interactions when origin of interaction is Engagement Plan';
+  }
+  if (values.is_adverse_event === undefined) {
+    errors.is_adverse_event = 'It must be specified whether and adverse event has occurred';
+  }
+  if (values.is_adverse_event && values.appropriate_pv_procedures_followed === undefined) {
+    errors.appropriate_pv_procedures_followed = 'It must be specified whether appropriate PV procedures were followed';
+  }
+  if (values.is_joint_visit === undefined) {
+    errors.is_joint_visit = 'It must be specified whether this was a joint visit or not';
+  }
+  if (values.is_joint_visit && values.joint_visit_with === undefined) {
+    errors.joint_visit_with = 'It must be specified who was the joint visit with';
+  }
+  if (values.is_joint_visit && values.joint_visit_reason === undefined) {
+    errors.joint_visit_reason = 'It must be specified what was the reason of the joint visit';
+  }
+
   return errors;
 };
 

@@ -14,7 +14,7 @@ export default class HCPSelector extends React.Component {
   static propTypes = {
     // supplied by Field
     input: PropTypes.object, // { onChange, value, ...}
-    // meta: PropTypes.object, // { error, ... }
+    meta: PropTypes.object, // { error, ... }
     // other
     hcps: PropTypes.array,
     hcp: PropTypes.object,
@@ -68,10 +68,10 @@ export default class HCPSelector extends React.Component {
   };
 
   render() {
-    const { hcps, hcp } = this.props;
+    const { hcps, hcp, meta } = this.props;
 
     return (
-      <div className="HCPSelector">
+      <div className={`HCPSelector ${(meta.touched && meta.error) ? 'HCPSelector--error' : ''}`}>
         <Row>
           <Col sm={10}>
             <FormControl

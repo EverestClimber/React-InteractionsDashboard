@@ -50,6 +50,15 @@ $ctrl-height: 36px;
   option[disabled] {
     color: $s-placeholder-color;
   }
+
+  .has-error & {
+    background: $s-error-bg;
+    border-color: $s-error-border;
+    color: $s-error-text;
+    @include placeholder {
+      color: $s-error-text;
+    }
+  }
 }
 
 .checkbox label,

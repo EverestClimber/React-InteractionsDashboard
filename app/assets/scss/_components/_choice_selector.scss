@@ -6,6 +6,11 @@
   border-radius: 4px;
   overflow: hidden;
 
+  &--error {
+    background: $s-error-bg;
+    border-color: $s-error-border;
+  }
+
   &--withSecondary &__primary {
     padding: 15px;
     overflow: hidden;

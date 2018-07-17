@@ -33,7 +33,7 @@ export class ChoiceSelector extends React.Component {
     const { choices, meta, disabled, label, className, children } = this.props;
     return (
       <BS.FormGroup
-        className={`ChoiceSelector ${label ? 'ChoiceSelector--labeled' : ''} ${children ? 'ChoiceSelector--withSecondary' : ''} ${className}`}
+        className={`ChoiceSelector ${label ? 'ChoiceSelector--labeled' : ''} ${children ? 'ChoiceSelector--withSecondary' : ''} ${(meta.touched && meta.error) ? 'ChoiceSelector--error' : ''}  ${className}`}
         validationState={(meta.touched && meta.error) ? 'error' : null}
       >
         <div className="ChoiceSelector__primary">

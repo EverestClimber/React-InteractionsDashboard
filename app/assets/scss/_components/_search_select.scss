@@ -8,7 +8,13 @@
   .css-d8oujb {
     display: none;
   }
-  .css-205izw {
-
+  &.has-error {
+    .css-1aya2g8 {
+      background: $s-error-bg;
+      border-color: $s-error-border;
+      .css-1492t68 {
+        color: $s-error-text;
+      }
+    }
   }
 }

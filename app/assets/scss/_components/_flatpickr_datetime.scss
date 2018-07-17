@@ -9,6 +9,17 @@
     font-size: 20px;
     border-radius: 0 4px 4px 0;
     line-height: 35px;
-    background: $n-grey-lighter ;
+    background: $n-grey-lighter;
+  }
+
+  &.has-error {
+    input.form-control[readonly] {
+      background: $s-error-bg;
+      border-color: $s-error-border;
+      color: $s-error-text;
+      @include placeholder {
+        color: $s-error-text;
+      }
+    }
   }
 }

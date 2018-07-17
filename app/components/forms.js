@@ -174,9 +174,9 @@ export class LabeledFormControl extends React.PureComponent {
       >
         {field}
         <BS.HelpBlock>{helpText}</BS.HelpBlock>
-        {meta.touched && meta.error && (
+        {/* meta.touched && meta.error && (
           <BS.Alert bsStyle="danger">{meta.error}</BS.Alert>
-        )}
+        ) */}
       </BS.FormGroup>
     );
   }

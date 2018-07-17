@@ -35,7 +35,9 @@ $ctrl-height: 36px;
   height: $ctrl-height;
   padding: 6px 15px;
   border-color: $s-border-light;
-  background: $s-ctrl-bg;
+  &, &[readonly].flatpickr-input:not([disabled]) {
+    background: $s-ctrl-bg;
+  }
   &--primary {
     background: $s-ctrl-primary-bg;
   }
@@ -50,10 +52,24 @@ $ctrl-height: 36px;
   }
 }
 
+.checkbox label,
 label.checkbox,
 label.checkbox-inline {
   position: relative;
   overflow: hidden;
+  padding: 6px 6px 6px 35px;
+}
+
+.checkbox {
+  margin-top: 0;
+  background: $n-grey-lighter;
+  border-radius: 4px;
+  border: 1px solid $n-grey-light;
+  label {
+    position: relative;
+    top: 2px;
+    padding: 4px 6px 4px 35px;
+  }
 }
 
 input[type="checkbox"] {
@@ -61,7 +77,7 @@ input[type="checkbox"] {
     content: '';
     position: absolute;
     top: -1px;
-    left: 1020px;
+    left: 1035px;
     width: 14px;
     height: 14px;
     border: 1px solid $s-cb-box-border;
@@ -79,7 +95,7 @@ input[type="checkbox"] {
       content: '\2714';
       font-size: 12px;
       position: absolute;
-      left: 1022px;
+      left: 1037px;
       top: -3px;
       color: $s-cb-box-active-mark;
     }

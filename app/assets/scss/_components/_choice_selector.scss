@@ -1,0 +1,57 @@
+
+.ChoiceSelector {
+  min-height: 36px;
+  background: $n-grey-lighter;
+  border: 1px solid $n-grey-light;
+  border-radius: 4px;
+  overflow: hidden;
+
+  &--withSecondary &__primary {
+    padding: 15px;
+    overflow: hidden;
+    label.control-label {
+      padding-left: 0
+    }
+  }
+
+  label.checkbox-inline {
+    display: block;
+    float: left;
+    margin: 0 15px 0 0;
+    &:last-of-type {
+      margin-right: 0;
+    }
+  }
+
+  &__secondary {
+    clear: both;
+    border-top: 1px solid $n-grey-light;
+    label.control-label {
+      padding-left: 0
+    }
+    > * {
+      border: 0;
+    }
+    > :last-child {
+      margin-bottom: 0;
+    }
+    > .row {
+      margin: 12px 7px 0 7px;
+    }
+  }
+
+  &--labeled {
+    label.control-label {
+      float: left;
+      padding: 6px 0 6px 15px;
+      margin: 0;
+    }
+    label.checkbox-inline {
+      float: right;
+      margin: 0 8px 0 0;
+      &:last-of-type {
+        margin-left: 0;
+      }
+    }
+  }
+}

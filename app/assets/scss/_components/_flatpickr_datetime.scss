@@ -1,0 +1,14 @@
+.FlatpickrDateTime {
+
+  &__icon {
+    position: absolute;
+    top: 1px;
+    right: 8px;
+    height: calc(100% - 17px);
+    padding: 0 5px 0 5px;
+    font-size: 20px;
+    border-radius: 0 4px 4px 0;
+    line-height: 35px;
+    background: $n-grey-lighter ;
+  }
+}

@@ -42,24 +42,24 @@ export const Options = ({ choices }) => choices.map(([val, text]) => ( // eslint
 ));
 
 
-export const SearchSelect = ({ options, input: { value, onChange }, isMulti, ...rest }) => { // eslint-disable-line
+export const SearchSelect = ({ input, meta, options, label, isMulti, ...rest }) => { // eslint-disable-line
   // NOTE: react-select's Select expects the value to be of form
   //  `{label, value}` or `null` (NOT undefined! if it receives undefined, it keeps
   //  showing the old selected value instead!)
 
   const onSelectChange = (selected) => {
     if (!isMulti) {
-      onChange(selected.value);
+      input.onChange(selected.value);
     } else {
-      onChange(selected.map((opt) => opt.value));
+      input.onChange(selected.map((opt) => opt.value));
     }
   };
 
   let selectValue;
   if (!isMulti) {
-    selectValue = options.find((opt) => String(opt.value) === String(value)) || null;
+    selectValue = options.find((opt) => String(opt.value) === String(input.value)) || null;
   } else {
-    selectValue = value.map((v) => options.find(
+    selectValue = input.value.map((v) => options.find(
       (opt) => String(opt.value) === String(v)
     )).filter((x) => x);
     if (!selectValue.length) {
@@ -67,22 +67,44 @@ export const SearchSelect = ({ options, input: { value, onChange }, isMulti, ...
     }
   }
 
-  return (<Select
-    value={selectValue}
-    onChange={onSelectChange}
-    options={options}
-    isMulti={isMulti}
-    {...rest}
-  />);
+  return (
+    <BS.FormGroup
+      controlId={input.id || input.name}
+      validationState={(meta.touched && meta.error) ? 'error' : null}
+      className="SearchSelect"
+    >
+      {label && (
+        <BS.ControlLabel>{label}</BS.ControlLabel>
+      )}
+      <Select
+        value={selectValue}
+        onChange={onSelectChange}
+        options={options}
+        isMulti={isMulti}
+        {...rest}
+      />
+    </BS.FormGroup>
+  );
 };
 
 
-export const FlatpickrDateTime = ({ options, input: { value, onChange }, ...rest }) => ( // eslint-disable-line react/prop-types
-  <Flatpickr
-    value={value}
-    onChange={onChange}
-    {...rest}
-  />
+export const FlatpickrDateTime = ({ input, meta, options, label, className, ...rest }) => ( // eslint-disable-line react/prop-types
+  <BS.FormGroup
+    controlId={input.id || input.name}
+    validationState={(meta.touched && meta.error) ? 'error' : null}
+    className="FlatpickrDateTime"
+  >
+    {label && (
+      <BS.ControlLabel>{label}</BS.ControlLabel>
+    )}
+    <Flatpickr
+      value={input.value}
+      onChange={input.onChange}
+      className={className}
+      {...rest}
+    />
+    <span className="FlatpickrDateTime__icon icon-calendar" />
+  </BS.FormGroup>
 );
 
 

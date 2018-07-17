@@ -52,6 +52,7 @@ export class RecordInteraction extends React.Component {
     originOfInteraction: PropTypes.string,
     isJointVisit: PropTypes.bool,
     isAdverseEvent: PropTypes.bool,
+    isFollowUpRequired: PropTypes.bool,
     // serverError: PropTypes.string,
   };
 
@@ -96,6 +97,7 @@ export class RecordInteraction extends React.Component {
       originOfInteraction,
       isJointVisit,
       isAdverseEvent,
+      isFollowUpRequired,
       // serverError,
     } = this.props;
 
@@ -172,7 +174,7 @@ export class RecordInteraction extends React.Component {
                           <Field
                             name="time_of_interaction"
                             component={FlatpickrDateTime}
-                            label="Time of interaction"
+                            placeholder="Time of interaction"
                             className="form-control"
                             data-enable-time
                           />
@@ -294,18 +296,18 @@ export class RecordInteraction extends React.Component {
                       <Field
                         name="is_adverse_event"
                         component={ChoiceSelector}
-                        choices={[[true, 'Yes'], [false, 'No']]}
+                        choices={[[false, 'No'], [true, 'Yes']]}
                         label="Adverse Event"
-                      />
-
-                      {isAdverseEvent && (
-                        <Field
-                          name="appropriate_pv_procedures_followed"
-                          component={LabeledFormControl}
-                          type="checkbox"
-                          label="Appropriate PV Procedures Followed"
-                        />
-                      )}
+                      >
+                        {isAdverseEvent && (
+                          <Field
+                            name="appropriate_pv_procedures_followed"
+                            component={ChoiceSelector}
+                            choices={[[false, 'No'], [true, 'Yes']]}
+                            label="Appropriate PV Procedures Followed"
+                          />
+                        )}
+                      </Field>
 
                     </Col>
                     <Col xs={6}>
@@ -313,26 +315,34 @@ export class RecordInteraction extends React.Component {
                       <Field
                         name="is_joint_visit"
                         component={ChoiceSelector}
-                        choices={[[true, 'Yes'], [false, 'No']]}
+                        choices={[[false, 'No'], [true, 'Yes']]}
                         label="Joint Visit"
-                      />
-
-                      {isJointVisit && (
-                        <React.Fragment>
-                          <Field
-                            name="joint_visit_with"
-                            component={LabeledFormControl}
-                            type="text"
-                            label="Joint visit with"
-                          />
-                          <Field
-                            name="joint_visit_reason"
-                            component={LabeledFormControl}
-                            type="text"
-                            label="Joint visit reason"
-                          />
-                        </React.Fragment>
-                      )}
+                      >
+                        {isJointVisit && (
+                          <Row>
+                            <Col md={6}>
+                              <Field
+                                name="joint_visit_with"
+                                component={LabeledFormControl}
+                                type="text"
+                                placeholder="Joint visit with"
+                              />
+                            </Col>
+                            <Col md={6}>
+                              <Field
+                                name="joint_visit_reason"
+                                component={LabeledFormControl}
+                                type="select"
+                              >
+                                <option disabled value="">Reason</option>
+                                <Options
+                                  choices={Object.entries(Interaction.joint_visit_reason_choices)}
+                                />
+                              </Field>
+                            </Col>
+                          </Row>
+                        )}
+                      </Field>
 
                     </Col>
                   </Row>
@@ -354,6 +364,7 @@ export class RecordInteraction extends React.Component {
                         component={FlatpickrDateTime}
                         className="form-control"
                         placeholder="Follow-up Date"
+                        disabled={isFollowUpRequired}
                       />
 
                     </Col>
@@ -364,6 +375,7 @@ export class RecordInteraction extends React.Component {
                         component={LabeledFormControl}
                         type="text"
                         placeholder="Follow-up notes"
+                        disabled={isFollowUpRequired}
                       />
 
                     </Col>
@@ -384,7 +396,7 @@ export class RecordInteraction extends React.Component {
           </Row>
 
           <Row>
-            <Col xs={12}>
+            <Col xs={12} className="text-center">
 
               <Button>Back</Button>
               {' '}
@@ -444,6 +456,7 @@ function mapStateToProps(state, ownProps) {
     originOfInteraction: selector(state, 'origin_of_interaction'),
     isJointVisit: selector(state, 'is_joint_visit'),
     isAdverseEvent: selector(state, 'is_adverse_event'),
+    isFollowUpRequired: selector(state, 'is_follow_up_required'),
   };
 }
 
@@ -470,7 +483,7 @@ export default compose(
     form: 'recordInteraction',
     initialValues: {
       resources: [],  // to quench warning
-      time_of_interaction: new Date().toISOString(),
+      // time_of_interaction: new Date().toISOString(),
     },
     validate,
     onSubmit: (data, dispatch, props) => {

@@ -59,6 +59,11 @@ class Interaction extends Record({
     no_further_actions: 'No further actions',
   };
 
+  static joint_visit_reason_choices = {
+    option1: 'Option 1',
+    option2: 'Option 2',
+  };
+
   toApiData() {
     const data = this.toJS();
     for (const f of Interaction.READ_ONLY_FIELDS) {

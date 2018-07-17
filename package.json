@@ -157,7 +157,8 @@
       "redux-saga/yield-effects": 2,
       "require-yield": 0,
       "no-restricted-syntax": 0,
-      "padded-blocks": 0
+      "padded-blocks": 0,
+      "react/sort-comp": 0
     },
     "settings": {
       "import/resolver": {

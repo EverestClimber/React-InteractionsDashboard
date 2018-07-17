@@ -99,7 +99,7 @@ export const FlatpickrDateTime = ({ input, meta, options, label, className, ...r
     )}
     <Flatpickr
       value={input.value}
-      onChange={input.onChange}
+      onChange={(val) => input.onChange(val[0])}
       className={className}
       {...rest}
     />
@@ -181,3 +181,10 @@ export class LabeledFormControl extends React.PureComponent {
     );
   }
 }
+
+
+export const CenteredAlert = (props) => ( // eslint-disable-line react/prop-types
+  <div className="CenteredAlert">
+    <BS.Alert {...props} />
+  </div>
+);

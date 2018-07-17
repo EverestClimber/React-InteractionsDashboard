@@ -32,7 +32,7 @@ class Interaction extends Record({
   outcome: '',
   follow_up_date: undefined,
   follow_up_notes: '',
-  is_follow_up_required: false,
+  no_follow_up_required: false,
   created_at: undefined,
 }) {
   static READ_ONLY_FIELDS = [

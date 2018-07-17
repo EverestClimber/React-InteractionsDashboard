@@ -67,6 +67,16 @@ export default class HCPSelector extends React.Component {
     this.props.onHCPSelected(hcpId);
   };
 
+  showAll = () => {
+    console.log('--- SHOW ALL ---');
+    this.setState({ searchHCPsText: '' });
+    this.props.searchHCPs('');
+    setTimeout(
+      () => this.setState({ showList: true }),
+      500
+    );
+  };
+
   render() {
     const { hcps, hcp, meta } = this.props;
 
@@ -74,15 +84,26 @@ export default class HCPSelector extends React.Component {
       <div className={`HCPSelector ${(meta.touched && meta.error) ? 'HCPSelector--error' : ''}`}>
         <Row>
           <Col sm={10}>
-            <FormControl
-              type="text"
-              placeholder="Search HCPs ..."
-              onChange={this.handleSearchHCPsInputChange}
-              onKeyPress={this.searchHCPsKeyPressed}
-              onFocus={this.searchHCPsFocused}
-              onBlur={this.searchHCPsBlured}
-              className="form-control--primary"
-            />
+            <div className="HCPSelector__Search">
+              <FormControl
+                type="text"
+                placeholder="Search HCPs ..."
+                onChange={this.handleSearchHCPsInputChange}
+                onKeyPress={this.searchHCPsKeyPressed}
+                onFocus={this.searchHCPsFocused}
+                onBlur={this.searchHCPsBlured}
+                className="form-control--primary"
+                value={this.state.searchHCPsText}
+              />
+              <a
+                className="HCPSelector__Search__ShowAll"
+                role="button"
+                tabIndex={0}
+                onClick={this.showAll}
+              >
+                Show All
+              </a>
+            </div>
           </Col>
           <Col sm={2}>
             <Button type="submit" block>

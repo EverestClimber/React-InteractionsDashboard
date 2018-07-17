@@ -1,4 +1,5 @@
 import { takeLatest, call, select, put } from 'redux-saga/effects';
+import { push } from 'react-router-redux';
 import { List } from 'immutable';
 
 import HCP from 'records/HCP';
@@ -127,6 +128,7 @@ function* recordInteractionSaga({ interaction }) {
   try {
     yield call(postInteraction, interaction.toApiData());
     yield put(recordInteractionActions.success());
+    yield put(push('/'));
   } catch (error) {
     yield put(recordInteractionActions.error(error.message));
   }

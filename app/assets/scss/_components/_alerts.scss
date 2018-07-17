@@ -1,0 +1,13 @@
+
+.CenteredAlert {
+  text-align: center;
+  .alert {
+    display: inline-block;
+    padding: 8px 15px;
+    &.alert-danger {
+      background: $s-error-bg;
+      color: $s-error-text;
+      border-color: $s-error-border;
+    }
+  }
+}

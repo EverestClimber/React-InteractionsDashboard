@@ -36,6 +36,7 @@ export default class HCPSelector extends React.Component {
   componentDidMount() {
     document.body.addEventListener('click', this.handleBodyClick);
 
+    // when value is received from outside
     const hcpId = this.props.input.value;
     if (hcpId) {
       this.props.fetchHCP(hcpId);

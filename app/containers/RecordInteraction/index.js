@@ -54,8 +54,8 @@ export class RecordInteraction extends React.Component {
     isAdverseEvent: PropTypes.bool,
     noFollowUpRequired: PropTypes.bool,
     allFormErrors: PropTypes.any,
-    // serverError: PropTypes.string,
-    initialize: PropTypes.func.isRequired,
+    serverError: PropTypes.string,
+    // initialize: PropTypes.func.isRequired,
   };
 
   state = {
@@ -64,10 +64,11 @@ export class RecordInteraction extends React.Component {
   };
 
   componentDidMount() {
-    this.props.initialize({
-      resources: [],  // to quench warning
-      origin_of_interaction: this.props.urlQuery.origin_of_interaction,
-    });
+    // this.props.initialize({
+    //   resources: [],  // to quench warning
+    //   origin_of_interaction: this.props.urlQuery.origin_of_interaction,
+    //   hcp_id: this.props.urlQuery.hcp ? +this.props.urlQuery.hcp : undefined,
+    // });
     this.props.fetchInteractionRecordingRequiredData();
     const hcpId = parseInt(this.props.urlQuery.hcp, 10);
     console.log('--- urlQuery:', this.props.urlQuery);
@@ -110,7 +111,7 @@ export class RecordInteraction extends React.Component {
       isAdverseEvent,
       noFollowUpRequired,
       allFormErrors,
-      // serverError
+      serverError,
     } = this.props;
 
     if (!therapeuticAreas || !affiliateGroups) {
@@ -120,6 +121,7 @@ export class RecordInteraction extends React.Component {
     const formDisabled = (hcp && !hcp.has_consented) ? !this.state.recordWithoutConsent : false;
 
     console.log('DISABLED=', formDisabled, (hcp && !hcp.has_consented), this.state.recordWithoutConsent);
+    console.log('SUBMIT DISABLED=', pristine, submitting, formDisabled, !!allFormErrors);
 
     return (
       <Grid>
@@ -128,6 +130,13 @@ export class RecordInteraction extends React.Component {
         </Helmet>
 
         <h2>Record Interaction</h2>
+
+        {serverError && (
+          <CenteredAlert bsStyle="danger">
+            An error has occurred. Please refresh the page or try again later.
+            <pre>{serverError}</pre>
+          </CenteredAlert>
+        )}
 
         <form
           onSubmit={handleSubmit}
@@ -284,7 +293,7 @@ export class RecordInteraction extends React.Component {
                           value: it.id,
                           label: it.description,
                         }))}
-                        isDisabled={formDisabled}
+                        isDisabled={formDisabled || originOfInteraction !== 'engagement_plan'}
                       />
 
                     </Col>
@@ -443,6 +452,7 @@ export class RecordInteraction extends React.Component {
           {allFormErrors && (
             <CenteredAlert bsStyle="danger" className="centered">
               Please fill in all the fields above.
+              <pre>{JSON.stringify(allFormErrors, null, 2)}</pre>
             </CenteredAlert>
           )}
 
@@ -455,7 +465,7 @@ export class RecordInteraction extends React.Component {
                 type="submit"
                 disables=""
                 bsStyle="primary"
-                disabled={pristine || submitting || formDisabled || !!allFormErrors}
+                disabled={submitting || formDisabled}
               >
                 Save
               </Button>
@@ -549,10 +559,6 @@ function mapStateToProps(state, ownProps) {
     isJointVisit: selector(state, 'is_joint_visit'),
     isAdverseEvent: selector(state, 'is_adverse_event'),
     noFollowUpRequired: selector(state, 'no_follow_up_required'),
-    initialValues: {
-      resources: [],  // to quench warning
-      purpose: 'wtf',
-    },
   };
 }
 
@@ -574,6 +580,7 @@ const withSaga = injectSaga({ key: 'recordInteraction', saga });
 export default compose(
   withReducer,
   withSaga,
+  withConnect,
   reduxForm({
     form: 'recordInteraction',
     validate,
@@ -588,5 +595,4 @@ export default compose(
     },
     enableReinitialize: true,
   }),
-  withConnect,
 )(RecordInteraction);

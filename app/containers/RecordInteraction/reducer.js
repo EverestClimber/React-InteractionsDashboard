@@ -9,7 +9,7 @@ import {
 
 
 const initialState = fromJS({
-  serverError: '',
+  serverError: null,
   hcp: null,
   hcps: new List(),
   hcpObjectives: new List(),
@@ -32,9 +32,12 @@ function recordInteractionReducer(state = initialState, action) {
 
     case recordInteractionActions.error.type: {
       window.scrollTo(0, 0);
-      return state.merge({
-        serverError: action.message,
-      });
+      return state.merge({ serverError: action.message });
+    }
+
+    case recordInteractionActions.success.type: {
+      window.scrollTo(0, 0);
+      return state.merge({ serverError: null });
     }
 
     case searchHCPsActions.success.type:

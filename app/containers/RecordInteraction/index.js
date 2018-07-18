@@ -55,6 +55,7 @@ export class RecordInteraction extends React.Component {
     noFollowUpRequired: PropTypes.bool,
     allFormErrors: PropTypes.any,
     // serverError: PropTypes.string,
+    initialize: PropTypes.func.isRequired,
   };
 
   state = {
@@ -63,6 +64,10 @@ export class RecordInteraction extends React.Component {
   };
 
   componentDidMount() {
+    this.props.initialize({
+      resources: [],  // to quench warning
+      origin_of_interaction: this.props.urlQuery.origin_of_interaction,
+    });
     this.props.fetchInteractionRecordingRequiredData();
     const hcpId = parseInt(this.props.urlQuery.hcp, 10);
     console.log('--- urlQuery:', this.props.urlQuery);
@@ -544,6 +549,10 @@ function mapStateToProps(state, ownProps) {
     isJointVisit: selector(state, 'is_joint_visit'),
     isAdverseEvent: selector(state, 'is_adverse_event'),
     noFollowUpRequired: selector(state, 'no_follow_up_required'),
+    initialValues: {
+      resources: [],  // to quench warning
+      purpose: 'wtf',
+    },
   };
 }
 
@@ -565,19 +574,19 @@ const withSaga = injectSaga({ key: 'recordInteraction', saga });
 export default compose(
   withReducer,
   withSaga,
-  withConnect,
   reduxForm({
     form: 'recordInteraction',
-    initialValues: {
-      resources: [],  // to quench warning
-      // origin_of_interaction:
-      // time_of_interaction: new Date().toISOString(),
-    },
     validate,
     onSubmit: (data, dispatch, props) => {
       // data.outcome = 'follow_up';
       // data.description = '...';
       props.recordInteraction(new Interaction(data));
     },
+    initialValues: {
+      resources: [],  // to quench warning
+      purpose: 'wtf0',
+    },
+    enableReinitialize: true,
   }),
+  withConnect,
 )(RecordInteraction);

@@ -69,8 +69,6 @@ export class App extends React.PureComponent {
               <Switch>
                 <Route exact path={routes.DASHBOARD.path} component={Dashboard} />
                 <Route exact path={routes.RECORD_INTERACTION.path} component={RecordInteraction} />
-                <Route path={routes.RECORD_INTERACTION_FOR_EP.path} component={RecordInteraction} />
-                <Route path={routes.RECORD_INTERACTION_FOR_HCP.path} component={RecordInteraction} />
                 <Route path={routes.NOT_FOUND.path} component={NotFound} />
               </Switch>
             )}

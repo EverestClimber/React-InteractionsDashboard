@@ -23,19 +23,48 @@ export default class HCPSelector extends React.Component {
     onHCPSelected: PropTypes.func,
   };
 
-  state = {
-    searchHCPsText: '',
-    showList: false,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      searchHCPsText: '',
+      showList: false,
+    };
+    this.containerRef = React.createRef();
+    this.inputRef = React.createRef();
+  }
 
   componentDidMount() {
-    console.log('=== props', this.props);
+    document.body.addEventListener('click', this.handleBodyClick);
+
     const hcpId = this.props.input.value;
     if (hcpId) {
       this.props.fetchHCP(hcpId);
       this.props.onHCPSelected(hcpId);
     }
   }
+
+  componentWillUnmount() {
+    document.body.removeEventListener('click', this.handleBodyClick);
+  }
+
+  handleBodyClick = (event) => {
+    if (this.inputRef.current && this.inputRef.current.contains(event.target)) {
+      // console.log('*** clicked inside');
+      this.setState({ showList: true });
+    } else {
+      // console.log('*** clicked outside');
+      // when clicking inside leave time at lease for event to propagate
+      if (this.containerRef.current && this.containerRef.current.contains(event.target)) {
+        // TODO: replace this hack with toggling visibility instead of existence based on showList
+        setTimeout(
+          () => this.setState({ showList: false }),
+          250
+        );
+      } else {
+        this.setState({ showList: false });
+      }
+    }
+  };
 
   handleSearchHCPsInputChange = (event) => {
     this.setState({ searchHCPsText: event.target.value });
@@ -45,23 +74,23 @@ export default class HCPSelector extends React.Component {
   searchHCPsKeyPressed = (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
-      console.log('...will search for HCPs');
       this.props.searchHCPs(this.state.searchHCPsText);
     }
   };
 
-  searchHCPsFocused = () => {
-    this.setState({ showList: true });
-  };
-
-  searchHCPsBlured = () => {
-    setTimeout(
-      () => this.setState({ showList: false }),
-      250
-    );
-  };
+  // searchHCPsFocused = () => {
+  //   this.setState({ showList: true });
+  // };
+  //
+  // searchHCPsBlured = () => {
+  //   setTimeout(
+  //     () => this.setState({ showList: false }),
+  //     250
+  //   );
+  // };
 
   handleHCPSelection = (hcpId) => {
+    console.log('^^^ handle hcp select');
     this.props.input.onChange(hcpId);
     this.props.fetchHCP(hcpId);
     this.props.onHCPSelected(hcpId);
@@ -81,17 +110,23 @@ export default class HCPSelector extends React.Component {
     const { hcps, hcp, meta } = this.props;
 
     return (
-      <div className={`HCPSelector ${(meta.touched && meta.error) ? 'HCPSelector--error' : ''}`}>
+      <div
+        className={`HCPSelector ${(meta.touched && meta.error) ? 'HCPSelector--error' : ''}`}
+        ref={this.containerRef}
+      >
         <Row>
           <Col sm={10}>
-            <div className="HCPSelector__Search">
+            <div
+              className="HCPSelector__Search"
+              ref={this.inputRef}
+            >
               <FormControl
                 type="text"
                 placeholder="Search HCPs ..."
                 onChange={this.handleSearchHCPsInputChange}
                 onKeyPress={this.searchHCPsKeyPressed}
-                onFocus={this.searchHCPsFocused}
-                onBlur={this.searchHCPsBlured}
+                // onFocus={this.searchHCPsFocused}
+                // onBlur={this.searchHCPsBlured}
                 className="form-control--primary"
                 value={this.state.searchHCPsText}
               />

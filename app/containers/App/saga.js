@@ -5,7 +5,8 @@ import { List } from 'immutable';
 import User from 'records/User';
 import AffiliateGroup from 'records/AffiliateGroup';
 import TherapeuticArea from 'records/TherapeuticArea';
-import { getSelf, postRefreshToken } from 'api/auth';
+import { postRefreshToken } from 'api/auth';
+import { getSelf } from 'api/users';
 import { getAffiliateGroups } from 'api/affiliateGroups';
 import { getTherapeuticAreas } from 'api/therapeuticAreas';
 

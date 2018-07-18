@@ -2,10 +2,17 @@ import { takeLatest, call, put } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
 
 import User from 'records/User';
-import { postObtainToken, getSelf } from '../../api/auth';
+import { postObtainToken } from 'api/auth';
+import { getSelf } from 'api/users';
 import { loginActionTypes } from './constants';
 import { loginActions } from './actions';
-import { setUser, setLoading } from '../App/actions';
+import {
+  setUser,
+  setLoading,
+  getCurrentUserActions,
+  fetchCommonDataActions,
+} from '../App/actions';
+
 
 function* loginSaga(action) {
   const { payload } = action;
@@ -15,6 +22,7 @@ function* loginSaga(action) {
     const tokenResponse = yield call(postObtainToken, payload.email, payload.password);
     const token = tokenResponse.data.token;
 
+    console.log('^^^ set api token:', token);
     localStorage.setItem('token', token);
 
     const selfResponse = yield call(getSelf, token);
@@ -22,6 +30,9 @@ function* loginSaga(action) {
     const user = User.fromApiData(selfResponse.data);
     yield put(setUser(user));
     yield put(setLoading(false));
+
+    yield put(getCurrentUserActions.request());
+    yield put(fetchCommonDataActions.request());
 
     yield put(push('/'));
   } catch (error) {

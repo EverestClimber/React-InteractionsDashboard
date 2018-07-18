@@ -39,6 +39,11 @@ export class Dashboard extends React.PureComponent { // eslint-disable-line reac
             <Button>Record Interaction for HCP #2</Button>
           </Link>
         </p>
+        <p>
+          <Link to={`${routes.RECORD_INTERACTION.path}?origin_of_interaction=engagement_plan`}>
+            <Button>Record Interaction from EP</Button>
+          </Link>
+        </p>
 
       </Grid>
     );

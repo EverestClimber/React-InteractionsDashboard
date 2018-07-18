@@ -3,15 +3,14 @@ $nav-font-size: 13px;
 
 .topbar {
   height: 50px;
-  //padding: 0 60px;
   background: $n-white;
   border-bottom: 1px solid $n-grey-light;
+  padding: 0 0 6px 0;
 
   &__container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    //max-width: $topbar-container-width;
     height: 100%;
     margin: 0 auto;
   }

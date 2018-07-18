@@ -55,7 +55,7 @@ export class RecordInteraction extends React.Component {
     noFollowUpRequired: PropTypes.bool,
     allFormErrors: PropTypes.any,
     serverError: PropTypes.string,
-    // initialize: PropTypes.func.isRequired,
+    initialize: PropTypes.func.isRequired,
   };
 
   state = {
@@ -64,11 +64,11 @@ export class RecordInteraction extends React.Component {
   };
 
   componentDidMount() {
-    // this.props.initialize({
-    //   resources: [],  // to quench warning
-    //   origin_of_interaction: this.props.urlQuery.origin_of_interaction,
-    //   hcp_id: this.props.urlQuery.hcp ? +this.props.urlQuery.hcp : undefined,
-    // });
+    this.props.initialize({
+      resources: [],  // to quench warning
+      origin_of_interaction: this.props.urlQuery.origin_of_interaction,
+      hcp_id: this.props.urlQuery.hcp ? +this.props.urlQuery.hcp : undefined,
+    });
     this.props.fetchInteractionRecordingRequiredData();
     const hcpId = parseInt(this.props.urlQuery.hcp, 10);
     console.log('--- urlQuery:', this.props.urlQuery);
@@ -452,7 +452,7 @@ export class RecordInteraction extends React.Component {
           {allFormErrors && (
             <CenteredAlert bsStyle="danger" className="centered">
               Please fill in all the fields above.
-              {/* <pre>{JSON.stringify(allFormErrors, null, 2)}</pre> */}
+             <pre>{JSON.stringify(allFormErrors, null, 2)}</pre>
             </CenteredAlert>
           )}
 
@@ -593,6 +593,6 @@ export default compose(
       resources: [],  // to quench warning
       purpose: 'wtf0',
     },
-    enableReinitialize: true,
+    // enableReinitialize: true,
   }),
 )(RecordInteraction);

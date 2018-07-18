@@ -36,8 +36,7 @@ function recordInteractionReducer(state = initialState, action) {
     }
 
     case recordInteractionActions.success.type: {
-      window.scrollTo(0, 0);
-      return state.merge({ serverError: null });
+      return initialState;
     }
 
     case searchHCPsActions.success.type:

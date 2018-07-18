@@ -248,42 +248,10 @@ export class RecordInteraction extends React.Component {
                           name="origin_of_interaction_other"
                           component={LabeledFormControl}
                           type="text"
-                          label="Other origin of interaction"
+                          placeholder="Other origin of interaction"
                           disabled={formDisabled}
                         />
                       )}
-
-                    </Col>
-                    <Col xs={6}>
-
-                      <Row>
-                        <Col xs={12}>
-
-                          <Field
-                            name="purpose"
-                            component={LabeledFormControl}
-                            type="text"
-                            placeholder="Enter purpose of interaction"
-                            disabled={formDisabled}
-                          />
-
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
-
-                </Panel.Body>
-              </Panel>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col xs={12}>
-              <Panel>
-                <Panel.Heading>Objective & Project</Panel.Heading>
-                <Panel.Body>
-                  <Row>
-                    <Col xs={6}>
 
                       <Field
                         name="hcp_objective_id"
@@ -299,19 +267,33 @@ export class RecordInteraction extends React.Component {
                     </Col>
                     <Col xs={6}>
 
-                      <Field
-                        name="project_id"
-                        placeholder="Select Project"
-                        component={SearchSelect}
-                        options={projects.map((it) => ({
-                          value: it.id,
-                          label: it.title,
-                        }))}
-                        isDisabled={formDisabled}
-                      />
+                      <Row>
+                        <Col xs={12}>
 
+                          <Field
+                            name="purpose"
+                            component={LabeledFormControl}
+                            type="text"
+                            placeholder="Enter purpose of interaction"
+                            disabled={formDisabled}
+                          />
+
+                          <Field
+                            name="project_id"
+                            placeholder="Select Project"
+                            component={SearchSelect}
+                            options={projects.map((it) => ({
+                              value: it.id,
+                              label: it.title,
+                            }))}
+                            isDisabled={formDisabled}
+                          />
+
+                        </Col>
+                      </Row>
                     </Col>
                   </Row>
+
                 </Panel.Body>
               </Panel>
             </Col>
@@ -452,7 +434,7 @@ export class RecordInteraction extends React.Component {
           {allFormErrors && (
             <CenteredAlert bsStyle="danger" className="centered">
               Please fill in all the fields above.
-             <pre>{JSON.stringify(allFormErrors, null, 2)}</pre>
+              <pre>{JSON.stringify(allFormErrors, null, 2)}</pre>
             </CenteredAlert>
           )}
 
@@ -492,6 +474,9 @@ const validate = (values) => { // eslint-disable-line no-unused-vars
   }
   if (!values.origin_of_interaction) {
     errors.origin_of_interaction = 'The origin of interaction must be specified';
+  }
+  if (values.origin_of_interaction === 'other' && !values.origin_of_interaction_other) {
+    errors.origin_of_interaction_other = 'The other origin of interaction must be specified';
   }
   if (values.is_proactive === undefined) {
     errors.is_proactive = 'Specify if this is a proactive or reactive interaction';
@@ -591,7 +576,6 @@ export default compose(
     },
     initialValues: {
       resources: [],  // to quench warning
-      purpose: 'wtf0',
     },
     // enableReinitialize: true,
   }),

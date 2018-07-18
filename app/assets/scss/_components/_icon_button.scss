@@ -16,6 +16,12 @@
   background: $s-icon-btn-bg;
   border-color: $s-icon-btn-border;
   color: $s-icon-btn-text-color;
+
+  .has-error & {
+    background: $s-error-bg;
+    color: $s-error-text;
+  }
+
   &, .btn-group > &.btn {
     margin: 0 8px;
   }

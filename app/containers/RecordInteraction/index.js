@@ -452,7 +452,7 @@ export class RecordInteraction extends React.Component {
           {allFormErrors && (
             <CenteredAlert bsStyle="danger" className="centered">
               Please fill in all the fields above.
-              <pre>{JSON.stringify(allFormErrors, null, 2)}</pre>
+              {/* <pre>{JSON.stringify(allFormErrors, null, 2)}</pre> */}
             </CenteredAlert>
           )}
 

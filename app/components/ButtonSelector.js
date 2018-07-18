@@ -22,7 +22,6 @@ export class ButtonsSelector extends React.Component {
 
 
   handleBtnClick = (event, idx, value) => {
-    console.log('^^^ selected option:', value, idx);
     this.props.input.onChange(value);
     this.setState({ selectedIdx: idx });
   };

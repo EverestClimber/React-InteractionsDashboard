@@ -10,7 +10,7 @@ $ctrl-height: 36px;
   &:hover {
     background: $n-white;
   }
-  &:not(.btn-block) {
+  &:not(.btn-block):not(.btn-default) {
     margin-right: 15px;
   }
   center &:not(.btn-block) {
@@ -23,6 +23,24 @@ $ctrl-height: 36px;
     top: 6px;
     font-size: 24px;
     line-height: 10px;
+  }
+}
+
+.input-group {
+  .input-group-addon {
+    background: transparent;
+    border-color: $s-border-light;
+    border-right: transparent;
+    & + input {
+      border-left: transparent;
+    }
+  }
+  input + .input-group-btn {
+    button {
+      border-color: $s-border-light;
+      background: $n-grey-lighter;
+      color: $n-darkest;
+    }
   }
 }
 

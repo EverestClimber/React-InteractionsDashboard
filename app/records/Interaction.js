@@ -9,6 +9,7 @@ class Interaction extends Record({
   id: undefined,
   // relationships
   user_id: null,
+  user: null,
   hcp_id: null,
   hcp: null,
   hcp_objective_id: null,

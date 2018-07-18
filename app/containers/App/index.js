@@ -8,6 +8,7 @@ import Loader from 'containers/Loader';
 import Dashboard from 'containers/Dashboard';
 import Login from 'containers/Login';
 import RecordInteraction from 'containers/RecordInteraction';
+import ListInteractions from 'containers/ListInteractions';
 import NotFound from 'containers/NotFound';
 import TopBar from 'components/TopBar';
 
@@ -69,6 +70,7 @@ export class App extends React.PureComponent {
               <Switch>
                 <Route exact path={routes.DASHBOARD.path} component={Dashboard} />
                 <Route exact path={routes.RECORD_INTERACTION.path} component={RecordInteraction} />
+                <Route exact path={routes.LIST_INTERACTIONS.path} component={ListInteractions} />
                 <Route path={routes.NOT_FOUND.path} component={NotFound} />
               </Switch>
             )}

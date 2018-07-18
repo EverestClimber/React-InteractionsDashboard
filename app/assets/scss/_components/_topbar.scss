@@ -2,8 +2,8 @@ $topbar-container-width: 1464px;
 $nav-font-size: 13px;
 
 .topbar {
-  height: 74px;
-  padding: 0 60px;
+  height: 50px;
+  //padding: 0 60px;
   background: $n-white;
   border-bottom: 1px solid $n-grey-light;
 
@@ -11,7 +11,7 @@ $nav-font-size: 13px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: $topbar-container-width;
+    //max-width: $topbar-container-width;
     height: 100%;
     margin: 0 auto;
   }
@@ -19,6 +19,10 @@ $nav-font-size: 13px;
   &__section {
     display: flex;
     align-items: center;
+    margin: 0 auto 0 0;
+    &:last-of-type {
+      margin: 0 0 0 auto;
+    }
   }
 
   &__logo,
@@ -27,20 +31,23 @@ $nav-font-size: 13px;
   }
 
   &__logo {
-    width: 120px;
-    height: 46px;
+    width: 92px;
+    height: 35px;
     background: url(../images/svg/logo.svg) center center no-repeat;
   }
 
   &__nav {
-    margin-left: 65px;
+    margin-left: 30px;
   }
 
   &__logout {
-    margin-left: 36px;
     font-size: $nav-font-size;
     color: $n-black;
     font-weight: lighter;
+    border: 0;
+    &.btn {
+      margin: 0 0 0 36px;
+    }
 
     &:active,
     &:visited,
@@ -58,9 +65,10 @@ $nav-font-size: 13px;
     color: $n-black;
     line-height: 13px;
     font-weight: lighter;
+    padding-right: 4px;
 
     &:not(:first-child) {
-      margin-left: 42px;
+      margin-left: 15px;
     }
 
     &:active,
@@ -76,6 +84,14 @@ $nav-font-size: 13px;
       padding-bottom: 6px;
       border-bottom: 1px solid $n-black;
     }
+
+    .fi-icon {
+      position: relative;
+      margin: 0 5px 0 0;
+      top: 4px;
+      font-size: 22px;
+      font-weight: 200;
+    }
   }
 }
 
@@ -89,7 +105,8 @@ $nav-font-size: 13px;
   }
 
   &__name {
-    font-size: rem(14); // 14px
+    font-size: rem(11);
+    font-weight: bold;
     line-height: 23px;
 
     &:hover,
@@ -102,5 +119,6 @@ $nav-font-size: 13px;
   &__ta {
     font-size: 11px;
     line-height: 11px;
+    color: $n-darkest;
   }
 }

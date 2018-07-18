@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { Link, withRouter } from 'react-router-dom';
-import { Button } from 'react-bootstrap';
+import {
+  Button,
+  Grid,
+} from 'react-bootstrap';
 
 import routes from 'routes';
 import { logout } from 'containers/App/actions';
@@ -21,7 +24,7 @@ export class TopBar extends React.PureComponent { // eslint-disable-line react/p
 
     return (
       <Link to={path} className={`topbar-nav__item ${activeClass}`}>
-        <i className={`nav-icon nav-icon__${icon} nav-icon--left`}></i>
+        <span className={`fi-icon icon-${icon}`} />
         {title}
       </Link>
     );
@@ -33,15 +36,17 @@ export class TopBar extends React.PureComponent { // eslint-disable-line react/p
 
     return (
       <div className="topbar">
-        <div className="topbar__container">
+        <Grid className="topbar__container">
           <div className="topbar__section">
             <div className="topbar__logo" />
             <div className="topbar__nav topbar-nav">
-              {this.renderRoute('MSL Dashboard', routes.DASHBOARD.path, 'folder')}
-              {this.renderRoute('HCP Directory', routes.HCP_DIRECTORY.path, 'folder')}
-              {this.renderRoute('Record Interaction', routes.RECORD_INTERACTION.path, 'folder')}
-              {this.renderRoute('Report', routes.REPORT.path, 'folder')}
+              {this.renderRoute('MSL Dashboard', routes.DASHBOARD.path, 'nav-dashboard')}
+              {this.renderRoute('HCP Directory', routes.HCP_DIRECTORY.path, 'nav-hcps')}
+              {this.renderRoute('Record Interaction', routes.RECORD_INTERACTION.path, 'nav-record')}
+              {this.renderRoute('Report', routes.REPORT.path, 'nav-report')}
             </div>
+          </div>
+          <div className="topbar__section">
           </div>
           <div className="topbar__section">
             <div className="topbar__user topbar-user">
@@ -59,7 +64,7 @@ export class TopBar extends React.PureComponent { // eslint-disable-line react/p
               Log Out
             </Button>
           </div>
-        </div>
+        </Grid>
       </div>
     );
   }

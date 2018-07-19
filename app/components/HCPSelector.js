@@ -17,7 +17,7 @@ export default class HCPSelector extends React.Component {
     meta: PropTypes.object, // { error, ... }
     // other
     hcps: PropTypes.array,
-    hcp: PropTypes.object,
+    selectedHCPs: PropTypes.object,
     searchHCPs: PropTypes.func,
     fetchHCP: PropTypes.func,
     onHCPSelected: PropTypes.func,
@@ -108,7 +108,7 @@ export default class HCPSelector extends React.Component {
   };
 
   render() {
-    const { hcps, hcp, meta } = this.props;
+    const { hcps, selectedHCPs, meta } = this.props;
 
     return (
       <div
@@ -154,7 +154,7 @@ export default class HCPSelector extends React.Component {
           <ListHCPs hcps={hcps} handleSelect={this.handleHCPSelection} />
         ) : null}
 
-        {hcp && <SelectedHCP hcp={hcp} handleRemove={() => this.handleHCPSelection(null)} />}
+        {selectedHCPs.size && <SelectedHCPs hcps={selectedHCPs} handleRemove={() => this.handleHCPSelection(null)} />}
       </div>
     );
   }
@@ -209,47 +209,52 @@ const ListHCPs = ({ hcps, handleSelect }) => ( // eslint-disable-line react/prop
 );
 
 
-const SelectedHCP = ({ hcp, handleRemove }) => ( // eslint-disable-line react/prop-types
-  <Panel
-    className={`HCPSelector__SelectedHCP HCPSelector__SelectedHCP--${hcp.has_consented ? 'consentYes' : 'consentNo'}`}
-  >
-    <Panel.Body>
-      <div className="HCPSelector__SelectedHCP__heading">
-        <span className="HCPSelector__SelectedHCP__name">
-          Dr. {hcp.first_name} {hcp.last_name}
-        </span>
-        <span
-          className={`HCPSelector__SelectedHCP__consent HCPSelector__SelectedHCP__consent--${hcp.has_consented ? 'yes' : 'no'}`}
-        >
-          <span className={hcp.has_consented ? 'icon-consent-yes' : 'icon-consent-no'} />
-          <span className="HCPSelector__SelectedHCP__consent__label">
-            {hcp.has_consented ? '' : 'NO CONSENT'}
-          </span>
-        </span>
-        <span
-          className="HCPSelector__SelectedHCP__remove icon-delete"
-          role="button"
-          tabIndex={0}
-          onClick={handleRemove}
-        />
-      </div>
-      <div className="HCPSelector__SelectedHCP__location HCPSelector__location">
-        <span className="icon-hcp-location" />
-        <span className="HCPSelector__SelectedHCP__location__city">
-          {hcp.city}
-        </span>
-        {', '}
-        <span className="HCPSelector__SelectedHCP__location__country">
-          {hcp.country}
-        </span>
-      </div>
-      <div className="HCPSelector__SelectedHCP__tas">
-        {hcp.ta_names.join(', ')}
-      </div>
-      <div className="HCPSelector__SelectedHCP__institution_name">
-        <span className="icon-hcp-hospital" />{' '}
-        {hcp.institution_name}
-      </div>
-    </Panel.Body>
-  </Panel>
+const SelectedHCPs = ({ hcps, handleRemove }) => ( // eslint-disable-line react/prop-types
+  <div className="HCPSelector__SelectedHCPs">
+    {hcps.map((hcp) => (
+      <Panel
+        key={hcp.id}
+        className={`HCPSelector__SelectedHCP HCPSelector__SelectedHCP--${hcp.has_consented ? 'consentYes' : 'consentNo'}`}
+      >
+        <Panel.Body>
+          <div className="HCPSelector__SelectedHCP__heading">
+            <span className="HCPSelector__SelectedHCP__name">
+              Dr. {hcp.first_name} {hcp.last_name}
+            </span>
+            <span
+              className={`HCPSelector__SelectedHCP__consent HCPSelector__SelectedHCP__consent--${hcp.has_consented ? 'yes' : 'no'}`}
+            >
+              <span className={hcp.has_consented ? 'icon-consent-yes' : 'icon-consent-no'} />
+              <span className="HCPSelector__SelectedHCP__consent__label">
+                {hcp.has_consented ? '' : 'NO CONSENT'}
+              </span>
+            </span>
+            <span
+              className="HCPSelector__SelectedHCP__remove icon-delete"
+              role="button"
+              tabIndex={0}
+              onClick={handleRemove}
+            />
+          </div>
+          <div className="HCPSelector__SelectedHCP__location HCPSelector__location">
+            <span className="icon-hcp-location" />
+            <span className="HCPSelector__SelectedHCP__location__city">
+              {hcp.city}
+            </span>
+            {', '}
+            <span className="HCPSelector__SelectedHCP__location__country">
+              {hcp.country}
+            </span>
+          </div>
+          <div className="HCPSelector__SelectedHCP__tas">
+            {hcp.ta_names.join(', ')}
+          </div>
+          <div className="HCPSelector__SelectedHCP__institution_name">
+            <span className="icon-hcp-hospital" />{' '}
+            {hcp.institution_name}
+          </div>
+        </Panel.Body>
+      </Panel>
+    ))}
+  </div>
 );

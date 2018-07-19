@@ -1,4 +1,5 @@
 import * as qs from 'qs';
+import { OrderedMap } from 'immutable';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { compose, bindActionCreators } from 'redux';
@@ -146,7 +147,7 @@ export class RecordInteraction extends React.Component {
             name="hcp_id"
             component={HCPSelector}
             hcps={hcps}
-            hcp={hcp}
+            selectedHCPs={new OrderedMap(hcp ? [[hcp.id, hcp]] : [])}
             searchHCPs={searchHCPs}
             fetchHCP={fetchHCP}
             onHCPSelected={fetchHCPObjectives}

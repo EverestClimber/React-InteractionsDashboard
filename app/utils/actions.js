@@ -10,7 +10,7 @@
  * contexts too.
  *
  * Eg.
- *    makeAction('SET_USER', (user) => ({ payload: user }))
+ *    makeActionCreator('SET_USER', (user) => ({ payload: user }))
  * returns:
  *    a function that:
  *    1. has type: 'SET_USER' set on it
@@ -36,7 +36,7 @@ export function makeActionCreator(type, maker) {
  * the action type as an attribute on the function itself.
  *
  * Eg.
- *    makeActions('FETCH_COMMON_DATA', {
+ *    makeActionCreators('FETCH_COMMON_DATA', {
  *        request: () => {},
  *        success: (payload) => { payload },
  *        error: (message) => { message },

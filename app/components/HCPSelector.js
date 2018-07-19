@@ -6,6 +6,7 @@ import {
   Panel,
   FormControl,
   Button,
+  Checkbox,
 } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
@@ -20,7 +21,9 @@ export default class HCPSelector extends React.Component {
     selectedHCPs: PropTypes.object,
     searchHCPs: PropTypes.func,
     fetchHCP: PropTypes.func,
+    removeHCP: PropTypes.func,
     onHCPSelected: PropTypes.func,
+    multiple: PropTypes.bool,
   };
 
   constructor(props) {
@@ -34,6 +37,8 @@ export default class HCPSelector extends React.Component {
   }
 
   componentDidMount() {
+    console.log('$$$ props:', this.props);
+
     document.body.addEventListener('click', this.handleBodyClick);
 
     // when value is received from outside
@@ -79,26 +84,18 @@ export default class HCPSelector extends React.Component {
     }
   };
 
-  // searchHCPsFocused = () => {
-  //   this.setState({ showList: true });
-  // };
-  //
-  // searchHCPsBlured = () => {
-  //   setTimeout(
-  //     () => this.setState({ showList: false }),
-  //     250
-  //   );
-  // };
-
   handleHCPSelection = (hcpId) => {
-    console.log('^^^ handle hcp select');
     this.props.input.onChange(hcpId);
     this.props.fetchHCP(hcpId);
     this.props.onHCPSelected(hcpId);
   };
 
+  handleHCPRemoval = (hcpId) => {
+    this.props.input.onChange(null);
+    this.props.removeHCP(hcpId);
+  };
+
   showAll = () => {
-    console.log('--- SHOW ALL ---');
     this.setState({ searchHCPsText: '' });
     this.props.searchHCPs('');
     setTimeout(
@@ -108,11 +105,11 @@ export default class HCPSelector extends React.Component {
   };
 
   render() {
-    const { hcps, selectedHCPs, meta } = this.props;
+    const { hcps, selectedHCPs, meta, multiple } = this.props;
 
     return (
       <div
-        className={`HCPSelector ${(meta.touched && meta.error) ? 'HCPSelector--error' : ''}`}
+        className={`HCPSelector ${(meta && meta.touched && meta.error) ? 'HCPSelector--error' : ''} ${multiple ? 'HCPSelector--multiple' : ''}`}
         ref={this.containerRef}
       >
         <Row>
@@ -151,17 +148,27 @@ export default class HCPSelector extends React.Component {
         <br />
 
         {(this.state.showList && hcps && hcps.length) ? (
-          <ListHCPs hcps={hcps} handleSelect={this.handleHCPSelection} />
+          <ListHCPs
+            hcps={hcps}
+            handleSelect={this.handleHCPSelection}
+            multiple={multiple}
+            selectedHCPs={selectedHCPs}
+          />
         ) : null}
 
-        {selectedHCPs.size && <SelectedHCPs hcps={selectedHCPs} handleRemove={() => this.handleHCPSelection(null)} />}
+        {!!selectedHCPs.size && (
+          <SelectedHCPs
+            hcps={selectedHCPs}
+            handleRemove={this.handleHCPRemoval}
+          />
+        )}
       </div>
     );
   }
 }
 
 
-const ListHCPs = ({ hcps, handleSelect }) => ( // eslint-disable-line react/prop-types
+const ListHCPs = ({ multiple, hcps, handleSelect, selectedHCPs }) => ( // eslint-disable-line react/prop-types
   <Grid className="HCPSelector__ListHCPs__container">
     <Row>
       <Col sm={10}>
@@ -176,6 +183,12 @@ const ListHCPs = ({ hcps, handleSelect }) => ( // eslint-disable-line react/prop
                   tabIndex={0}
                   onClick={() => handleSelect(hcp.id)}
                 >
+                  {multiple && (
+                    <div className="HCPSelector__ListHCPs__HCP__selected">
+                      <Checkbox inline checked={!!selectedHCPs.get(hcp.id)} />
+                    </div>
+                  )}
+
                   <div className="HCPSelector__ListHCPs__HCP__name">
                     {hcp.first_name} {hcp.last_name}
                   </div>
@@ -211,7 +224,7 @@ const ListHCPs = ({ hcps, handleSelect }) => ( // eslint-disable-line react/prop
 
 const SelectedHCPs = ({ hcps, handleRemove }) => ( // eslint-disable-line react/prop-types
   <div className="HCPSelector__SelectedHCPs">
-    {hcps.map((hcp) => (
+    {Array.from(hcps.values()).map((hcp) => (
       <Panel
         key={hcp.id}
         className={`HCPSelector__SelectedHCP HCPSelector__SelectedHCP--${hcp.has_consented ? 'consentYes' : 'consentNo'}`}
@@ -221,6 +234,7 @@ const SelectedHCPs = ({ hcps, handleRemove }) => ( // eslint-disable-line react/
             <span className="HCPSelector__SelectedHCP__name">
               Dr. {hcp.first_name} {hcp.last_name}
             </span>
+
             <span
               className={`HCPSelector__SelectedHCP__consent HCPSelector__SelectedHCP__consent--${hcp.has_consented ? 'yes' : 'no'}`}
             >
@@ -229,13 +243,16 @@ const SelectedHCPs = ({ hcps, handleRemove }) => ( // eslint-disable-line react/
                 {hcp.has_consented ? '' : 'NO CONSENT'}
               </span>
             </span>
-            <span
+
+            <div
               className="HCPSelector__SelectedHCP__remove icon-delete"
               role="button"
               tabIndex={0}
-              onClick={handleRemove}
-            />
+              onClick={() => handleRemove(hcp.id)}
+            >
+            </div>
           </div>
+
           <div className="HCPSelector__SelectedHCP__location HCPSelector__location">
             <span className="icon-hcp-location" />
             <span className="HCPSelector__SelectedHCP__location__city">

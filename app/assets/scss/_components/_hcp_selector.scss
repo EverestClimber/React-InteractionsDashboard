@@ -107,6 +107,7 @@
         white-space: nowrap;
         text-overflow: ellipsis;
       }
+
       &__name {
       }
       &__institution {
@@ -114,6 +115,34 @@
       &__location {
       }
       &__tas {
+      }
+    }
+  }
+
+  &--multiple {
+    .HCPSelector__ListHCPs {
+      &__HCP {
+        &__selected {
+          width: 10%;
+          max-width: 60px;
+          text-align: center;
+          label.checkbox-inline {
+            display: inline-block;
+            margin-top: -5px;
+          }
+        }
+        &__name {
+          width: 22.5%;
+        }
+        &__institution {
+          width: 22.5%;
+        }
+        &__location {
+          width: 22.5%;
+        }
+        &__tas {
+          min-width: 22.5%;
+        }
       }
     }
   }

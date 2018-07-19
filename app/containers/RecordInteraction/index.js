@@ -39,7 +39,6 @@ export class RecordInteraction extends React.Component {
     affiliateGroups: PropTypes.object,
     urlQuery: PropTypes.object,
     submitting: PropTypes.bool,
-    pristine: PropTypes.bool,
     handleSubmit: PropTypes.func,
     searchHCPs: PropTypes.func,
     fetchHCP: PropTypes.func,
@@ -97,7 +96,6 @@ export class RecordInteraction extends React.Component {
       therapeuticAreas,
       affiliateGroups,
       submitting,
-      pristine,
       handleSubmit,
       searchHCPs,
       fetchHCP,
@@ -121,8 +119,8 @@ export class RecordInteraction extends React.Component {
 
     const formDisabled = (hcp && !hcp.has_consented) ? !this.state.recordWithoutConsent : false;
 
-    console.log('DISABLED=', formDisabled, (hcp && !hcp.has_consented), this.state.recordWithoutConsent);
-    console.log('SUBMIT DISABLED=', pristine, submitting, formDisabled, !!allFormErrors);
+    // console.log('DISABLED=', formDisabled, (hcp && !hcp.has_consented), this.state.recordWithoutConsent);
+    // console.log('SUBMIT DISABLED=', pristine, submitting, formDisabled, !!allFormErrors);
 
     return (
       <Grid>
@@ -139,9 +137,7 @@ export class RecordInteraction extends React.Component {
           </CenteredAlert>
         )}
 
-        <form
-          onSubmit={handleSubmit}
-        >
+        <form onSubmit={handleSubmit}>
 
           <Field
             name="hcp_id"
@@ -150,7 +146,9 @@ export class RecordInteraction extends React.Component {
             selectedHCPs={new OrderedMap(hcp ? [[hcp.id, hcp]] : [])}
             searchHCPs={searchHCPs}
             fetchHCP={fetchHCP}
+            removeHCP={() => fetchHCP(null)}
             onHCPSelected={fetchHCPObjectives}
+            multiple
           />
 
           {hcp && !hcp.has_consented && !this.state.recordWithoutConsent && (

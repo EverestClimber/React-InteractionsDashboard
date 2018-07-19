@@ -37,6 +37,7 @@ class Interaction extends Record({
   created_at: undefined,
 }) {
   static READ_ONLY_FIELDS = [
+    'user',
     'hcp',
     'hcp_objective',
     'project',

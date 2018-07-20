@@ -1,6 +1,15 @@
-// import { take, call, put, select } from 'redux-saga/effects';
+import { takeLatest } from 'redux-saga/effects';
+import { makeFetchHCPSaga, makeSearchHCPsSaga } from 'containers/App/saga';
+import { fetchHCPActions, searchHCPsActions } from './actions';
 
-// Individual exports for testing
+
 export default function* createEPAddHCPsRootSage() {
-  // See example in containers/HomePage/saga.js
+  yield takeLatest(
+    searchHCPsActions.request.type,
+    makeSearchHCPsSaga(searchHCPsActions.success, searchHCPsActions.error)
+  );
+  yield takeLatest(
+    fetchHCPActions.request.type,
+    makeFetchHCPSaga(fetchHCPActions.success, fetchHCPActions.error)
+  );
 }

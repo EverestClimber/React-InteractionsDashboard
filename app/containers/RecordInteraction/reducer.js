@@ -1,10 +1,10 @@
 import { fromJS, List } from 'immutable';
 import {
   fetchInteractionRecordingRequiredDataActions,
-  searchHCPsActions,
-  fetchHCPActions,
   fetchHCPObjectivesActions,
   recordInteractionActions,
+  searchHCPsActions,
+  fetchHCPActions,
 } from './actions';
 
 

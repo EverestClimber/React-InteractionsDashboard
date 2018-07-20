@@ -1,4 +1,4 @@
-import { takeEvery, call, put } from 'redux-saga/effects';
+import { select, takeEvery, call, put } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
 import { List } from 'immutable';
 
@@ -9,6 +9,8 @@ import { postRefreshToken } from 'api/auth';
 import { getSelf } from 'api/users';
 import { getAffiliateGroups } from 'api/affiliateGroups';
 import { getTherapeuticAreas } from 'api/therapeuticAreas';
+import HCP from 'records/HCP';
+import { getHCP, getHCPs } from 'api/hcps';
 
 import { LOGOUT, REFRESH_TOKEN } from './constants';
 import {
@@ -17,9 +19,62 @@ import {
   getCurrentUserActions,
   fetchCommonDataActions,
 } from './actions';
+import { selectGlobal } from './selectors';
 
 
-// const delay = (ms) => new Promise(res => setTimeout(res, ms));
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+
+export function makeSearchHCPsSaga(successActionCreator, errorActionCreator) {
+  return function* searchHCPsSaga({ search }) {
+    // debounce
+    yield delay(500);
+
+    try {
+      const res = yield call(getHCPs, { search });
+
+      const globalState = yield select(selectGlobal);
+      const tasById = globalState.get('therapeuticAreas');
+      const affiliateGroupsById = globalState.get('affiliateGroups');
+
+      const hcps = new List(res.data.map(
+        (hcpData) => HCP.fromApiData(hcpData, tasById, affiliateGroupsById))
+      );
+      // yield put(searchHCPsActions.success(hcps));
+      yield put(successActionCreator(hcps));
+
+    } catch (error) {
+      // yield put(searchHCPsActions.error(error.message));
+      yield put(errorActionCreator(error.message));
+    }
+  };
+}
+
+
+export function makeFetchHCPSaga(successActionCreator, errorActionCreator) {
+  return function* fetchHCPSaga({ hcpId }) {
+    if (!hcpId) {
+      yield put(successActionCreator(null));
+      return;
+    }
+
+    try {
+      const res = yield call(getHCP, hcpId);
+
+      const globalState = yield select(selectGlobal);
+      const tasById = globalState.get('therapeuticAreas');
+      const affiliateGroupsById = globalState.get('affiliateGroups');
+
+      const hcp = HCP.fromApiData(res.data, tasById, affiliateGroupsById);
+      // yield put(fetchHCPActions.success(hcp));
+      yield put(successActionCreator(hcp));
+
+    } catch (error) {
+      // yield put(fetchHCPActions.error(error.message));
+      yield put(errorActionCreator(error.message));
+    }
+  };
+}
 
 
 function* refreshTokenSaga() {
@@ -57,6 +112,7 @@ function* getCurrentUserSaga() {
   }
 }
 
+
 function* getCommonDataSaga() {
 
   console.log('~~~ in getCommonDataSaga');
@@ -92,15 +148,18 @@ function* getCommonDataSaga() {
   }
 }
 
+
 function* logoutSaga() {
   localStorage.removeItem('token');
 
   yield put(push('/login'));
 }
 
+
 export default function* appRootSaga() {
   yield takeEvery(getCurrentUserActions.request.type, getCurrentUserSaga);
   yield takeEvery(fetchCommonDataActions.request.type, getCommonDataSaga);
+
   yield takeEvery(REFRESH_TOKEN, refreshTokenSaga);
   yield takeEvery(LOGOUT, logoutSaga);
 }

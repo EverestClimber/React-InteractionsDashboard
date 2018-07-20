@@ -37,7 +37,6 @@ export default class HCPSelector extends React.Component {
   }
 
   componentDidMount() {
-    console.log('$$$ props:', this.props);
 
     document.body.addEventListener('click', this.handleBodyClick);
 
@@ -45,7 +44,9 @@ export default class HCPSelector extends React.Component {
     const hcpId = this.props.input.value;
     if (hcpId) {
       this.props.fetchHCP(hcpId);
-      this.props.onHCPSelected(hcpId);
+      if (this.props.onHCPSelected) {
+        this.props.onHCPSelected(hcpId);
+      }
     }
   }
 
@@ -87,7 +88,9 @@ export default class HCPSelector extends React.Component {
   handleHCPSelection = (hcpId) => {
     this.props.input.onChange(hcpId);
     this.props.fetchHCP(hcpId);
-    this.props.onHCPSelected(hcpId);
+    if (this.props.onHCPSelected) {
+      this.props.onHCPSelected(hcpId);
+    }
   };
 
   handleHCPRemoval = (hcpId) => {
@@ -156,7 +159,7 @@ export default class HCPSelector extends React.Component {
           />
         ) : null}
 
-        {!!selectedHCPs.size && (
+        {selectedHCPs && !!selectedHCPs.size && (
           <SelectedHCPs
             hcps={selectedHCPs}
             handleRemove={this.handleHCPRemoval}

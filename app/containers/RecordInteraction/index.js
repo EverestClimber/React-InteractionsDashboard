@@ -29,7 +29,8 @@ import {
   searchHCPsActions,
   fetchHCPActions,
   fetchHCPObjectivesActions,
-  recordInteractionActions, fetchInteractionRecordingRequiredDataActions,
+  recordInteractionActions,
+  fetchInteractionRecordingRequiredDataActions,
 } from './actions';
 
 

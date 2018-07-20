@@ -11,7 +11,7 @@ import { compose } from 'redux';
 
 import { CenteredAlert } from 'components/forms';
 import injectSaga from 'utils/injectSaga';
-import { CreateEPAddHCPs } from 'containers/CreateEPAddHCPs';
+import CreateEPAddHCPs from 'containers/CreateEPAddHCPs';
 import injectReducer from 'utils/injectReducer';
 import reducer from './reducer';
 import saga from './saga';
@@ -19,8 +19,8 @@ import saga from './saga';
 
 export class CreateEP extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
-    serverError: PropTypes.func.string,
-    engagementPlan: PropTypes.func.object,
+    serverError: PropTypes.string,
+    engagementPlan: PropTypes.object,
   };
 
   render() {
@@ -32,6 +32,7 @@ export class CreateEP extends React.Component { // eslint-disable-line react/pre
     return (
       <div>
         <h2>Create Engagement Plan</h2>
+
         {serverError && (
           <CenteredAlert bsStyle="danger">
             An error has occurred. Please refresh the page or try again later.

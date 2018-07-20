@@ -59,7 +59,6 @@ export class RecordInteraction extends React.Component {
   };
 
   state = {
-    selectedOption: '',
     recordWithoutConsent: false,
   };
 
@@ -79,17 +78,7 @@ export class RecordInteraction extends React.Component {
     }
   }
 
-  handleChange = (selectedOption) => {
-    this.setState({ selectedOption });
-    // selectedOption can be null when the `x` (close) button is clicked
-    if (selectedOption) {
-      console.log(`Selected: ${selectedOption.label}`);
-    }
-  };
-
   setRecordWithoutConsent = () => this.setState({ recordWithoutConsent: true });
-
-  unsetRecordWithoutConsent = () => this.setState({ recordWithoutConsent: false });
 
   render() {
     const {

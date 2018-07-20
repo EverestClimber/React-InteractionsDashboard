@@ -1,15 +1,10 @@
-/*
- *
- * CreateEp reducer
- *
- */
+import { fromJS } from 'immutable';
+import { EngagementPlan } from 'records/EngagementPlan';
 
-import { fromJS, List } from 'immutable';
 
 const initialState = fromJS({
   serverError: '',
-  hcpObjectives: new List(),
-  projectObjectives: new List(),
+  engagementPlan: new EngagementPlan(),
 });
 
 function createEpReducer(state = initialState, action) {

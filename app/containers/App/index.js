@@ -14,6 +14,7 @@ import TopBar from 'components/TopBar';
 
 import routes from 'routes';
 import injectSaga from 'utils/injectSaga';
+import { CreateEP } from 'containers/CreateEP';
 import saga from './saga';
 import {
   refreshToken,
@@ -71,6 +72,7 @@ export class App extends React.PureComponent {
                 <Route exact path={routes.DASHBOARD.path} component={Dashboard} />
                 <Route exact path={routes.RECORD_INTERACTION.path} component={RecordInteraction} />
                 <Route exact path={routes.LIST_INTERACTIONS.path} component={ListInteractions} />
+                <Route exact path={routes.CREATE_EP.path} component={CreateEP} />
                 <Route path={routes.NOT_FOUND.path} component={NotFound} />
               </Switch>
             )}

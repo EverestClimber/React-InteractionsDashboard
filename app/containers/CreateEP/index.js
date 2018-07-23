@@ -1,13 +1,14 @@
-/**
- *
- * CreateEp
- *
- */
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { compose } from 'redux';
+import { compose, bindActionCreators } from 'redux';
+import {
+  Grid,
+  // Col,
+  // Row,
+  // Button,
+  // Panel,
+} from 'react-bootstrap';
 
 import { CenteredAlert } from 'components/forms';
 import injectSaga from 'utils/injectSaga';
@@ -15,22 +16,32 @@ import CreateEPAddHCPs from 'containers/CreateEPAddHCPs';
 import injectReducer from 'utils/injectReducer';
 import reducer from './reducer';
 import saga from './saga';
+import {
+  removeHCPAction,
+  selectHCPsAction,
+} from './actions';
 
 
-export class CreateEP extends React.Component { // eslint-disable-line react/prefer-stateless-function
+class CreateEP extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     serverError: PropTypes.string,
     engagementPlan: PropTypes.object,
+    selectedHCPs: PropTypes.object,
+    selectHCPs: PropTypes.func,
+    removeHCP: PropTypes.func,
   };
 
   render() {
     const {
       serverError,
       engagementPlan,
+      selectedHCPs,
+      selectHCPs,
+      removeHCP,
     } = this.props;
 
     return (
-      <div>
+      <Grid>
         <h2>Create Engagement Plan</h2>
 
         {serverError && (
@@ -43,8 +54,11 @@ export class CreateEP extends React.Component { // eslint-disable-line react/pre
         <hr />
         <CreateEPAddHCPs
           engagementPlan={engagementPlan}
+          selectedHCPs={selectedHCPs}
+          selectHCPs={selectHCPs}
+          removeHCP={removeHCP}
         />
-      </div>
+      </Grid>
     );
   }
 }
@@ -54,13 +68,15 @@ function mapStateToProps(state) {
   return {
     serverError: createEPState.get('serverError'),
     engagementPlan: createEPState.get('engagementPlan'),
+    selectedHCPs: createEPState.get('selectedHCPs'),
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return {
-    dispatch,
-  };
+  return bindActionCreators({
+    selectHCPs: selectHCPsAction,
+    removeHCP: removeHCPAction,
+  }, dispatch);
 }
 
 const withConnect = connect(mapStateToProps, mapDispatchToProps);

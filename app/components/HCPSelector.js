@@ -86,16 +86,27 @@ export default class HCPSelector extends React.Component {
   };
 
   handleHCPSelection = (hcpId) => {
-    this.props.input.onChange(hcpId);
-    this.props.fetchHCP(hcpId);
-    if (this.props.onHCPSelected) {
-      this.props.onHCPSelected(hcpId);
+    if (!this.props.multiple) {
+      this.props.input.onChange(hcpId);
+      this.props.fetchHCP(hcpId);
+      if (this.props.onHCPSelected) {
+        this.props.onHCPSelected(hcpId);
+      }
+    } else {
+      const newSelectedHCPs = this.props.selectedHCPs.get(hcpId)
+        ? this.props.selectedHCPs.delete(hcpId)
+        : this.props.selectedHCPs.set(hcpId, this.props.hcps.find((hcp) => hcp.id === hcpId));
+      this.props.input.onChange(newSelectedHCPs);
     }
   };
 
   handleHCPRemoval = (hcpId) => {
-    this.props.input.onChange(null);
-    this.props.removeHCP(hcpId);
+    if (!this.props.multiple) {
+      this.props.input.onChange(null);
+      this.props.removeHCP(hcpId);
+    } else {
+      this.props.input.onChange(this.props.selectedHCPs.delete(hcpId));
+    }
   };
 
   showAll = () => {
@@ -188,7 +199,7 @@ const ListHCPs = ({ multiple, hcps, handleSelect, selectedHCPs }) => ( // eslint
                 >
                   {multiple && (
                     <div className="HCPSelector__ListHCPs__HCP__selected">
-                      <Checkbox inline checked={!!selectedHCPs.get(hcp.id)} />
+                      <Checkbox inline readOnly checked={!!selectedHCPs.get(hcp.id)} />
                     </div>
                   )}
 

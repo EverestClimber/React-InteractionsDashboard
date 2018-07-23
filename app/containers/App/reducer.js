@@ -28,8 +28,8 @@ function appReducer(state = initialState, action) {
         (therapeuticAreasById && therapeuticAreasById.size)
       ) ? User.fromApiData(
           action.payload.user.toApiData(),
-          affiliateGroupsById,
-          therapeuticAreasById
+          therapeuticAreasById,
+          affiliateGroupsById
         )
         : action.payload.user;
       return state.merge({

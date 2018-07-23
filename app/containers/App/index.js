@@ -14,7 +14,7 @@ import TopBar from 'components/TopBar';
 
 import routes from 'routes';
 import injectSaga from 'utils/injectSaga';
-import { CreateEP } from 'containers/CreateEP';
+import CreateEP from 'containers/CreateEP';
 import saga from './saga';
 import {
   refreshToken,

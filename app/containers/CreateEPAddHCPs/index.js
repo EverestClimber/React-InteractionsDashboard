@@ -12,8 +12,6 @@ import saga from './saga';
 import {
   fetchHCPActions,
   searchHCPsActions,
-  selectHCPsAction,
-  removeHCPAction,
 } from './actions';
 
 class CreateEPAddHCPs extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -37,8 +35,6 @@ class CreateEPAddHCPs extends React.Component { // eslint-disable-line react/pre
       selectHCPs,
       removeHCP,
     } = this.props;
-
-    console.log('~~~ props:', this.props);
 
     return (
       <div>
@@ -70,7 +66,6 @@ function mapStateToProps(state) {
   return {
     serverError: createEPAddHCPsState.get('serverError'),
     hcps: createEPAddHCPsState.get('hcps').toJS(),
-    selectedHCPs: createEPAddHCPsState.get('selectedHCPs'),
   };
 }
 
@@ -78,8 +73,6 @@ function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     fetchHCP: fetchHCPActions.request,
     searchHCPs: searchHCPsActions.request,
-    selectHCPs: selectHCPsAction.request,
-    removeHCP: removeHCPAction.request,
   }, dispatch);
 }
 

@@ -138,7 +138,6 @@ export class RecordInteraction extends React.Component {
             fetchHCP={fetchHCP}
             removeHCP={() => fetchHCP(null)}
             onHCPSelected={fetchHCPObjectives}
-            multiple
           />
 
           {hcp && !hcp.has_consented && !this.state.recordWithoutConsent && (

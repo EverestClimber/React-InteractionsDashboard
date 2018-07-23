@@ -1,4 +1,4 @@
-import { makeActionCreator, makeActionCreators } from 'utils/actions';
+import { makeActionCreators } from 'utils/actions';
 
 
 export const searchHCPsActions = makeActionCreators(
@@ -20,14 +20,3 @@ export const fetchHCPActions = makeActionCreators(
   }
 );
 
-
-export const selectHCPsAction = makeActionCreator(
-  'CREATE_EP/SELECT_HCPS',
-  (hcps) => ({ hcps }),
-);
-
-
-export const removeHCPAction = makeActionCreator(
-  'CREATE_EP/REMOVE_HCP',
-  (hcpId) => ({ hcpId }),
-);

@@ -52,6 +52,8 @@ export class EngagementPlanHCPItem extends Record({
   hcp: null,
   objectives: new List(),
   // fields
+  reason: '',
+  reason_other: '',
   approved: undefined,
   approved_at: undefined,
   created_at: undefined,
@@ -64,6 +66,12 @@ export class EngagementPlanHCPItem extends Record({
     'created_at',
     'updated_at',
   ];
+
+  static reason_choices = {
+    reason1: 'Reason 1',
+    reason2: 'Reason 2',
+    other: 'Other',
+  };
 
   toApiData() {
     const data = this.toJS();

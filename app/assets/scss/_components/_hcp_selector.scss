@@ -1,12 +1,5 @@
 
 .HCPSelector {
-  $s-text: $n-grey;
-  $s-name-text: $n-blue;
-  $s-consent-yes-text: $n-green;
-  $s-consent-yes-border: $n-green;
-  $s-consent-no-text: $n-red;
-  $s-consent-no-border: $n-red;
-
   position: relative;
 
   &--error {
@@ -146,74 +139,99 @@
       }
     }
   }
+}
 
-  &__SelectedHCP {
-    position: relative;
-    border: 1px solid;
-    color: $s-text;
-    &--consentYes {
-      border-color: $s-consent-yes-border;
-    }
-    &--consentNo {
-      border-color: $s-consent-no-border;
-    }
-    &__heading {
-      margin: 5px 0 0 0;
-    }
-    &__remove {
-      font-size: rem(30);
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      cursor: pointer;
-    }
-    &__consent {
-      &__label {
-        position: relative;
-        top: rem(-5);
-        font-size: rem(10);
-        line-height: rem(20);
-      }
-      [class^="icon-"] {
-        line-height: 10px;
-      }
-    }
-    &__name {
-      font-size: rem(16);
-      color: $s-name-text;
-    }
-    &__consent {
+.SelectedHCP {
+  $s-text: $n-grey;
+  $s-name-text: $n-blue;
+  $s-consent-yes-text: $n-green;
+  $s-consent-yes-border: $n-green;
+  $s-consent-no-text: $n-red;
+  $s-consent-no-border: $n-red;
+
+  position: relative;
+  border: 1px solid;
+  color: $s-text;
+
+  &--consentYes {
+    border-color: $s-consent-yes-border;
+  }
+  &--consentNo {
+    border-color: $s-consent-no-border;
+  }
+  &__heading {
+    margin: 5px 0 0 0;
+  }
+  &__remove {
+    font-size: rem(30);
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+  }
+  &__consent {
+    &__label {
       position: relative;
-      top: 5px;
-      font-size: rem(24);
+      top: rem(-5);
+      font-size: rem(10);
+      line-height: rem(20);
+    }
+    [class^="icon-"] {
       line-height: 10px;
-      margin-left: 2px;
-      &--yes {
-        color: $s-consent-yes-text;
-      }
-      &--no {
-        color: $s-consent-no-text;
-      }
     }
-    &__institution_name {
-      padding-top: rem(20);
-      [class^="icon-"] {
-        font-size: rem(26);
-        position: relative;
-        top: 4px;
-        line-height: 10px;
-        margin-left: -10px;
-      }
+  }
+  &__name {
+    font-size: rem(16);
+    color: $s-name-text;
+  }
+  &__consent {
+    position: relative;
+    top: 5px;
+    font-size: rem(24);
+    line-height: 10px;
+    margin-left: 2px;
+    &--yes {
+      color: $s-consent-yes-text;
     }
-    &__location {
-      text-align: right;
-      float: right;
-      clear: right;
+    &--no {
+      color: $s-consent-no-text;
     }
-    &__tas {
-      text-align: right;
-      float: right;
-      clear: right;
+  }
+  &__institution_name {
+    padding-top: rem(20);
+    [class^="icon-"] {
+      font-size: rem(26);
+      position: relative;
+      top: 4px;
+      line-height: 10px;
+      margin-left: -10px;
     }
+  }
+  &__location {
+    text-align: right;
+    float: right;
+    clear: right;
+  }
+  &__tas {
+    text-align: right;
+    float: right;
+    clear: right;
+  }
+
+  &__location {
+    [class^="icon-"] {
+      font-size: rem(28);
+      position: relative;
+      top: 4px;
+      line-height: 10px;
+    }
+    &__city {
+    }
+    &__country {
+    }
+  }
+
+  &__children {
+    margin: 15px 0 5px 0;
   }
 }

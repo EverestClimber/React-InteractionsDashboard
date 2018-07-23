@@ -160,7 +160,8 @@
       "no-restricted-syntax": 0,
       "padded-blocks": 0,
       "react/sort-comp": 0,
-      "no-lonely-if": 0
+      "no-lonely-if": 0,
+      "camelcase": 0
     },
     "settings": {
       "import/resolver": {

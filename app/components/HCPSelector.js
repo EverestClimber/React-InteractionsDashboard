@@ -3,7 +3,6 @@ import {
   Grid,
   Col,
   Row,
-  Panel,
   FormControl,
   Button,
   Checkbox,
@@ -23,6 +22,7 @@ export default class HCPSelector extends React.Component {
     fetchHCP: PropTypes.func,
     removeHCP: PropTypes.func,
     onHCPSelected: PropTypes.func,
+    renderSelectedHCP: PropTypes.func,
     multiple: PropTypes.bool,
   };
 
@@ -119,7 +119,8 @@ export default class HCPSelector extends React.Component {
   };
 
   render() {
-    const { hcps, selectedHCPs, meta, multiple } = this.props;
+    const { hcps, selectedHCPs, meta, multiple, renderSelectedHCP } = this.props;
+    const RenderSelectedHCP = renderSelectedHCP;
 
     return (
       <div
@@ -137,8 +138,6 @@ export default class HCPSelector extends React.Component {
                 placeholder="Search HCPs ..."
                 onChange={this.handleSearchHCPsInputChange}
                 onKeyPress={this.searchHCPsKeyPressed}
-                // onFocus={this.searchHCPsFocused}
-                // onBlur={this.searchHCPsBlured}
                 className="form-control--primary"
                 value={this.state.searchHCPsText}
               />
@@ -170,12 +169,13 @@ export default class HCPSelector extends React.Component {
           />
         ) : null}
 
-        {selectedHCPs && !!selectedHCPs.size && (
-          <SelectedHCPs
-            hcps={selectedHCPs}
-            handleRemove={this.handleHCPRemoval}
-          />
-        )}
+        {(renderSelectedHCP && selectedHCPs && selectedHCPs.size) ? (
+          <div className="SelectedHCPs">
+            {Array.from(selectedHCPs.values()).map((hcp) =>
+              <RenderSelectedHCP key={hcp.id} hcp={hcp} handleRemove={this.handleHCPRemoval} />
+            )}
+          </div>
+        ) : null}
       </div>
     );
   }
@@ -236,56 +236,10 @@ const ListHCPs = ({ multiple, hcps, handleSelect, selectedHCPs }) => ( // eslint
 );
 
 
-const SelectedHCPs = ({ hcps, handleRemove }) => ( // eslint-disable-line react/prop-types
-  <div className="HCPSelector__SelectedHCPs">
-    {Array.from(hcps.values()).map((hcp) => (
-      <Panel
-        key={hcp.id}
-        className={`HCPSelector__SelectedHCP HCPSelector__SelectedHCP--${hcp.has_consented ? 'consentYes' : 'consentNo'}`}
-      >
-        <Panel.Body>
-          <div className="HCPSelector__SelectedHCP__heading">
-            <span className="HCPSelector__SelectedHCP__name">
-              Dr. {hcp.first_name} {hcp.last_name}
-            </span>
-
-            <span
-              className={`HCPSelector__SelectedHCP__consent HCPSelector__SelectedHCP__consent--${hcp.has_consented ? 'yes' : 'no'}`}
-            >
-              <span className={hcp.has_consented ? 'icon-consent-yes' : 'icon-consent-no'} />
-              <span className="HCPSelector__SelectedHCP__consent__label">
-                {hcp.has_consented ? '' : 'NO CONSENT'}
-              </span>
-            </span>
-
-            <div
-              className="HCPSelector__SelectedHCP__remove icon-delete"
-              role="button"
-              tabIndex={0}
-              onClick={() => handleRemove(hcp.id)}
-            >
-            </div>
-          </div>
-
-          <div className="HCPSelector__SelectedHCP__location HCPSelector__location">
-            <span className="icon-hcp-location" />
-            <span className="HCPSelector__SelectedHCP__location__city">
-              {hcp.city}
-            </span>
-            {', '}
-            <span className="HCPSelector__SelectedHCP__location__country">
-              {hcp.country}
-            </span>
-          </div>
-          <div className="HCPSelector__SelectedHCP__tas">
-            {hcp.ta_names.join(', ')}
-          </div>
-          <div className="HCPSelector__SelectedHCP__institution_name">
-            <span className="icon-hcp-hospital" />{' '}
-            {hcp.institution_name}
-          </div>
-        </Panel.Body>
-      </Panel>
-    ))}
-  </div>
-);
+// const SelectedHCPs = ({ hcps, handleRemove }) => ( // eslint-disable-line react/prop-types
+//   <div className="SelectedHCPs">
+//     {Array.from(hcps.values()).map((hcp) => (
+//       <SelectedHCP hcp={hcp} handleRemove={handleRemove} />
+//     ))}
+//   </div>
+// );

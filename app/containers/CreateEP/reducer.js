@@ -14,17 +14,41 @@ import {
   addHCPObjectiveDeliverableAction,
   updateHCPObjectiveDeliverableAction,
   removeHCPObjectiveDeliverableAction,
+  fetchCreateEPRequiredDataActions,
 } from './actions';
 
 
 const initialState = fromJS({
   serverError: '',
   engagementPlan: new EngagementPlan(),
+  bcsfs: new List(),
+  medicalPlanObjectives: new List(),
+  projects: new List(),
   selectedHCPs: new OrderedMap(),
 });
 
+function updateInEPlanForHCP(state, hcpId, pathStr, updateCb) {
+  const ePlan = state.get('engagementPlan');
+  const hcpItemIdx = ePlan.hcp_items.findIndex(
+    (it) => it.hcp_id === hcpId
+  );
+  const path = pathStr.split('.').map(
+    (s) => s === 'HCP_ITEM_IDX' ? hcpItemIdx : s
+  );
+  console.log('::: path = ', path);
+  return state.set('engagementPlan', ePlan.updateIn(path, updateCb));
+}
+
 function createEpReducer(state = initialState, action) {
   switch (action.type) {
+    case fetchCreateEPRequiredDataActions.success.type:
+      console.log('### reduce fetchCreateEPRequiredDataActions.success.type');
+      return state.merge({
+        bcsfs: action.payload.bcsfs,
+        medicalPlanObjectives: action.payload.medicalPlanObjectives,
+        projects: action.payload.projects,
+      });
+
     case selectHCPsAction.type: {
       const selectedHCPs = action.hcps;
 
@@ -53,32 +77,40 @@ function createEpReducer(state = initialState, action) {
 
     case updateHCPItemAction.type: {
       const { hcpId, data } = action.payload;
-      const ePlan = state.get('engagementPlan');
-      const hcpItemIdx = ePlan.hcp_items.findIndex(
-        (it) => it.hcp_id === hcpId
-      );
-      return state.set('engagementPlan', ePlan.updateIn(
-        ['hcp_items', hcpItemIdx],
-        (hcpItem) => hcpItem.merge(data)
-      ));
+      // const ePlan = state.get('engagementPlan');
+      // const hcpItemIdx = ePlan.hcp_items.findIndex(
+      //   (it) => it.hcp_id === hcpId
+      // );
+      // return state.set('engagementPlan', ePlan.updateIn(
+      //   ['hcp_items', hcpItemIdx],
+      //   (hcpItem) => hcpItem.merge(data)
+      // ));
+      return updateInEPlanForHCP(
+        state, hcpId, 'hcp_items.HCP_ITEM_IDX', (it) => it.merge(data));
     }
 
     case addHCPObjectiveAction.type: {
-      const ePlan = state.get('engagementPlan');
-      const hcpItemIdx = ePlan.hcp_items.findIndex(
-        (it) => it.hcp_ids === action.hcpId
-      );
-      return state.set('engagementPlan', ePlan.updateIn(
-        ['hcp_items', hcpItemIdx, 'objectives'],
+      // const ePlan = state.get('engagementPlan');
+      // const hcpItemIdx = ePlan.hcp_items.findIndex(
+      //   (it) => it.hcp_id === action.hcpId
+      // );
+      // return state.set('engagementPlan', ePlan.updateIn(
+      //   ['hcp_items', hcpItemIdx, 'objectives'],
+      //   (objectives) => objectives.push(HCPObjective.fromApiData())
+      // ));
+      return updateInEPlanForHCP(
+        state,
+        action.hcpId,
+        'hcp_items.HCP_ITEM_IDX.objectives',
         (objectives) => objectives.push(HCPObjective.fromApiData())
-      ));
+      );
     }
 
     case updateHCPObjectiveAction.type: {
       const { hcpId, idx, data } = action.payload;
       const ePlan = state.get('engagementPlan');
       const hcpItemIdx = ePlan.hcp_items.findIndex(
-        (it) => it.hcp_ids === hcpId
+        (it) => it.hcp_id === hcpId
       );
       return state.set('engagementPlan', ePlan.updateIn(
         ['hcp_items', hcpItemIdx, 'objectives', idx],
@@ -90,7 +122,7 @@ function createEpReducer(state = initialState, action) {
       const { hcpId, idx } = action.payload;
       const ePlan = state.get('engagementPlan');
       const hcpItemIdx = ePlan.hcp_items.findIndex(
-        (it) => it.hcp_ids === hcpId
+        (it) => it.hcp_id === hcpId
       );
       return state.set('engagementPlan', ePlan.updateIn(
         ['hcp_items', hcpItemIdx, 'objectives'],
@@ -102,7 +134,7 @@ function createEpReducer(state = initialState, action) {
       const { hcpId, objectiveIdx } = action.payload;
       const ePlan = state.get('engagementPlan');
       const hcpItemIdx = ePlan.hcp_items.findIndex(
-        (it) => it.hcp_ids === hcpId
+        (it) => it.hcp_id === hcpId
       );
       return state.set('engagementPlan', ePlan.updateIn(
         ['hcp_items', hcpItemIdx, 'objectives', objectiveIdx, 'deliverables'],
@@ -114,7 +146,7 @@ function createEpReducer(state = initialState, action) {
       const { hcpId, objectiveIdx, deliverableIdx, data } = action.payload;
       const ePlan = state.get('engagementPlan');
       const hcpItemIdx = ePlan.hcp_items.findIndex(
-        (it) => it.hcp_ids === hcpId
+        (it) => it.hcp_id === hcpId
       );
       return state.set('engagementPlan', ePlan.updateIn(
         ['hcp_items', hcpItemIdx, 'objectives', objectiveIdx, 'deliverables', deliverableIdx],
@@ -126,7 +158,7 @@ function createEpReducer(state = initialState, action) {
       const { hcpId, objectiveIdx, deliverableIdx } = action.payload;
       const ePlan = state.get('engagementPlan');
       const hcpItemIdx = ePlan.hcp_items.findIndex(
-        (it) => it.hcp_ids === hcpId
+        (it) => it.hcp_id === hcpId
       );
       return state.set('engagementPlan', ePlan.updateIn(
         ['hcp_items', hcpItemIdx, 'objectives', objectiveIdx, 'deliverables'],

@@ -1,5 +1,14 @@
-import { makeActionCreator } from 'utils/actions';
+import { makeActionCreator, makeActionCreators } from 'utils/actions';
 
+
+export const fetchCreateEPRequiredDataActions = makeActionCreators(
+  'CREATE_EP/FETCH_REQUIRED_DATA',
+  {
+    request: () => ({}),
+    success: (payload) => ({ payload }), // payload : { bcsfs, projects, medicalPlanObjectives }
+    error: (message) => ({ message }),
+  }
+);
 
 export const selectHCPsAction = makeActionCreator(
   'CREATE_EP/SELECT_HCPS',
@@ -44,7 +53,7 @@ export const updateHCPObjectiveDeliverableAction = makeActionCreator(
 );
 
 export const removeHCPObjectiveDeliverableAction = makeActionCreator(
-  'CREATE_EP/UPDATE_HCP_OBJECTIVE_DELIVERABLE',
+  'CREATE_EP/REMOVE_HCP_OBJECTIVE_DELIVERABLE',
   (hcpId, objectiveIdx, deliverableIdx) => (
     { payload: { hcpId, objectiveIdx, deliverableIdx } }
   ),

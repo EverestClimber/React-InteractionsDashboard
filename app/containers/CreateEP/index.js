@@ -27,6 +27,7 @@ import {
   addHCPObjectiveDeliverableAction,
   updateHCPObjectiveDeliverableAction,
   removeHCPObjectiveDeliverableAction,
+  fetchCreateEPRequiredDataActions,
 } from './actions';
 
 
@@ -34,6 +35,9 @@ class CreateEP extends React.Component { // eslint-disable-line react/prefer-sta
   static propTypes = {
     serverError: PropTypes.string,
     engagementPlan: PropTypes.object,
+    bcsfs: PropTypes.object,
+    medicalPlanObjectives: PropTypes.object,
+    projects: PropTypes.object,
     selectedHCPs: PropTypes.object,
     selectHCPs: PropTypes.func,
     removeHCP: PropTypes.func,
@@ -44,12 +48,21 @@ class CreateEP extends React.Component { // eslint-disable-line react/prefer-sta
     addHCPObjectiveDeliverable: PropTypes.func,
     updateHCPObjectiveDeliverable: PropTypes.func,
     removeHCPObjectiveDeliverable: PropTypes.func,
+    fetchCreateEPRequiredData: PropTypes.func,
   };
+
+  componentDidMount() {
+    console.log('### componentDidMount');
+    this.props.fetchCreateEPRequiredData();
+  }
 
   render() {
     const {
       serverError,
       engagementPlan,
+      bcsfs,
+      medicalPlanObjectives,
+      projects,
       selectedHCPs,
       selectHCPs,
       removeHCP,
@@ -92,6 +105,9 @@ class CreateEP extends React.Component { // eslint-disable-line react/prefer-sta
           addDeliverable={addHCPObjectiveDeliverable} // (hcpId, objectiveIdx)
           updateDeliverable={updateHCPObjectiveDeliverable} // (hcpId, objectiveIdx, deliverableIdx, data)
           removeDeliverable={removeHCPObjectiveDeliverable} // (hcpId, objectiveIdx, deliverableIdx)
+          bcsfs={bcsfs}
+          medicalPlanObjectives={medicalPlanObjectives}
+          projects={projects}
         />
 
       </Grid>
@@ -103,6 +119,9 @@ function mapStateToProps(state) {
   const createEPState = state.get('createEP');
   return {
     serverError: createEPState.get('serverError'),
+    bcsfs: createEPState.get('bcsfs'),
+    medicalPlanObjectives: createEPState.get('medicalPlanObjectives'),
+    projects: createEPState.get('projects'),
     engagementPlan: createEPState.get('engagementPlan'),
     selectedHCPs: createEPState.get('selectedHCPs'),
   };
@@ -119,6 +138,7 @@ function mapDispatchToProps(dispatch) {
     addHCPObjectiveDeliverable: addHCPObjectiveDeliverableAction,
     updateHCPObjectiveDeliverable: updateHCPObjectiveDeliverableAction,
     removeHCPObjectiveDeliverable: removeHCPObjectiveDeliverableAction,
+    fetchCreateEPRequiredData: fetchCreateEPRequiredDataActions.request,
   }, dispatch);
 }
 

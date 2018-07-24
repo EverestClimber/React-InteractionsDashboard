@@ -8,6 +8,9 @@ export class HCPObjective extends Record({
   engagement_plan_item_id: undefined,
   hcp_id: undefined,
   deliverables: new List(),
+  bcsf_id: null,
+  medical_plan_objective_id: null,
+  project_id: null,
   // fields
   description: '',
   approved: undefined,

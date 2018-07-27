@@ -15,12 +15,16 @@ import {
   updateHCPObjectiveDeliverableAction,
   removeHCPObjectiveDeliverableAction,
   fetchCreateEPRequiredDataActions,
+  searchHCPsActions,
+  fetchHCPActions,
 } from './actions';
 
 
 const initialState = fromJS({
   serverError: '',
   engagementPlan: new EngagementPlan(),
+  hcp: null,
+  hcps: new List(),
   bcsfs: new List(),
   medicalPlanObjectives: new List(),
   projects: new List(),
@@ -35,14 +39,18 @@ function updateInEPlanForHCP(state, hcpId, pathStr, updateCb) {
   const path = pathStr.split('.').map(
     (s) => s === 'HCP_ITEM_IDX' ? hcpItemIdx : s
   );
-  console.log('::: path = ', path);
   return state.set('engagementPlan', ePlan.updateIn(path, updateCb));
 }
 
 function createEpReducer(state = initialState, action) {
   switch (action.type) {
+    case searchHCPsActions.success.type:
+      return state.merge({ hcps: action.hcps });
+
+    case fetchHCPActions.success.type:
+      return state.merge({ hcp: action.hcp });
+
     case fetchCreateEPRequiredDataActions.success.type:
-      console.log('### reduce fetchCreateEPRequiredDataActions.success.type');
       return state.merge({
         bcsfs: action.payload.bcsfs,
         medicalPlanObjectives: action.payload.medicalPlanObjectives,
@@ -77,27 +85,11 @@ function createEpReducer(state = initialState, action) {
 
     case updateHCPItemAction.type: {
       const { hcpId, data } = action.payload;
-      // const ePlan = state.get('engagementPlan');
-      // const hcpItemIdx = ePlan.hcp_items.findIndex(
-      //   (it) => it.hcp_id === hcpId
-      // );
-      // return state.set('engagementPlan', ePlan.updateIn(
-      //   ['hcp_items', hcpItemIdx],
-      //   (hcpItem) => hcpItem.merge(data)
-      // ));
       return updateInEPlanForHCP(
         state, hcpId, 'hcp_items.HCP_ITEM_IDX', (it) => it.merge(data));
     }
 
     case addHCPObjectiveAction.type: {
-      // const ePlan = state.get('engagementPlan');
-      // const hcpItemIdx = ePlan.hcp_items.findIndex(
-      //   (it) => it.hcp_id === action.hcpId
-      // );
-      // return state.set('engagementPlan', ePlan.updateIn(
-      //   ['hcp_items', hcpItemIdx, 'objectives'],
-      //   (objectives) => objectives.push(HCPObjective.fromApiData())
-      // ));
       return updateInEPlanForHCP(
         state,
         action.hcpId,

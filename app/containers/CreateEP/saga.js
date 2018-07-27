@@ -1,13 +1,18 @@
 /* eslint-disable */
 import { List } from 'immutable';
-import { call, put, takeLatest } from "redux-saga/es/effects";
+import { call, put, takeLatest } from 'redux-saga/es/effects';
 import { setLoading } from 'containers/App/actions';
-import { fetchCreateEPRequiredDataActions } from "./actions";
+import {
+  fetchCreateEPRequiredDataActions,
+  fetchHCPActions,
+  searchHCPsActions
+} from './actions';
+import { makeFetchHCPSaga, makeSearchHCPsSaga } from 'containers/App/saga';
 import { BCSF } from 'records/BCSF';
 import { MedicalPlanObjective } from 'records/MedicalPlanObjective';
 import { Project } from 'records/Project';
 import { getBCSFs } from 'api/bcsfs';
-import { getMedicalPlanObjectives } from 'api/medicalPlanObjectives';
+import { getMedicalPlanObjectives } from "api/medicalPlanObjectives";
 import { getProjects } from 'api/projects';
 
 
@@ -52,5 +57,15 @@ export default function* createEPRootSage() {
   yield takeLatest(
     fetchCreateEPRequiredDataActions.request.type,
     fetchCreateEPRequiredDataSaga
+  );
+
+  yield takeLatest(
+    searchHCPsActions.request.type,
+    makeSearchHCPsSaga(searchHCPsActions.success, searchHCPsActions.error)
+  );
+
+  yield takeLatest(
+    fetchHCPActions.request.type,
+    makeFetchHCPSaga(fetchHCPActions.success, fetchHCPActions.error)
   );
 }

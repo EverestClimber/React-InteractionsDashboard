@@ -12,12 +12,15 @@ import {
 
 import { CenteredAlert } from 'components/forms';
 import injectSaga from 'utils/injectSaga';
-import CreateEPAddHCPs from 'containers/CreateEPAddHCPs';
+// import CreateEPAddHCPs from 'containers/CreateEPAddHCPs';
+import CreateEPAddHCPs from 'components/CreateEPAddHCPs';
 import CreateEPAddHCPObjectives from 'components/CreateEPAddHCPObjectives';
 import injectReducer from 'utils/injectReducer';
 import reducer from './reducer';
 import saga from './saga';
 import {
+  searchHCPsActions,
+  fetchHCPActions,
   removeHCPAction,
   selectHCPsAction,
   updateHCPItemAction,
@@ -35,10 +38,13 @@ class CreateEP extends React.Component { // eslint-disable-line react/prefer-sta
   static propTypes = {
     serverError: PropTypes.string,
     engagementPlan: PropTypes.object,
+    hcps: PropTypes.object,
     bcsfs: PropTypes.object,
     medicalPlanObjectives: PropTypes.object,
     projects: PropTypes.object,
     selectedHCPs: PropTypes.object,
+    searchHCPs: PropTypes.func,
+    fetchHCP: PropTypes.func,
     selectHCPs: PropTypes.func,
     removeHCP: PropTypes.func,
     updateHCPItem: PropTypes.func,
@@ -52,7 +58,6 @@ class CreateEP extends React.Component { // eslint-disable-line react/prefer-sta
   };
 
   componentDidMount() {
-    console.log('### componentDidMount');
     this.props.fetchCreateEPRequiredData();
   }
 
@@ -60,6 +65,8 @@ class CreateEP extends React.Component { // eslint-disable-line react/prefer-sta
     const {
       serverError,
       engagementPlan,
+      searchHCPs,
+      fetchHCP,
       bcsfs,
       medicalPlanObjectives,
       projects,
@@ -73,6 +80,7 @@ class CreateEP extends React.Component { // eslint-disable-line react/prefer-sta
       addHCPObjectiveDeliverable,
       updateHCPObjectiveDeliverable,
       removeHCPObjectiveDeliverable,
+      hcps,
     } = this.props;
 
     return (
@@ -88,10 +96,13 @@ class CreateEP extends React.Component { // eslint-disable-line react/prefer-sta
 
         <hr />
         <CreateEPAddHCPs
+          hcps={hcps}
           selectedHCPs={selectedHCPs}
+          hcpItems={engagementPlan.hcp_items}
+          fetchHCP={fetchHCP}
+          searchHCPs={searchHCPs}
           selectHCPs={selectHCPs}
           removeHCP={removeHCP}
-          hcpItems={engagementPlan.hcp_items}
           updateHCPItem={updateHCPItem} // (hcpId, data)
         />
 
@@ -110,6 +121,32 @@ class CreateEP extends React.Component { // eslint-disable-line react/prefer-sta
           projects={projects}
         />
 
+        {/*
+        <hr />
+        <CreateEPAddProjects
+          selectedHCPs={selectedHCPs}
+          selectHCPs={selectHCPs}
+          removeHCP={removeHCP}
+          hcpItems={engagementPlan.hcp_items}
+          updateHCPItem={updateHCPItem} // (hcpId, data)
+        />
+
+        <hr />
+        <CreateEPAddProjectObjectives
+          selectedHCPs={selectedHCPs}
+          hcpItems={engagementPlan.hcp_items}
+          addHCPObjective={addHCPObjective} // (hcpId)
+          updateHCPObjective={updateHCPObjective} // (hcpId, idx, data)
+          removeHCPObjective={removeHCPObjective} // (hcpId, idx)
+          addDeliverable={addHCPObjectiveDeliverable} // (hcpId, objectiveIdx)
+          updateDeliverable={updateHCPObjectiveDeliverable} // (hcpId, objectiveIdx, deliverableIdx, data)
+          removeDeliverable={removeHCPObjectiveDeliverable} // (hcpId, objectiveIdx, deliverableIdx)
+          bcsfs={bcsfs}
+          medicalPlanObjectives={medicalPlanObjectives}
+          projects={projects}
+        />
+        */}
+
       </Grid>
     );
   }
@@ -119,6 +156,7 @@ function mapStateToProps(state) {
   const createEPState = state.get('createEP');
   return {
     serverError: createEPState.get('serverError'),
+    hcps: createEPState.get('hcps'),
     bcsfs: createEPState.get('bcsfs'),
     medicalPlanObjectives: createEPState.get('medicalPlanObjectives'),
     projects: createEPState.get('projects'),
@@ -129,6 +167,8 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
+    searchHCPs: searchHCPsActions.request,
+    fetchHCP: fetchHCPActions.request,
     selectHCPs: selectHCPsAction,
     removeHCP: removeHCPAction,
     updateHCPItem: updateHCPItemAction,

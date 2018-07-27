@@ -18,7 +18,7 @@ import Interaction from 'records/Interaction';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
 import { FlatpickrDateTime, SearchSelect, LabeledFormControl, Options, CenteredAlert } from 'components/forms';
-import HCPSelector from 'components/HCPSelector';
+import SmartSelector from 'components/SmartSelector';
 import SelectedHCP from 'components/SelectedHCP';
 import { ButtonsSelector } from 'components/ButtonSelector';
 import { ChoiceSelector } from 'components/ChoiceSelector';
@@ -132,14 +132,14 @@ export class RecordInteraction extends React.Component {
 
           <Field
             name="hcp_id"
-            component={HCPSelector}
-            hcps={hcps}
-            selectedHCPs={new OrderedMap(hcp ? [[hcp.id, hcp]] : [])}
-            searchHCPs={searchHCPs}
-            fetchHCP={fetchHCP}
-            removeHCP={() => fetchHCP(null)}
-            onHCPSelected={fetchHCPObjectives}
-            renderSelectedHCP={SelectedHCP}
+            component={SmartSelector}
+            items={hcps}
+            selectedItems={new OrderedMap(hcp ? [[hcp.id, hcp]] : [])}
+            searchItems={searchHCPs}
+            fetchItem={fetchHCP}
+            removeItem={() => fetchHCP(null)}
+            onItemSelected={fetchHCPObjectives}
+            renderSelectedItem={SelectedHCP}
           />
 
           {hcp && !hcp.has_consented && !this.state.recordWithoutConsent && (

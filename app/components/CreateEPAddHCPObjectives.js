@@ -78,7 +78,7 @@ export default class CreateEPAddHCPObjectives extends React.Component {
             </Panel>
 
             {hcpItem.objectives.map((objective, objectiveIdx) => (
-              <Row key={makeKey(objective.id, objectiveIdx)}>
+              <Row key={makeKey(objective, objectiveIdx)}>
                 <Col xs={10} xsOffset={1}>
                   <Panel className="CreateEPAddHCPObjectives__objectives">
                     <Panel.Heading>
@@ -107,7 +107,7 @@ export default class CreateEPAddHCPObjectives extends React.Component {
                         <h5><strong>Deliverables</strong></h5>
                         {objective.deliverables.map((deliverable, deliverableIdx) => (
                           <div
-                            key={makeKey(deliverable.id, deliverableIdx)}
+                            key={makeKey(deliverable, deliverableIdx)}
                             className="CreateEPAddHCPObjectives__deliverable"
                           >
                             <FormGroup>

@@ -10,26 +10,33 @@ import {
 import PropTypes from 'prop-types';
 
 
-export default class HCPSelector extends React.Component {
+export default class SmartSelector extends React.Component {
   static propTypes = {
     // supplied by Field
     input: PropTypes.object, // { onChange, value, ...}
     meta: PropTypes.object, // { error, ... }
     // other
-    hcps: PropTypes.array,
-    selectedHCPs: PropTypes.object,
-    searchHCPs: PropTypes.func,
-    fetchHCP: PropTypes.func,
-    removeHCP: PropTypes.func,
-    onHCPSelected: PropTypes.func,
-    renderSelectedHCP: PropTypes.func,
+    // hcps: PropTypes.array,
+    items: PropTypes.array,
+    // selectedHCPs: PropTypes.object,
+    selectedItems: PropTypes.object,
+    // searchHCPs: PropTypes.func,
+    searchItems: PropTypes.func,
+    // fetchHCP: PropTypes.func,
+    fetchItem: PropTypes.func,
+    // removeHCP: PropTypes.func,
+    removeItem: PropTypes.func,
+    // onHCPSelected: PropTypes.func,
+    onItemSelected: PropTypes.func,
+    // renderSelectedHCP: PropTypes.func,
+    renderSelectedItem: PropTypes.func,
     multiple: PropTypes.bool,
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      searchHCPsText: '',
+      searchText: '',
       showList: false,
     };
     this.containerRef = React.createRef();
@@ -41,11 +48,11 @@ export default class HCPSelector extends React.Component {
     document.body.addEventListener('click', this.handleBodyClick);
 
     // when value is received from outside
-    const hcpId = this.props.input.value;
-    if (hcpId) {
-      this.props.fetchHCP(hcpId);
-      if (this.props.onHCPSelected) {
-        this.props.onHCPSelected(hcpId);
+    const itemId = this.props.input.value;
+    if (itemId) {
+      this.props.fetchItem(itemId);
+      if (this.props.onItemSelected) {
+        this.props.onItemSelected(itemId);
       }
     }
   }
@@ -56,10 +63,8 @@ export default class HCPSelector extends React.Component {
 
   handleBodyClick = (event) => {
     if (this.inputRef.current && this.inputRef.current.contains(event.target)) {
-      // console.log('*** clicked inside');
       this.setState({ showList: true });
     } else {
-      // console.log('*** clicked outside');
       // when clicking inside leave time at lease for event to propagate
       if (this.containerRef.current && this.containerRef.current.contains(event.target)) {
         // TODO: replace this hack with toggling visibility instead of existence based on showList
@@ -73,45 +78,45 @@ export default class HCPSelector extends React.Component {
     }
   };
 
-  handleSearchHCPsInputChange = (event) => {
-    this.setState({ searchHCPsText: event.target.value });
-    this.props.searchHCPs(event.target.value);
+  handleSearchInputChange = (event) => {
+    this.setState({ searchText: event.target.value });
+    this.props.searchItems(event.target.value);
   };
 
-  searchHCPsKeyPressed = (event) => {
+  searchKeyPressed = (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
-      this.props.searchHCPs(this.state.searchHCPsText);
+      this.props.searchItems(this.state.searchText);
     }
   };
 
-  handleHCPSelection = (hcpId) => {
+  handleItemSelection = (itemId) => {
     if (!this.props.multiple) {
-      this.props.input.onChange(hcpId);
-      this.props.fetchHCP(hcpId);
-      if (this.props.onHCPSelected) {
-        this.props.onHCPSelected(hcpId);
+      this.props.input.onChange(itemId);
+      this.props.fetchItem(itemId);
+      if (this.props.onItemSelected) {
+        this.props.onItemSelected(itemId);
       }
     } else {
-      const newSelectedHCPs = this.props.selectedHCPs.get(hcpId)
-        ? this.props.selectedHCPs.delete(hcpId)
-        : this.props.selectedHCPs.set(hcpId, this.props.hcps.find((hcp) => hcp.id === hcpId));
-      this.props.input.onChange(newSelectedHCPs);
+      const newSelectedItems = this.props.selectedItems.get(itemId)
+        ? this.props.selectedItems.delete(itemId)
+        : this.props.selectedItems.set(itemId, this.props.items.find((hcp) => hcp.id === itemId));
+      this.props.input.onChange(newSelectedItems);
     }
   };
 
-  handleHCPRemoval = (hcpId) => {
+  handleItemRemoval = (itemId) => {
     if (!this.props.multiple) {
       this.props.input.onChange(null);
-      this.props.removeHCP(hcpId);
+      this.props.removeItem(itemId);
     } else {
-      this.props.input.onChange(this.props.selectedHCPs.delete(hcpId));
+      this.props.input.onChange(this.props.selectedItems.delete(itemId));
     }
   };
 
   showAll = () => {
-    this.setState({ searchHCPsText: '' });
-    this.props.searchHCPs('');
+    this.setState({ searchText: '' });
+    this.props.searchItems('');
     setTimeout(
       () => this.setState({ showList: true }),
       500
@@ -119,8 +124,8 @@ export default class HCPSelector extends React.Component {
   };
 
   render() {
-    const { hcps, selectedHCPs, meta, multiple, renderSelectedHCP } = this.props;
-    const RenderSelectedHCP = renderSelectedHCP;
+    const { items, selectedItems, meta, multiple, renderSelectedItem } = this.props;
+    const RenderSelectedHCP = renderSelectedItem;
 
     return (
       <div
@@ -136,10 +141,10 @@ export default class HCPSelector extends React.Component {
               <FormControl
                 type="text"
                 placeholder="Search HCPs ..."
-                onChange={this.handleSearchHCPsInputChange}
-                onKeyPress={this.searchHCPsKeyPressed}
+                onChange={this.handleSearchInputChange}
+                onKeyPress={this.searchKeyPressed}
                 className="form-control--primary"
-                value={this.state.searchHCPsText}
+                value={this.state.searchText}
               />
               <a
                 className="HCPSelector__Search__ShowAll"
@@ -160,19 +165,19 @@ export default class HCPSelector extends React.Component {
         </Row>
         <br />
 
-        {(this.state.showList && hcps && hcps.length) ? (
-          <ListHCPs
-            hcps={hcps}
-            handleSelect={this.handleHCPSelection}
+        {(this.state.showList && items && items.length) ? (
+          <ListItems
+            items={items}
+            handleSelect={this.handleItemSelection}
             multiple={multiple}
-            selectedHCPs={selectedHCPs}
+            selectedItems={selectedItems}
           />
         ) : null}
 
-        {(renderSelectedHCP && selectedHCPs && selectedHCPs.size) ? (
+        {(renderSelectedItem && selectedItems && selectedItems.size) ? (
           <div className="SelectedHCPs">
-            {Array.from(selectedHCPs.values()).map((hcp) =>
-              <RenderSelectedHCP key={hcp.id} hcp={hcp} handleRemove={this.handleHCPRemoval} />
+            {Array.from(selectedItems.values()).map((hcp) =>
+              <RenderSelectedHCP key={hcp.id} hcp={hcp} handleRemove={this.handleItemRemoval} />
             )}
           </div>
         ) : null}
@@ -182,14 +187,14 @@ export default class HCPSelector extends React.Component {
 }
 
 
-const ListHCPs = ({ multiple, hcps, handleSelect, selectedHCPs }) => ( // eslint-disable-line react/prop-types
+const ListItems = ({ multiple, items, handleSelect, selectedItems }) => ( // eslint-disable-line react/prop-types
   <Grid className="HCPSelector__ListHCPs__container">
     <Row>
       <Col sm={10}>
         <div className="HCPSelector__ListHCPs__content">
           <div className="HCPSelector__ListHCPs__box">
             <div className="HCPSelector__ListHCPs__list">
-              {hcps.map((hcp) => (
+              {items.map((hcp) => (
                 <div
                   key={hcp.id}
                   className="HCPSelector__ListHCPs__HCP"
@@ -199,7 +204,7 @@ const ListHCPs = ({ multiple, hcps, handleSelect, selectedHCPs }) => ( // eslint
                 >
                   {multiple && (
                     <div className="HCPSelector__ListHCPs__HCP__selected">
-                      <Checkbox inline readOnly checked={!!selectedHCPs.get(hcp.id)} />
+                      <Checkbox inline readOnly checked={!!selectedItems.get(hcp.id)} />
                     </div>
                   )}
 
@@ -234,12 +239,3 @@ const ListHCPs = ({ multiple, hcps, handleSelect, selectedHCPs }) => ( // eslint
     </Row>
   </Grid>
 );
-
-
-// const SelectedHCPs = ({ hcps, handleRemove }) => ( // eslint-disable-line react/prop-types
-//   <div className="SelectedHCPs">
-//     {Array.from(hcps.values()).map((hcp) => (
-//       <SelectedHCP hcp={hcp} handleRemove={handleRemove} />
-//     ))}
-//   </div>
-// );

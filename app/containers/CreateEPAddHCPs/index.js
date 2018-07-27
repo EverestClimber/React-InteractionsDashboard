@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
 import { FormControl } from 'react-bootstrap';
 
-import HCPSelector from 'components/HCPSelector';
+import SmartSelector from 'components/SmartSelector';
 import { CenteredAlert, Options } from 'components/forms';
 import SelectedHCP from 'components/SelectedHCP';
 import injectSaga from 'utils/injectSaga';
@@ -54,12 +54,12 @@ class CreateEPAddHCPs extends React.Component { // eslint-disable-line react/pre
           </CenteredAlert>
         )}
 
-        <HCPSelector
-          hcps={hcps}
-          selectedHCPs={selectedHCPs}
-          searchHCPs={searchHCPs}
-          fetchHCP={fetchHCP}
-          removeHCP={removeHCP}
+        <SmartSelector
+          items={hcps}
+          selectedItems={selectedHCPs}
+          searchItems={searchHCPs}
+          fetchItem={fetchHCP}
+          removeItem={removeHCP}
           input={{ onChange: selectHCPs }}
           multiple
         />

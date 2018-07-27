@@ -18,7 +18,7 @@ import Interaction from 'records/Interaction';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
 import { FlatpickrDateTime, SearchSelect, LabeledFormControl, Options, CenteredAlert } from 'components/forms';
-import SmartSelector from 'components/SmartSelector';
+import HCPSelector from 'components/HCPSelector';
 import SelectedHCP from 'components/SelectedHCP';
 import { ButtonsSelector } from 'components/ButtonSelector';
 import { ChoiceSelector } from 'components/ChoiceSelector';
@@ -132,7 +132,7 @@ export class RecordInteraction extends React.Component {
 
           <Field
             name="hcp_id"
-            component={SmartSelector}
+            component={HCPSelector}
             items={hcps}
             selectedItems={new OrderedMap(hcp ? [[hcp.id, hcp]] : [])}
             searchItems={searchHCPs}

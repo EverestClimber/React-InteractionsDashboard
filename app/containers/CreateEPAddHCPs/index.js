@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
 import { FormControl } from 'react-bootstrap';
 
-import SmartSelector from 'components/SmartSelector';
+import HCPSelector from 'components/HCPSelector';
 import { CenteredAlert, Options } from 'components/forms';
 import SelectedHCP from 'components/SelectedHCP';
 import injectSaga from 'utils/injectSaga';
@@ -16,6 +16,7 @@ import {
   fetchHCPActions,
   searchHCPsActions,
 } from './actions';
+
 
 class CreateEPAddHCPs extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
@@ -54,7 +55,7 @@ class CreateEPAddHCPs extends React.Component { // eslint-disable-line react/pre
           </CenteredAlert>
         )}
 
-        <SmartSelector
+        <HCPSelector
           items={hcps}
           selectedItems={selectedHCPs}
           searchItems={searchHCPs}

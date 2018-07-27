@@ -5,32 +5,26 @@ import {
   Row,
   FormControl,
   Button,
-  Checkbox,
 } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 
 
 export default class SmartSelector extends React.Component {
   static propTypes = {
-    // supplied by Field
+    // can be supplied by Field
     input: PropTypes.object, // { onChange, value, ...}
     meta: PropTypes.object, // { error, ... }
     // other
-    // hcps: PropTypes.array,
     items: PropTypes.array,
-    // selectedHCPs: PropTypes.object,
     selectedItems: PropTypes.object,
-    // searchHCPs: PropTypes.func,
     searchItems: PropTypes.func,
-    // fetchHCP: PropTypes.func,
     fetchItem: PropTypes.func,
-    // removeHCP: PropTypes.func,
     removeItem: PropTypes.func,
-    // onHCPSelected: PropTypes.func,
     onItemSelected: PropTypes.func,
-    // renderSelectedHCP: PropTypes.func,
     renderSelectedItem: PropTypes.func,
     multiple: PropTypes.bool,
+    // render component
+    renderItem: PropTypes.func,
   };
 
   constructor(props) {
@@ -124,7 +118,14 @@ export default class SmartSelector extends React.Component {
   };
 
   render() {
-    const { items, selectedItems, meta, multiple, renderSelectedItem } = this.props;
+    const {
+      items,
+      selectedItems,
+      meta,
+      multiple,
+      renderSelectedItem,
+      renderItem,
+    } = this.props;
     const RenderSelectedHCP = renderSelectedItem;
 
     return (
@@ -172,15 +173,13 @@ export default class SmartSelector extends React.Component {
                 <div className="SmartSelector__ListItems__content">
                   <div className="SmartSelector__ListItems__box">
                     <div className="SmartSelector__ListItems__list">
-                      {items.map((item) => (
-                        <Item
-                          key={item.id}
-                          multiple={multiple}
-                          item={item}
-                          handleSelect={this.handleItemSelection}
-                          selectedItems={selectedItems}
-                        />
-                      ))}
+                      {items.map((item) => renderItem({
+                        key: item.id,
+                        multiple,
+                        item,
+                        handleSelect: this.handleItemSelection,
+                        selectedItems,
+                      }))}
                     </div>
                   </div>
                 </div>
@@ -200,42 +199,3 @@ export default class SmartSelector extends React.Component {
     );
   }
 }
-
-const Item = ({ multiple, item, handleSelect, selectedItems }) => ( // eslint-disable-line react/prop-types
-  <div
-    key={item.id}
-    className="SmartSelector__ListItems__Item"
-    role="button"
-    tabIndex={0}
-    onClick={() => handleSelect(item.id)}
-  >
-    {multiple && (
-      <div className="SmartSelector__ListItems__Item__selected">
-        <Checkbox inline readOnly checked={!!selectedItems.get(item.id)} />
-      </div>
-    )}
-
-    <div className="SmartSelector__ListItems__Item__name">
-      {item.first_name} {item.last_name}
-    </div>
-
-    <div className="SmartSelector__ListItems__Item__institution">
-      {item.institution_name}
-    </div>
-
-    <div className="SmartSelector__ListItems__Item__location SmartSelector__location">
-      <span className="icon-hcp-location" />
-      <span className="SmartSelector__location__city">
-        {item.city}
-      </span>
-      {', '}
-      <span className="SmartSelector__location__country">
-        {item.country}
-      </span>
-    </div>
-
-    <div className="SmartSelector__ListItems__Item__tas">
-      {item.ta_names.join(', ')}
-    </div>
-  </div>
-);

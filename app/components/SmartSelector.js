@@ -129,13 +129,13 @@ export default class SmartSelector extends React.Component {
 
     return (
       <div
-        className={`HCPSelector ${(meta && meta.touched && meta.error) ? 'HCPSelector--error' : ''} ${multiple ? 'HCPSelector--multiple' : ''}`}
+        className={`SmartSelector ${(meta && meta.touched && meta.error) ? 'SmartSelector--error' : ''} ${multiple ? 'SmartSelector--multiple' : ''}`}
         ref={this.containerRef}
       >
         <Row>
           <Col sm={10}>
             <div
-              className="HCPSelector__Search"
+              className="SmartSelector__Search"
               ref={this.inputRef}
             >
               <FormControl
@@ -147,7 +147,7 @@ export default class SmartSelector extends React.Component {
                 value={this.state.searchText}
               />
               <a
-                className="HCPSelector__Search__ShowAll"
+                className="SmartSelector__Search__ShowAll"
                 role="button"
                 tabIndex={0}
                 onClick={this.showAll}
@@ -166,12 +166,27 @@ export default class SmartSelector extends React.Component {
         <br />
 
         {(this.state.showList && items && items.length) ? (
-          <ListItems
-            items={items}
-            handleSelect={this.handleItemSelection}
-            multiple={multiple}
-            selectedItems={selectedItems}
-          />
+          <Grid className="SmartSelector__ListItems__container">
+            <Row>
+              <Col sm={10}>
+                <div className="SmartSelector__ListItems__content">
+                  <div className="SmartSelector__ListItems__box">
+                    <div className="SmartSelector__ListItems__list">
+                      {items.map((item) => (
+                        <Item
+                          key={item.id}
+                          multiple={multiple}
+                          item={item}
+                          handleSelect={this.handleItemSelection}
+                          selectedItems={selectedItems}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+          </Grid>
         ) : null}
 
         {(renderSelectedItem && selectedItems && selectedItems.size) ? (
@@ -186,56 +201,41 @@ export default class SmartSelector extends React.Component {
   }
 }
 
+const Item = ({ multiple, item, handleSelect, selectedItems }) => ( // eslint-disable-line react/prop-types
+  <div
+    key={item.id}
+    className="SmartSelector__ListItems__Item"
+    role="button"
+    tabIndex={0}
+    onClick={() => handleSelect(item.id)}
+  >
+    {multiple && (
+      <div className="SmartSelector__ListItems__Item__selected">
+        <Checkbox inline readOnly checked={!!selectedItems.get(item.id)} />
+      </div>
+    )}
 
-const ListItems = ({ multiple, items, handleSelect, selectedItems }) => ( // eslint-disable-line react/prop-types
-  <Grid className="HCPSelector__ListHCPs__container">
-    <Row>
-      <Col sm={10}>
-        <div className="HCPSelector__ListHCPs__content">
-          <div className="HCPSelector__ListHCPs__box">
-            <div className="HCPSelector__ListHCPs__list">
-              {items.map((hcp) => (
-                <div
-                  key={hcp.id}
-                  className="HCPSelector__ListHCPs__HCP"
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => handleSelect(hcp.id)}
-                >
-                  {multiple && (
-                    <div className="HCPSelector__ListHCPs__HCP__selected">
-                      <Checkbox inline readOnly checked={!!selectedItems.get(hcp.id)} />
-                    </div>
-                  )}
+    <div className="SmartSelector__ListItems__Item__name">
+      {item.first_name} {item.last_name}
+    </div>
 
-                  <div className="HCPSelector__ListHCPs__HCP__name">
-                    {hcp.first_name} {hcp.last_name}
-                  </div>
+    <div className="SmartSelector__ListItems__Item__institution">
+      {item.institution_name}
+    </div>
 
-                  <div className="HCPSelector__ListHCPs__HCP__institution">
-                    {hcp.institution_name}
-                  </div>
+    <div className="SmartSelector__ListItems__Item__location SmartSelector__location">
+      <span className="icon-hcp-location" />
+      <span className="SmartSelector__location__city">
+        {item.city}
+      </span>
+      {', '}
+      <span className="SmartSelector__location__country">
+        {item.country}
+      </span>
+    </div>
 
-                  <div className="HCPSelector__ListHCPs__HCP__location HCPSelector__location">
-                    <span className="icon-hcp-location" />
-                    <span className="HCPSelector__location__city">
-                      {hcp.city}
-                    </span>
-                    {', '}
-                    <span className="HCPSelector__location__country">
-                      {hcp.country}
-                    </span>
-                  </div>
-
-                  <div className="HCPSelector__ListHCPs__HCP__tas">
-                    {hcp.ta_names.join(', ')}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </Col>
-    </Row>
-  </Grid>
+    <div className="SmartSelector__ListItems__Item__tas">
+      {item.ta_names.join(', ')}
+    </div>
+  </div>
 );

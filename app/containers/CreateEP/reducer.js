@@ -2,6 +2,7 @@ import { fromJS, List, OrderedMap } from 'immutable';
 import {
   EngagementPlan,
   EngagementPlanHCPItem,
+  EngagementPlanProjectItem,
 } from 'records/EngagementPlan';
 import { HCPObjective, HCPDeliverable } from 'records/HCPObjective';
 import {
@@ -17,18 +18,26 @@ import {
   fetchCreateEPRequiredDataActions,
   searchHCPsActions,
   fetchHCPActions,
+  searchProjectsActions,
+  selectProjectsAction,
 } from './actions';
 
 
 const initialState = fromJS({
   serverError: '',
   engagementPlan: new EngagementPlan(),
+  // add HCPs
   hcp: null,
   hcps: new List(),
+  selectedHCPs: new OrderedMap(),
+  // add HCP Objectives
   bcsfs: new List(),
   medicalPlanObjectives: new List(),
   projects: new List(),
-  selectedHCPs: new OrderedMap(),
+  // add Projects
+  project: null,
+  searchedProjects: new List(),
+  selectedProjects: new OrderedMap(),
 });
 
 function updateInEPlanForHCP(state, hcpId, pathStr, updateCb) {
@@ -44,18 +53,18 @@ function updateInEPlanForHCP(state, hcpId, pathStr, updateCb) {
 
 function createEpReducer(state = initialState, action) {
   switch (action.type) {
-    case searchHCPsActions.success.type:
-      return state.merge({ hcps: action.hcps });
-
-    case fetchHCPActions.success.type:
-      return state.merge({ hcp: action.hcp });
-
     case fetchCreateEPRequiredDataActions.success.type:
       return state.merge({
         bcsfs: action.payload.bcsfs,
         medicalPlanObjectives: action.payload.medicalPlanObjectives,
         projects: action.payload.projects,
       });
+
+    case searchHCPsActions.success.type:
+      return state.merge({ hcps: action.hcps });
+
+    case fetchHCPActions.success.type:
+      return state.merge({ hcp: action.hcp });
 
     case selectHCPsAction.type: {
       const selectedHCPs = action.hcps;
@@ -156,6 +165,30 @@ function createEpReducer(state = initialState, action) {
         ['hcp_items', hcpItemIdx, 'objectives', objectiveIdx, 'deliverables'],
         (deliverables) => deliverables.delete(deliverableIdx)
       ));
+    }
+
+    case searchProjectsActions.success.type:
+      return state.merge({ searchedProjects: action.projects });
+
+    case selectProjectsAction.type: {
+      const selectedProjects = action.projects;
+
+      // newly selected Projects for which project_items need to be created
+      const newlySelectedProjects = selectedProjects.filter(
+        (project) => !state.get('engagementPlan').project_items.find(
+          (it) => it.project_id === project.id
+        )
+      );
+      return state.set('selectedProjects', selectedProjects).updateIn(
+        ['engagementPlan', 'project_items'],
+        (projectItems) => projectItems
+        // only keep items for currently selected HCPs
+        .filter((it) => selectedProjects.get(it.project_id))
+        // add items for newly selected Projects
+        .concat(new List(newlySelectedProjects.map(
+          (project) => EngagementPlanProjectItem.fromApiData({ project, project_id: project.id })
+        ).values()))
+      );
     }
 
     default:

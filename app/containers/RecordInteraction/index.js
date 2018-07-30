@@ -6,18 +6,18 @@ import { compose, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Helmet } from 'react-helmet';
 import { reduxForm, formValueSelector, Field } from 'redux-form/immutable';
-import {
-  Grid,
-  Col,
-  Row,
-  Button,
-  Panel,
-} from 'react-bootstrap';
+import { Grid, Col, Row, Button, Panel } from 'react-bootstrap';
 
 import Interaction from 'records/Interaction';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
-import { FlatpickrDateTime, SearchSelect, LabeledFormControl, Options, CenteredAlert } from 'components/forms';
+import {
+  FlatpickrDateTime,
+  SearchSelect,
+  LabeledFormControl,
+  Options,
+  CenteredAlert,
+} from 'components/forms';
 import HCPSelector from 'components/HCPSelector';
 import SelectedHCP from 'components/SelectedHCP';
 import { ButtonsSelector } from 'components/ButtonSelector';
@@ -33,7 +33,6 @@ import {
   recordInteractionActions,
   fetchInteractionRecordingRequiredDataActions,
 } from './actions';
-
 
 export class RecordInteraction extends React.Component {
   static propTypes = {
@@ -66,7 +65,7 @@ export class RecordInteraction extends React.Component {
 
   componentDidMount() {
     this.props.initialize({
-      resources: [],  // to quench warning
+      resources: [], // to quench warning
       origin_of_interaction: this.props.urlQuery.origin_of_interaction,
       hcp_id: this.props.urlQuery.hcp ? +this.props.urlQuery.hcp : undefined,
     });
@@ -108,7 +107,8 @@ export class RecordInteraction extends React.Component {
       return 'Loading...';
     }
 
-    const formDisabled = (hcp && !hcp.has_consented) ? !this.state.recordWithoutConsent : false;
+    const formDisabled =
+      hcp && !hcp.has_consented ? !this.state.recordWithoutConsent : false;
 
     // console.log('DISABLED=', formDisabled, (hcp && !hcp.has_consented), this.state.recordWithoutConsent);
     // console.log('SUBMIT DISABLED=', pristine, submitting, formDisabled, !!allFormErrors);
@@ -129,7 +129,6 @@ export class RecordInteraction extends React.Component {
         )}
 
         <form onSubmit={handleSubmit}>
-
           <Field
             name="hcp_id"
             component={HCPSelector}
@@ -142,28 +141,35 @@ export class RecordInteraction extends React.Component {
             renderSelectedItem={SelectedHCP}
           />
 
-          {hcp && !hcp.has_consented && !this.state.recordWithoutConsent && (
-            <React.Fragment>
-              <CenteredAlert bsStyle="danger" className="centered">
-                No interaction can be recorded for this HCP without their consent.
-              </CenteredAlert>
-              <p className="text-center">
-                <a role="button" tabIndex={0} onClick={this.setRecordWithoutConsent}>Click here to Record Interaction
-                  without HCP consent</a>
-                <br /><br />
-              </p>
-            </React.Fragment>
-          )}
+          {hcp &&
+            !hcp.has_consented &&
+            !this.state.recordWithoutConsent && (
+              <React.Fragment>
+                <CenteredAlert bsStyle="danger" className="centered">
+                  No interaction can be recorded for this HCP without their
+                  consent.
+                </CenteredAlert>
+                <p className="text-center">
+                  <a
+                    role="button"
+                    tabIndex={0}
+                    onClick={this.setRecordWithoutConsent}
+                  >
+                    Click here to Record Interaction without HCP consent
+                  </a>
+                  <br />
+                  <br />
+                </p>
+              </React.Fragment>
+            )}
 
           <Row>
             <Col xs={12}>
               <Panel>
                 <Panel.Heading>Interaction</Panel.Heading>
                 <Panel.Body>
-
                   <Row>
                     <Col xs={6}>
-
                       <Field
                         name="type_of_interaction"
                         component={ButtonsSelector}
@@ -186,23 +192,18 @@ export class RecordInteraction extends React.Component {
                         ]}
                         disabled={formDisabled}
                       />
-
                     </Col>
                     <Col xs={6}>
-
                       <Row>
                         <Col xs={6}>
-
                           <Field
                             name="is_proactive"
                             component={ChoiceSelector}
                             choices={[[true, 'Proactive'], [false, 'Reactive']]}
                             disabled={formDisabled}
                           />
-
                         </Col>
                         <Col xs={6}>
-
                           <Field
                             name="time_of_interaction"
                             component={FlatpickrDateTime}
@@ -211,25 +212,26 @@ export class RecordInteraction extends React.Component {
                             data-enable-time
                             disabled={formDisabled}
                           />
-
                         </Col>
                       </Row>
-
                     </Col>
                   </Row>
 
                   <Row>
                     <Col xs={6}>
-
                       <Field
                         name="origin_of_interaction"
                         component={LabeledFormControl}
                         type="select"
                         disabled={formDisabled}
                       >
-                        <option disabled value="">Select Origin of Interaction</option>
+                        <option disabled value="">
+                          Select Origin of Interaction
+                        </option>
                         <Options
-                          choices={Object.entries(Interaction.origin_of_interaction_choices)}
+                          choices={Object.entries(
+                            Interaction.origin_of_interaction_choices
+                          )}
                         />
                       </Field>
 
@@ -251,15 +253,15 @@ export class RecordInteraction extends React.Component {
                           value: it.id,
                           label: it.description,
                         }))}
-                        isDisabled={formDisabled || originOfInteraction !== 'engagement_plan'}
+                        isDisabled={
+                          formDisabled ||
+                          originOfInteraction !== 'engagement_plan'
+                        }
                       />
-
                     </Col>
                     <Col xs={6}>
-
                       <Row>
                         <Col xs={12}>
-
                           <Field
                             name="purpose"
                             component={LabeledFormControl}
@@ -278,12 +280,10 @@ export class RecordInteraction extends React.Component {
                             }))}
                             isDisabled={formDisabled}
                           />
-
                         </Col>
                       </Row>
                     </Col>
                   </Row>
-
                 </Panel.Body>
               </Panel>
             </Col>
@@ -296,7 +296,6 @@ export class RecordInteraction extends React.Component {
                 <Panel.Body>
                   <Row>
                     <Col xs={12}>
-
                       <Field
                         name="resources"
                         placeholder="Resources Used"
@@ -308,12 +307,10 @@ export class RecordInteraction extends React.Component {
                         isMulti
                         isDisabled={formDisabled}
                       />
-
                     </Col>
                   </Row>
                   <Row>
                     <Col xs={6}>
-
                       <Field
                         name="is_adverse_event"
                         component={ChoiceSelector}
@@ -331,10 +328,8 @@ export class RecordInteraction extends React.Component {
                           />
                         )}
                       </Field>
-
                     </Col>
                     <Col xs={6}>
-
                       <Field
                         name="is_joint_visit"
                         component={ChoiceSelector}
@@ -360,16 +355,19 @@ export class RecordInteraction extends React.Component {
                                 type="select"
                                 disabled={formDisabled}
                               >
-                                <option disabled value="">Reason</option>
+                                <option disabled value="">
+                                  Reason
+                                </option>
                                 <Options
-                                  choices={Object.entries(Interaction.joint_visit_reason_choices)}
+                                  choices={Object.entries(
+                                    Interaction.joint_visit_reason_choices
+                                  )}
                                 />
                               </Field>
                             </Col>
                           </Row>
                         )}
                       </Field>
-
                     </Col>
                   </Row>
                 </Panel.Body>
@@ -384,7 +382,6 @@ export class RecordInteraction extends React.Component {
                 <Panel.Body>
                   <Row>
                     <Col xs={3}>
-
                       <Field
                         name="follow_up_date"
                         component={FlatpickrDateTime}
@@ -392,10 +389,8 @@ export class RecordInteraction extends React.Component {
                         placeholder="Follow-up Date"
                         disabled={noFollowUpRequired || formDisabled}
                       />
-
                     </Col>
                     <Col xs={6}>
-
                       <Field
                         name="follow_up_notes"
                         component={LabeledFormControl}
@@ -403,17 +398,14 @@ export class RecordInteraction extends React.Component {
                         placeholder="Follow-up notes"
                         disabled={noFollowUpRequired || formDisabled}
                       />
-
                     </Col>
                     <Col xs={3}>
-
                       <Field
                         name="no_follow_up_required"
                         component={LabeledFormControl}
                         type="checkbox"
                         label="No follow up required"
                       />
-
                     </Col>
                   </Row>
                 </Panel.Body>
@@ -430,9 +422,7 @@ export class RecordInteraction extends React.Component {
 
           <Row>
             <Col xs={12} className="text-center">
-
-              <Button>Back</Button>
-              {' '}
+              <Button>Back</Button>{' '}
               <Button
                 type="submit"
                 disables=""
@@ -441,19 +431,19 @@ export class RecordInteraction extends React.Component {
               >
                 Save
               </Button>
-
             </Col>
           </Row>
-
         </form>
 
-        <br /><br />
+        <br />
+        <br />
       </Grid>
     );
   }
 }
 
-const validate = (values) => { // eslint-disable-line no-unused-vars
+const validate = (values) => {
+  // eslint-disable-line no-unused-vars
   const errors = {};
 
   if (!values.hcp_id) {
@@ -463,13 +453,19 @@ const validate = (values) => { // eslint-disable-line no-unused-vars
     errors.type_of_interaction = 'The type of interaction must be specified';
   }
   if (!values.origin_of_interaction) {
-    errors.origin_of_interaction = 'The origin of interaction must be specified';
+    errors.origin_of_interaction =
+      'The origin of interaction must be specified';
   }
-  if (values.origin_of_interaction === 'other' && !values.origin_of_interaction_other) {
-    errors.origin_of_interaction_other = 'The other origin of interaction must be specified';
+  if (
+    values.origin_of_interaction === 'other' &&
+    !values.origin_of_interaction_other
+  ) {
+    errors.origin_of_interaction_other =
+      'The other origin of interaction must be specified';
   }
   if (values.is_proactive === undefined) {
-    errors.is_proactive = 'Specify if this is a proactive or reactive interaction';
+    errors.is_proactive =
+      'Specify if this is a proactive or reactive interaction';
   }
   if (!values.time_of_interaction) {
     errors.time_of_interaction = 'Time of interaction must be entered';
@@ -477,23 +473,35 @@ const validate = (values) => { // eslint-disable-line no-unused-vars
   if (!values.purpose) {
     errors.purpose = 'Purpose of interaction must be specified';
   }
-  if (values.origin_of_interaction === 'engagement_plan' && !values.hcp_objective_id) {
-    errors.hcp_objective_id = 'HCP Objective must be specified for interactions when origin of interaction is Engagement Plan';
+  if (
+    values.origin_of_interaction === 'engagement_plan' &&
+    !values.hcp_objective_id
+  ) {
+    errors.hcp_objective_id =
+      'HCP Objective must be specified for interactions when origin of interaction is Engagement Plan';
   }
   if (values.is_adverse_event === undefined) {
-    errors.is_adverse_event = 'It must be specified whether and adverse event has occurred';
+    errors.is_adverse_event =
+      'It must be specified whether and adverse event has occurred';
   }
-  if (values.is_adverse_event && values.appropriate_pv_procedures_followed === undefined) {
-    errors.appropriate_pv_procedures_followed = 'It must be specified whether appropriate PV procedures were followed';
+  if (
+    values.is_adverse_event &&
+    values.appropriate_pv_procedures_followed === undefined
+  ) {
+    errors.appropriate_pv_procedures_followed =
+      'It must be specified whether appropriate PV procedures were followed';
   }
   if (values.is_joint_visit === undefined) {
-    errors.is_joint_visit = 'It must be specified whether this was a joint visit or not';
+    errors.is_joint_visit =
+      'It must be specified whether this was a joint visit or not';
   }
   if (values.is_joint_visit && values.joint_visit_with === undefined) {
-    errors.joint_visit_with = 'It must be specified who was the joint visit with';
+    errors.joint_visit_with =
+      'It must be specified who was the joint visit with';
   }
   if (values.is_joint_visit && values.joint_visit_reason === undefined) {
-    errors.joint_visit_reason = 'It must be specified what was the reason of the joint visit';
+    errors.joint_visit_reason =
+      'It must be specified what was the reason of the joint visit';
   }
   if (!values.no_follow_up_required) {
     if (!values.follow_up_date) {
@@ -517,15 +525,16 @@ function mapStateToProps(state, ownProps) {
     // global
     therapeuticAreas: state.get('global').get('therapeuticAreas'),
     affiliateGroups: state.get('global').get('affiliateGroups'),
-    allFormErrors: (
+    allFormErrors:
       state.get('form') &&
       state.get('form').recordInteraction &&
-      state.get('form').recordInteraction.syncErrors
-    ),
+      state.get('form').recordInteraction.syncErrors,
     // local
     serverError: recordInteractionState.get('serverError'),
     hcps: recordInteractionState.get('hcps').toJS(),
-    hcp: recordInteractionState.get('hcp') && recordInteractionState.get('hcp').toJS(),
+    hcp:
+      recordInteractionState.get('hcp') &&
+      recordInteractionState.get('hcp').toJS(),
     hcpObjectives: recordInteractionState.get('hcpObjectives').toJS(),
     projects: recordInteractionState.get('projects').toJS(),
     resources: recordInteractionState.get('resources').toJS(),
@@ -538,16 +547,23 @@ function mapStateToProps(state, ownProps) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    searchHCPs: searchHCPsActions.request,
-    fetchHCP: fetchHCPActions.request,
-    fetchInteractionRecordingRequiredData: fetchInteractionRecordingRequiredDataActions.request,
-    recordInteraction: recordInteractionActions.request,
-    fetchHCPObjectives: fetchHCPObjectivesActions.request,
-  }, dispatch);
+  return bindActionCreators(
+    {
+      searchHCPs: searchHCPsActions.request,
+      fetchHCP: fetchHCPActions.request,
+      fetchInteractionRecordingRequiredData:
+        fetchInteractionRecordingRequiredDataActions.request,
+      recordInteraction: recordInteractionActions.request,
+      fetchHCPObjectives: fetchHCPObjectivesActions.request,
+    },
+    dispatch
+  );
 }
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
 
 const withReducer = injectReducer({ key: 'recordInteraction', reducer });
 const withSaga = injectSaga({ key: 'recordInteraction', saga });
@@ -565,8 +581,8 @@ export default compose(
       props.recordInteraction(new Interaction(data));
     },
     initialValues: {
-      resources: [],  // to quench warning
+      resources: [], // to quench warning
     },
     // enableReinitialize: true,
-  }),
+  })
 )(RecordInteraction);

@@ -11,6 +11,7 @@ import { getAffiliateGroups } from 'api/affiliateGroups';
 import { getTherapeuticAreas } from 'api/therapeuticAreas';
 import HCP from 'records/HCP';
 import { getHCP, getHCPs } from 'api/hcps';
+import { delay } from 'utils/misc';
 
 import { LOGOUT, REFRESH_TOKEN } from './constants';
 import {
@@ -20,9 +21,6 @@ import {
   fetchCommonDataActions,
 } from './actions';
 import { selectGlobal } from './selectors';
-
-
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 
 export function makeSearchHCPsSaga(successActionCreator, errorActionCreator) {

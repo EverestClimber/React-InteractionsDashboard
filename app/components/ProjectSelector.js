@@ -4,7 +4,12 @@ import SmartSelector from './SmartSelector';
 
 
 const ProjectSelector = (props) => (
-  <SmartSelector {...props} renderItem={HCPItem} />
+  <SmartSelector
+    {...props}
+    placeholder={props.placeholder || 'Search Projects ...'}
+    btnLabel={props.btnLabel || 'Add New'}
+    renderItem={HCPItem}
+  />
 );
 
 ProjectSelector.propTypes = SmartSelector.propTypes;

@@ -1,6 +1,15 @@
 import { makeActionCreator, makeActionCreators } from 'utils/actions';
 
 
+export const fetchCreateEPRequiredDataActions = makeActionCreators(
+  'CREATE_EP/FETCH_REQUIRED_DATA',
+  {
+    request: () => ({}),
+    success: (payload) => ({ payload }), // payload : { bcsfs, projects, medicalPlanObjectives }
+    error: (message) => ({ message }),
+  }
+);
+
 export const searchHCPsActions = makeActionCreators(
   'CREATE_EP/SEARCH_HCPS',
   {
@@ -19,15 +28,6 @@ export const fetchHCPActions = makeActionCreators(
   }
 );
 
-export const fetchCreateEPRequiredDataActions = makeActionCreators(
-  'CREATE_EP/FETCH_REQUIRED_DATA',
-  {
-    request: () => ({}),
-    success: (payload) => ({ payload }), // payload : { bcsfs, projects, medicalPlanObjectives }
-    error: (message) => ({ message }),
-  }
-);
-
 export const selectHCPsAction = makeActionCreator(
   'CREATE_EP/SELECT_HCPS',
   (hcps) => ({ hcps }),
@@ -36,6 +36,34 @@ export const selectHCPsAction = makeActionCreator(
 export const removeHCPAction = makeActionCreator(
   'CREATE_EP/REMOVE_HCP',
   (hcpId) => ({ hcpId }),
+);
+
+export const searchProjectsActions = makeActionCreators(
+  'CREATE_EP/SEARCH_PROJECTS',
+  {
+    request: (search) => ({ search }),
+    success: (projects) => ({ projects }),
+    error: (message) => ({ message }),
+  }
+);
+
+export const fetchProjectActions = makeActionCreators(
+  'CREATE_EP/FETCH_PROJECT',
+  {
+    request: (projectId) => ({ projectId }),
+    success: (project) => ({ project }),
+    error: (message) => ({ message }),
+  }
+);
+
+export const selectProjectsAction = makeActionCreator(
+  'CREATE_EP/SELECT_PROJECTS',
+  (projects) => ({ projects }),
+);
+
+export const removeProjectAction = makeActionCreator(
+  'CREATE_EP/REMOVE_PROJECTS',
+  (projectId) => ({ projectId }),
 );
 
 export const updateHCPItemAction = makeActionCreator(

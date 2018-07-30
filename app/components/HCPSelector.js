@@ -4,7 +4,12 @@ import SmartSelector from './SmartSelector';
 
 
 const HCPSelector = (props) => (
-  <SmartSelector {...props} renderItem={HCPItem} />
+  <SmartSelector
+    {...props}
+    placeholder={props.placeholder || 'Search HCPs ...'}
+    btnLabel={props.btnLabel || 'New HCP'}
+    renderItem={HCPItem}
+  />
 );
 
 HCPSelector.propTypes = SmartSelector.propTypes;

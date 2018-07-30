@@ -14,15 +14,19 @@ import { CenteredAlert } from 'components/forms';
 import injectSaga from 'utils/injectSaga';
 // import CreateEPAddHCPs from 'containers/CreateEPAddHCPs';
 import CreateEPAddHCPs from 'components/CreateEPAddHCPs';
+import CreateEPAddProjects from 'components/CreateEPAddProjects';
 import CreateEPAddHCPObjectives from 'components/CreateEPAddHCPObjectives';
 import injectReducer from 'utils/injectReducer';
 import reducer from './reducer';
 import saga from './saga';
 import {
+  fetchCreateEPRequiredDataActions,
+  // add HCPs
   searchHCPsActions,
   fetchHCPActions,
   removeHCPAction,
   selectHCPsAction,
+  // add HCP Objectives
   updateHCPItemAction,
   addHCPObjectiveAction,
   updateHCPObjectiveAction,
@@ -30,23 +34,38 @@ import {
   addHCPObjectiveDeliverableAction,
   updateHCPObjectiveDeliverableAction,
   removeHCPObjectiveDeliverableAction,
-  fetchCreateEPRequiredDataActions,
+  // Add Projects
+  searchProjectsActions,
+  fetchProjectActions,
+  removeProjectAction,
+  selectProjectsAction,
+  // add Project Objectives
+  // updateProjectItemAction,
+  // addProjectObjectiveAction,
+  // updateProjectObjectiveAction,
+  // removeProjectObjectiveAction,
+  // addProjectObjectiveDeliverableAction,
+  // updateProjectObjectiveDeliverableAction,
+  // removeProjectObjectiveDeliverableAction,
 } from './actions';
 
 
 class CreateEP extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
+    // common
     serverError: PropTypes.string,
     engagementPlan: PropTypes.object,
-    hcps: PropTypes.object,
     bcsfs: PropTypes.object,
     medicalPlanObjectives: PropTypes.object,
     projects: PropTypes.object,
+    // add HCPs
+    hcps: PropTypes.object,
     selectedHCPs: PropTypes.object,
     searchHCPs: PropTypes.func,
     fetchHCP: PropTypes.func,
     selectHCPs: PropTypes.func,
     removeHCP: PropTypes.func,
+    // add HCP Objectives
     updateHCPItem: PropTypes.func,
     addHCPObjective: PropTypes.func,
     updateHCPObjective: PropTypes.func,
@@ -55,6 +74,13 @@ class CreateEP extends React.Component { // eslint-disable-line react/prefer-sta
     updateHCPObjectiveDeliverable: PropTypes.func,
     removeHCPObjectiveDeliverable: PropTypes.func,
     fetchCreateEPRequiredData: PropTypes.func,
+    // add Projects
+    searchedProjects: PropTypes.object,
+    selectedProjects: PropTypes.object,
+    searchProjects: PropTypes.func,
+    fetchProject: PropTypes.func,
+    selectProjects: PropTypes.func,
+    removeProject: PropTypes.func,
   };
 
   componentDidMount() {
@@ -65,14 +91,17 @@ class CreateEP extends React.Component { // eslint-disable-line react/prefer-sta
     const {
       serverError,
       engagementPlan,
+      // add HCPs
+      hcps,
+      selectedHCPs,
       searchHCPs,
       fetchHCP,
+      selectHCPs,
+      removeHCP,
+      // add HCP Objectives
       bcsfs,
       medicalPlanObjectives,
       projects,
-      selectedHCPs,
-      selectHCPs,
-      removeHCP,
       updateHCPItem,
       addHCPObjective,
       updateHCPObjective,
@@ -80,7 +109,16 @@ class CreateEP extends React.Component { // eslint-disable-line react/prefer-sta
       addHCPObjectiveDeliverable,
       updateHCPObjectiveDeliverable,
       removeHCPObjectiveDeliverable,
-      hcps,
+      // add Projects
+      searchedProjects,
+      selectedProjects,
+      searchProjects,
+      fetchProject,
+      selectProjects,
+      removeProject,
+      // add Project Objectives
+      // projectItems,
+      // updateProjectItem,
     } = this.props;
 
     return (
@@ -121,16 +159,18 @@ class CreateEP extends React.Component { // eslint-disable-line react/prefer-sta
           projects={projects}
         />
 
-        {/*
         <hr />
         <CreateEPAddProjects
-          selectedHCPs={selectedHCPs}
-          selectHCPs={selectHCPs}
-          removeHCP={removeHCP}
-          hcpItems={engagementPlan.hcp_items}
-          updateHCPItem={updateHCPItem} // (hcpId, data)
+          projects={searchedProjects}
+          selectedProjects={selectedProjects}
+          projectItems={engagementPlan.project_items}
+          fetchProject={fetchProject}
+          searchProjects={searchProjects}
+          selectProjects={selectProjects}
+          removeProject={removeProject}
         />
 
+        {/*
         <hr />
         <CreateEPAddProjectObjectives
           selectedHCPs={selectedHCPs}
@@ -156,21 +196,29 @@ function mapStateToProps(state) {
   const createEPState = state.get('createEP');
   return {
     serverError: createEPState.get('serverError'),
+    engagementPlan: createEPState.get('engagementPlan'),
+    // add HCPs
     hcps: createEPState.get('hcps'),
+    selectedHCPs: createEPState.get('selectedHCPs'),
+    // add HCP Objectives
     bcsfs: createEPState.get('bcsfs'),
     medicalPlanObjectives: createEPState.get('medicalPlanObjectives'),
     projects: createEPState.get('projects'),
-    engagementPlan: createEPState.get('engagementPlan'),
-    selectedHCPs: createEPState.get('selectedHCPs'),
+    // add Projects
+    searchedProjects: createEPState.get('searchedProjects'),
+    selectedProjects: createEPState.get('selectedProjects'),
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
+    fetchCreateEPRequiredData: fetchCreateEPRequiredDataActions.request,
+    // add HCPs
     searchHCPs: searchHCPsActions.request,
     fetchHCP: fetchHCPActions.request,
     selectHCPs: selectHCPsAction,
     removeHCP: removeHCPAction,
+    // add HCP Objectives
     updateHCPItem: updateHCPItemAction,
     addHCPObjective: addHCPObjectiveAction,
     updateHCPObjective: updateHCPObjectiveAction,
@@ -178,7 +226,19 @@ function mapDispatchToProps(dispatch) {
     addHCPObjectiveDeliverable: addHCPObjectiveDeliverableAction,
     updateHCPObjectiveDeliverable: updateHCPObjectiveDeliverableAction,
     removeHCPObjectiveDeliverable: removeHCPObjectiveDeliverableAction,
-    fetchCreateEPRequiredData: fetchCreateEPRequiredDataActions.request,
+    // Add Projects
+    searchProjects: searchProjectsActions.request,
+    fetchProject: fetchProjectActions.request,
+    selectProjects: selectProjectsAction,
+    removeProject: removeProjectAction,
+    // add Projects Objectives
+    // updateProjectItem: updateProjectItemAction,
+    // addProjectObjective: addProjectObjectiveAction,
+    // updateProjectObjective: updateProjectObjectiveAction,
+    // removeProjectObjective: removeProjectObjectiveAction,
+    // addProjectObjectiveDeliverable: addProjectObjectiveDeliverableAction,
+    // updateProjectObjectiveDeliverable: updateProjectObjectiveDeliverableAction,
+    // removeProjectObjectiveDeliverable: removeProjectObjectiveDeliverableAction,
   }, dispatch);
 }
 

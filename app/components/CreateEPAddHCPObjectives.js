@@ -33,14 +33,14 @@ export default class CreateEPAddHCPObjectives extends React.Component {
   }
 
   showPrevHCPItem = () => this.setState((prevState) => ({
-    selectedHCPItemIdx: prevState.selectedHCPItemIdx
-      ? prevState.selectedHCPItemIdx - 1
+    selectedProjectItemIdx: prevState.selectedProjectItemIdx
+      ? prevState.selectedProjectItemIdx - 1
       : this.props.hcpItems.size - 1,
   }));
 
   showNextHCPItem = () => this.setState((prevState) => ({
-    selectedHCPItemIdx: prevState.selectedHCPItemIdx < this.props.hcpItems.size - 1
-      ? prevState.selectedHCPItemIdx + 1
+    selectedProjectItemIdx: prevState.selectedProjectItemIdx < this.props.hcpItems.size - 1
+      ? prevState.selectedProjectItemIdx + 1
       : 0,
   }));
 

@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FormControl } from 'react-bootstrap';
+import { EngagementPlanHCPItem } from 'records/EngagementPlan';
 import { Options } from './forms';
 import HCPSelector from './HCPSelector';
 import SelectedHCP from './SelectedHCP';
-import { EngagementPlanHCPItem } from '../records/EngagementPlan';
 
 
 const CreateEPAddHCPs = ({

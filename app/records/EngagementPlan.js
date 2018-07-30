@@ -121,7 +121,7 @@ export class EngagementPlanProjectItem extends Record({
   }
 
   static fromApiData(data) {
-    let item = new EngagementPlanHCPItem(data);
+    let item = new EngagementPlanProjectItem(data);
     item = item.set('objectives', item.objectives.map(
       (objectiveData) => ProjectObjective.fromApiData(objectiveData)
     ));

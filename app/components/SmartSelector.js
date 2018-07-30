@@ -23,6 +23,8 @@ export default class SmartSelector extends React.Component {
     onItemSelected: PropTypes.func,
     renderSelectedItem: PropTypes.func,
     multiple: PropTypes.bool,
+    btnLabel: PropTypes.string,
+    placeholder: PropTypes.string,
     // render component
     renderItem: PropTypes.func,
   };
@@ -125,6 +127,8 @@ export default class SmartSelector extends React.Component {
       multiple,
       renderSelectedItem,
       renderItem,
+      placeholder,
+      btnLabel,
     } = this.props;
     const RenderSelectedHCP = renderSelectedItem;
 
@@ -141,7 +145,7 @@ export default class SmartSelector extends React.Component {
             >
               <FormControl
                 type="text"
-                placeholder="Search HCPs ..."
+                placeholder={placeholder}
                 onChange={this.handleSearchInputChange}
                 onKeyPress={this.searchKeyPressed}
                 className="form-control--primary"
@@ -160,7 +164,7 @@ export default class SmartSelector extends React.Component {
           <Col sm={2}>
             <Button type="submit" block>
               <span className="fi-icon icon-nav-hcps" />
-              {' '}New HCP
+              {' '}{btnLabel}
             </Button>
           </Col>
         </Row>

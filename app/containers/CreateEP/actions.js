@@ -104,3 +104,51 @@ export const removeHCPObjectiveDeliverableAction = makeActionCreator(
     { payload: { hcpId, objectiveIdx, deliverableIdx } }
   ),
 );
+
+export const updateProjectItemAction = makeActionCreator(
+  'CREATE_EP/UPDATE_PROJECT_ITEM',
+  (projectId, data) => ({ payload: { projectId, data } }),
+);
+
+export const addProjectObjectiveAction = makeActionCreator(
+  'CREATE_EP/ADD_PROJECT_OBJECTIVE',
+  (projectId) => ({ projectId }),
+);
+
+export const updateProjectObjectiveAction = makeActionCreator(
+  'CREATE_EP/UPDATE_PROJECT_OBJECTIVE',
+  (projectId, idx, data) => ({ payload: { projectId, idx, data } }),
+);
+
+export const removeProjectObjectiveAction = makeActionCreator(
+  'CREATE_EP/REMOVE_PROJECT_OBJECTIVE',
+  (projectId, idx) => ({ payload: { projectId, idx } }),
+);
+
+export const addProjectObjectiveDeliverableAction = makeActionCreator(
+  'CREATE_EP/ADD_PROJECT_OBJECTIVE_DELIVERABLE',
+  (projectId, objectiveIdx) => ({ payload: { projectId, objectiveIdx } }),
+);
+
+export const updateProjectObjectiveDeliverableAction = makeActionCreator(
+  'CREATE_EP/UPDATE_PROJECT_OBJECTIVE_DELIVERABLE',
+  (projectId, objectiveIdx, deliverableIdx, data) => (
+    { payload: { projectId, objectiveIdx, deliverableIdx, data } }
+  ),
+);
+
+export const removeProjectObjectiveDeliverableAction = makeActionCreator(
+  'CREATE_EP/REMOVE_PROJECT_OBJECTIVE_DELIVERABLE',
+  (projectId, objectiveIdx, deliverableIdx) => (
+    { payload: { projectId, objectiveIdx, deliverableIdx } }
+  ),
+);
+
+export const createEPActions = makeActionCreators(
+  'CREATE_EP/CREATE_EP',
+  {
+    request: (engagementPlan) => ({ engagementPlan }),
+    success: (engagementPlan) => ({ engagementPlan }),
+    error: (message) => ({ message }),
+  }
+);

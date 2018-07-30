@@ -5,22 +5,8 @@ import {
   EngagementPlanProjectItem,
 } from 'records/EngagementPlan';
 import { HCPObjective, HCPDeliverable } from 'records/HCPObjective';
-import {
-  removeHCPAction,
-  selectHCPsAction,
-  updateHCPItemAction,
-  addHCPObjectiveAction,
-  updateHCPObjectiveAction,
-  removeHCPObjectiveAction,
-  addHCPObjectiveDeliverableAction,
-  updateHCPObjectiveDeliverableAction,
-  removeHCPObjectiveDeliverableAction,
-  fetchCreateEPRequiredDataActions,
-  searchHCPsActions,
-  fetchHCPActions,
-  searchProjectsActions,
-  selectProjectsAction,
-} from './actions';
+import { ProjectObjective, ProjectDeliverable } from 'records/ProjectObjective';
+import * as actions from './actions';
 
 
 const initialState = fromJS({
@@ -51,22 +37,33 @@ function updateInEPlanForHCP(state, hcpId, pathStr, updateCb) {
   return state.set('engagementPlan', ePlan.updateIn(path, updateCb));
 }
 
+function updateInEPlanForProject(state, projectId, pathStr, updateCb) {
+  const ePlan = state.get('engagementPlan');
+  const projectItemIdx = ePlan.project_items.findIndex(
+    (it) => it.project_id === projectId
+  );
+  const path = pathStr.split('.').map(
+    (s) => s === 'PROJECT_ITEM_IDX' ? projectItemIdx : s
+  );
+  return state.set('engagementPlan', ePlan.updateIn(path, updateCb));
+}
+
 function createEpReducer(state = initialState, action) {
   switch (action.type) {
-    case fetchCreateEPRequiredDataActions.success.type:
+    case actions.fetchCreateEPRequiredDataActions.success.type:
       return state.merge({
         bcsfs: action.payload.bcsfs,
         medicalPlanObjectives: action.payload.medicalPlanObjectives,
         projects: action.payload.projects,
       });
 
-    case searchHCPsActions.success.type:
+    case actions.searchHCPsActions.success.type:
       return state.merge({ hcps: action.hcps });
 
-    case fetchHCPActions.success.type:
+    case actions.fetchHCPActions.success.type:
       return state.merge({ hcp: action.hcp });
 
-    case selectHCPsAction.type: {
+    case actions.selectHCPsAction.type: {
       const selectedHCPs = action.hcps;
 
       // newly selected HCPs for which hcp_items need to be created
@@ -87,90 +84,149 @@ function createEpReducer(state = initialState, action) {
       );
     }
 
-    case removeHCPAction.type:
+    case actions.removeHCPAction.type:
       return state.merge({
         selectedHCPs: state.get('selectedHCPs').remove(action.hcpId),
       });
 
-    case updateHCPItemAction.type: {
+    case actions.updateHCPItemAction.type: {
       const { hcpId, data } = action.payload;
       return updateInEPlanForHCP(
         state, hcpId, 'hcp_items.HCP_ITEM_IDX', (it) => it.merge(data));
     }
 
-    case addHCPObjectiveAction.type: {
+    case actions.addHCPObjectiveAction.type: {
       return updateInEPlanForHCP(
         state,
         action.hcpId,
         'hcp_items.HCP_ITEM_IDX.objectives',
-        (objectives) => objectives.push(HCPObjective.fromApiData())
+        (objectives) => objectives.push(HCPObjective.fromApiData({
+          hcp_id: action.hcpId,
+        }))
       );
     }
 
-    case updateHCPObjectiveAction.type: {
+    case actions.updateHCPObjectiveAction.type: {
       const { hcpId, idx, data } = action.payload;
-      const ePlan = state.get('engagementPlan');
-      const hcpItemIdx = ePlan.hcp_items.findIndex(
-        (it) => it.hcp_id === hcpId
-      );
-      return state.set('engagementPlan', ePlan.updateIn(
-        ['hcp_items', hcpItemIdx, 'objectives', idx],
+      return updateInEPlanForHCP(
+        state,
+        hcpId,
+        `hcp_items.HCP_ITEM_IDX.objectives.${idx}`,
         (objective) => objective.merge(data)
-      ));
+      );
     }
 
-    case removeHCPObjectiveAction.type: {
+    case actions.removeHCPObjectiveAction.type: {
       const { hcpId, idx } = action.payload;
-      const ePlan = state.get('engagementPlan');
-      const hcpItemIdx = ePlan.hcp_items.findIndex(
-        (it) => it.hcp_id === hcpId
-      );
-      return state.set('engagementPlan', ePlan.updateIn(
-        ['hcp_items', hcpItemIdx, 'objectives'],
+      return updateInEPlanForHCP(
+        state,
+        hcpId,
+        'hcp_items.HCP_ITEM_IDX.objectives',
         (objectives) => objectives.delete(idx)
-      ));
+      );
     }
 
-    case addHCPObjectiveDeliverableAction.type: {
+    case actions.addHCPObjectiveDeliverableAction.type: {
       const { hcpId, objectiveIdx } = action.payload;
-      const ePlan = state.get('engagementPlan');
-      const hcpItemIdx = ePlan.hcp_items.findIndex(
-        (it) => it.hcp_id === hcpId
-      );
-      return state.set('engagementPlan', ePlan.updateIn(
-        ['hcp_items', hcpItemIdx, 'objectives', objectiveIdx, 'deliverables'],
+      return updateInEPlanForHCP(
+        state,
+        hcpId,
+        `hcp_items.HCP_ITEM_IDX.objectives.${objectiveIdx}.deliverables`,
         (deliverables) => deliverables.push(HCPDeliverable.fromApiData())
-      ));
+      );
     }
 
-    case updateHCPObjectiveDeliverableAction.type: {
+    case actions.updateHCPObjectiveDeliverableAction.type: {
       const { hcpId, objectiveIdx, deliverableIdx, data } = action.payload;
-      const ePlan = state.get('engagementPlan');
-      const hcpItemIdx = ePlan.hcp_items.findIndex(
-        (it) => it.hcp_id === hcpId
-      );
-      return state.set('engagementPlan', ePlan.updateIn(
-        ['hcp_items', hcpItemIdx, 'objectives', objectiveIdx, 'deliverables', deliverableIdx],
+      return updateInEPlanForHCP(
+        state,
+        hcpId,
+        `hcp_items.HCP_ITEM_IDX.objectives.${objectiveIdx}.deliverables.${deliverableIdx}`,
         (deliverable) => deliverable.merge(data)
-      ));
-    }
-
-    case removeHCPObjectiveDeliverableAction.type: {
-      const { hcpId, objectiveIdx, deliverableIdx } = action.payload;
-      const ePlan = state.get('engagementPlan');
-      const hcpItemIdx = ePlan.hcp_items.findIndex(
-        (it) => it.hcp_id === hcpId
       );
-      return state.set('engagementPlan', ePlan.updateIn(
-        ['hcp_items', hcpItemIdx, 'objectives', objectiveIdx, 'deliverables'],
-        (deliverables) => deliverables.delete(deliverableIdx)
-      ));
     }
 
-    case searchProjectsActions.success.type:
+    case actions.removeHCPObjectiveDeliverableAction.type: {
+      const { hcpId, objectiveIdx, deliverableIdx } = action.payload;
+      return updateInEPlanForHCP(
+        state,
+        hcpId,
+        `hcp_items.HCP_ITEM_IDX.objectives.${objectiveIdx}.deliverables`,
+        (deliverables) => deliverables.delete(deliverableIdx)
+      );
+    }
+
+    case actions.updateProjectItemAction.type: {
+      const { projectId, data } = action.payload;
+      return updateInEPlanForProject(
+        state, projectId, 'project_items.PROJECT_ITEM_IDX', (it) => it.merge(data));
+    }
+
+    case actions.addProjectObjectiveAction.type: {
+      return updateInEPlanForProject(
+        state,
+        action.projectId,
+        'project_items.PROJECT_ITEM_IDX.objectives',
+        (objectives) => objectives.push(ProjectObjective.fromApiData({
+          project_id: action.projectId,
+        }))
+      );
+    }
+
+    case actions.updateProjectObjectiveAction.type: {
+      const { projectId, idx, data } = action.payload;
+      return updateInEPlanForProject(
+        state,
+        projectId,
+        `project_items.PROJECT_ITEM_IDX.objectives.${idx}`,
+        (objective) => objective.merge(data)
+      );
+    }
+
+    case actions.removeProjectObjectiveAction.type: {
+      const { projectId, idx } = action.payload;
+      return updateInEPlanForProject(
+        state,
+        projectId,
+        'project_items.PROJECT_ITEM_IDX.objectives',
+        (objectives) => objectives.delete(idx)
+      );
+    }
+
+    case actions.addProjectObjectiveDeliverableAction.type: {
+      const { projectId, objectiveIdx } = action.payload;
+      return updateInEPlanForProject(
+        state,
+        projectId,
+        `project_items.PROJECT_ITEM_IDX.objectives.${objectiveIdx}.deliverables`,
+        (deliverables) => deliverables.push(ProjectDeliverable.fromApiData())
+      );
+    }
+
+    case actions.updateProjectObjectiveDeliverableAction.type: {
+      const { projectId, objectiveIdx, deliverableIdx, data } = action.payload;
+      return updateInEPlanForProject(
+        state,
+        projectId,
+        `project_items.PROJECT_ITEM_IDX.objectives.${objectiveIdx}.deliverables.${deliverableIdx}`,
+        (deliverable) => deliverable.merge(data)
+      );
+    }
+
+    case actions.removeProjectObjectiveDeliverableAction.type: {
+      const { projectId, objectiveIdx, deliverableIdx } = action.payload;
+      return updateInEPlanForProject(
+        state,
+        projectId,
+        `project_items.PROJECT_ITEM_IDX.objectives.${objectiveIdx}.deliverables`,
+        (deliverables) => deliverables.delete(deliverableIdx)
+      );
+    }
+
+    case actions.searchProjectsActions.success.type:
       return state.merge({ searchedProjects: action.projects });
 
-    case selectProjectsAction.type: {
+    case actions.selectProjectsAction.type: {
       const selectedProjects = action.projects;
 
       // newly selected Projects for which project_items need to be created

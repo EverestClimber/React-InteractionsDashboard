@@ -6,7 +6,7 @@ export class ProjectObjective extends Record({
   id: undefined,
   // relationships
   engagement_plan_item_id: undefined,
-  hcp_id: undefined,
+  project_id: undefined,
   deliverables: new List(),
   // fields
   description: '',

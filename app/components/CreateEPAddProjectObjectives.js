@@ -28,13 +28,13 @@ export default class CreateEPAddProjectObjectives extends React.Component {
     };
   }
 
-  showPrevHCPItem = () => this.setState((prevState) => ({
+  showPrevProjectItem = () => this.setState((prevState) => ({
     selectedProjectItemIdx: prevState.selectedProjectItemIdx
       ? prevState.selectedProjectItemIdx - 1
       : this.props.projectItems.size - 1,
   }));
 
-  showNextHCPItem = () => this.setState((prevState) => ({
+  showNextProjectItem = () => this.setState((prevState) => ({
     selectedProjectItemIdx: prevState.selectedProjectItemIdx < this.props.projectItems.size - 1
       ? prevState.selectedProjectItemIdx + 1
       : 0,
@@ -56,7 +56,7 @@ export default class CreateEPAddProjectObjectives extends React.Component {
 
     return (
       <div className="CreateEPAddProjectObjectives">
-        <h2>Step 2: HCP Objectives</h2>
+        <h2>Step 4: Project Objectives</h2>
 
         {projectItem && (
 
@@ -64,9 +64,9 @@ export default class CreateEPAddProjectObjectives extends React.Component {
 
             <Panel className="CreateEPAddProjectObjectives__projectItem__project">
               <Panel.Body>
-                <Button onClick={this.showPrevHCPItem} className="pull-left">&lt;</Button>
-                <Button onClick={this.showNextHCPItem} className="pull-right">&gt;</Button>
-                <p className="text-center">{projectItem.hcp.first_name} {projectItem.hcp.last_name}</p>
+                <Button onClick={this.showPrevProjectItem} className="pull-left">&lt;</Button>
+                <Button onClick={this.showNextProjectItem} className="pull-right">&gt;</Button>
+                <p className="text-center">{projectItem.project.title}</p>
               </Panel.Body>
             </Panel>
 

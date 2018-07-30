@@ -1,21 +1,27 @@
 /* eslint-disable */
 import { List } from 'immutable';
 import { call, put, takeLatest, select } from 'redux-saga/es/effects';
+import { push } from 'react-router-redux';
 import { setLoading } from 'containers/App/actions';
-import { makeFetchHCPSaga, makeSearchHCPsSaga } from 'containers/App/saga';
+import {
+  // makeFetchHCPSaga,
+  makeSearchHCPsSaga
+} from 'containers/App/saga';
 import { BCSF } from 'records/BCSF';
 import { MedicalPlanObjective } from 'records/MedicalPlanObjective';
 import { Project } from 'records/Project';
 import { getBCSFs } from 'api/bcsfs';
 import { getMedicalPlanObjectives } from 'api/medicalPlanObjectives';
 import { getProjects } from 'api/projects';
+import { postEngagementPlan } from 'api/engagementPlans';
 import { delay } from 'utils/misc';
 import {
   fetchCreateEPRequiredDataActions,
-  fetchHCPActions,
+  // fetchHCPActions,
   searchHCPsActions,
-  fetchProjectActions,
+  // fetchProjectActions,
   searchProjectsActions,
+  createEPActions,
 } from './actions';
 import { selectGlobal } from '../App/selectors';
 
@@ -77,6 +83,16 @@ function* searchProjectsSaga({ search }) {
   }
 }
 
+function* createEPSaga({ engagementPlan }) {
+  try {
+    const res = yield call(postEngagementPlan, engagementPlan.toApiData());
+    yield put(createEPActions.success({engagementPlan: res}));
+    yield put(push('/'));
+  } catch (error) {
+    yield put(createEPActions.error(error.message));
+  }
+}
+
 // Individual exports for testing
 export default function* createEPRootSage() {
   yield takeLatest(
@@ -103,4 +119,6 @@ export default function* createEPRootSage() {
   //   fetchProjectActions.request.type,
   //   makeFetchHCPSaga(fetchProjectActions.success, fetchProjectActions.error)
   // );
+
+  yield takeLatest(createEPActions.request.type, createEPSaga);
 }

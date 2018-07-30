@@ -33,14 +33,14 @@ export default class CreateEPAddHCPObjectives extends React.Component {
   }
 
   showPrevHCPItem = () => this.setState((prevState) => ({
-    selectedProjectItemIdx: prevState.selectedProjectItemIdx
-      ? prevState.selectedProjectItemIdx - 1
+    selectedHCPItemIdx: prevState.selectedHCPItemIdx
+      ? prevState.selectedHCPItemIdx - 1
       : this.props.hcpItems.size - 1,
   }));
 
   showNextHCPItem = () => this.setState((prevState) => ({
-    selectedProjectItemIdx: prevState.selectedProjectItemIdx < this.props.hcpItems.size - 1
-      ? prevState.selectedProjectItemIdx + 1
+    selectedHCPItemIdx: prevState.selectedHCPItemIdx < this.props.hcpItems.size - 1
+      ? prevState.selectedHCPItemIdx + 1
       : 0,
   }));
 
@@ -169,7 +169,7 @@ export default class CreateEPAddHCPObjectives extends React.Component {
                                 { medical_plan_objective_id: +ev.target.value }
                               )}
                             >
-                              <option disabled value="">Medical Plan Objective</option>
+                              <option value={null}>- Medical Plan Objective -</option>
                               <Options
                                 choices={Array.from(medicalPlanObjectives.values()).map((it) =>
                                   [it.id, it.name]
@@ -189,7 +189,7 @@ export default class CreateEPAddHCPObjectives extends React.Component {
                                 { project_id: +ev.target.value }
                               )}
                             >
-                              <option disabled value="">Project</option>
+                              <option value={null}>- Project -</option>
                               <Options
                                 choices={Array.from(projects.values()).map((it) =>
                                   [it.id, it.title]
@@ -209,7 +209,7 @@ export default class CreateEPAddHCPObjectives extends React.Component {
                                 { bcsf_id: +ev.target.value }
                               )}
                             >
-                              <option disabled value="">Critical Success Factor</option>
+                              <option value={null}>- Critical Success Factor -</option>
                               <Options
                                 choices={Array.from(bcsfs.values()).map((it) =>
                                   [it.id, it.name]

@@ -1,6 +1,5 @@
 import axios from './config';
 
-
 export function getEngagementPlans() {
   const config = {
     method: 'GET',
@@ -23,7 +22,7 @@ export function postEngagementPlan(engagementPlan) {
 export function getEngagementPlan(id) {
   const config = {
     method: 'GET',
-    url: `/engagement-plans/${id}`,
+    url: `/engagement-plans/${id}/`,
   };
 
   return axios(config);
@@ -32,7 +31,7 @@ export function getEngagementPlan(id) {
 export function patchEngagementPlan(id, engagementPlan) {
   const config = {
     method: 'PATCH',
-    url: `/engagement-plans/${id}`,
+    url: `/engagement-plans/${id}/`,
     data: engagementPlan,
   };
 
@@ -42,7 +41,7 @@ export function patchEngagementPlan(id, engagementPlan) {
 export function deleteEngagementPlan(id) {
   const config = {
     method: 'DELETE',
-    url: `/engagement-plans/${id}`,
+    url: `/engagement-plans/${id}/`,
   };
 
   return axios(config);

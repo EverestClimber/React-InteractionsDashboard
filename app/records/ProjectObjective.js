@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
 import { Record, List } from 'immutable';
 
-
 export class ProjectObjective extends Record({
   id: undefined,
   // relationships
@@ -13,10 +12,7 @@ export class ProjectObjective extends Record({
   created_at: undefined,
   updated_at: undefined,
 }) {
-  static READ_ONLY_FIELDS = [
-    'created_at',
-    'updated_at',
-  ];
+  static READ_ONLY_FIELDS = ['created_at', 'updated_at'];
 
   toApiData() {
     const data = this.toJS();
@@ -28,13 +24,17 @@ export class ProjectObjective extends Record({
 
   static fromApiData(data) {
     let objective = new ProjectObjective(data);
-    objective = objective.set('deliverables', objective.deliverables.map(
-      (deliverableData) => ProjectDeliverable.fromApiData(deliverableData)
-    ));
+    objective = objective.set(
+      'deliverables',
+      new List(
+        objective.deliverables.map((deliverableData) =>
+          ProjectDeliverable.fromApiData(deliverableData)
+        )
+      )
+    );
     return objective;
   }
 }
-
 
 export class ProjectDeliverable extends Record({
   id: undefined,

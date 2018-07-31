@@ -15,6 +15,7 @@ import TopBar from 'components/TopBar';
 import routes from 'routes';
 import injectSaga from 'utils/injectSaga';
 import CreateEP from 'containers/CreateEP';
+import UpdateEP from 'containers/UpdateEP';
 import saga from './saga';
 import {
   refreshToken,
@@ -87,6 +88,11 @@ export class App extends React.PureComponent {
                   exact
                   path={routes.CREATE_EP.path}
                   component={CreateEP}
+                />
+                <Route
+                  exact
+                  path={routes.UPDATE_EP.path}
+                  component={UpdateEP}
                 />
                 <Route path={routes.NOT_FOUND.path} component={NotFound} />
               </Switch>

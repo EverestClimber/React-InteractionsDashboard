@@ -72,21 +72,32 @@ class EPForm extends React.Component {
   };
 
   constructor(props) {
+    console.log('% EPForm.constructor');
     super(props);
-    if (props.initEngagementPlan) {
-      console.log('=== initializing EP');
-      this.props.setEP(props.initEngagementPlan);
-    }
     this.state = {
       activeStep: 0,
     };
   }
 
   componentDidMount() {
+    console.log('% EPForm.componentDidMount');
+    if (this.props.initEngagementPlan) {
+      console.log('=== initializing EP');
+      this.props.setEP(this.props.initEngagementPlan);
+    }
     this.props.fetchCreateEPRequiredData();
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.initEngagementPlan !== prevProps.initEngagementPlan) {
+      console.log('=== initializing EP (2)');
+      this.props.setEP(this.props.initEngagementPlan);
+    }
+  }
+
   render() {
+    console.log('% EPForm.render');
+
     const steps = {
       0: <CreateEPAddHCPs {...this.props} />,
       1: <CreateEPAddHCPObjectives {...this.props} />,

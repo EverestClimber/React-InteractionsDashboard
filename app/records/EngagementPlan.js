@@ -4,7 +4,8 @@ import { Record, List } from 'immutable';
 
 import { ProjectObjective } from './ProjectObjective';
 import { HCPObjective } from './HCPObjective';
-
+import HCP from './HCP';
+import Project from './Project';
 
 // set fields to undefined to omit them on create request
 export class EngagementPlan extends Record({
@@ -33,16 +34,25 @@ export class EngagementPlan extends Record({
 
   static fromApiData(data) {
     let ep = new EngagementPlan(data);
-    ep = ep.set('hcp_items', ep.hcp_items.map(
-      (hcpItemData) => EngagementPlanHCPItem.fromApiData(hcpItemData))
+    ep = ep.set(
+      'hcp_items',
+      new List(
+        ep.hcp_items.map((hcpItemData) =>
+          EngagementPlanHCPItem.fromApiData(hcpItemData)
+        )
+      )
     );
-    ep = ep.set('project_items', ep.project_items.map(
-      (projectItemData) => EngagementPlanProjectItem.fromApiData(projectItemData))
+    ep = ep.set(
+      'project_items',
+      new List(
+        ep.project_items.map((projectItemData) =>
+          EngagementPlanProjectItem.fromApiData(projectItemData)
+        )
+      )
     );
     return ep;
   }
 }
-
 
 export class EngagementPlanHCPItem extends Record({
   id: undefined,
@@ -83,13 +93,18 @@ export class EngagementPlanHCPItem extends Record({
 
   static fromApiData(data) {
     let item = new EngagementPlanHCPItem(data);
-    item = item.set('objectives', item.objectives.map(
-      (objectiveData) => HCPObjective.fromApiData(objectiveData)
-    ));
+    item = item.set(
+      'objectives',
+      new List(
+        item.objectives.map((objectiveData) =>
+          HCPObjective.fromApiData(objectiveData)
+        )
+      )
+    );
+    item = item.set('hcp', HCP.fromApiData(item.hcp));
     return item;
   }
 }
-
 
 export class EngagementPlanProjectItem extends Record({
   id: undefined,
@@ -122,9 +137,15 @@ export class EngagementPlanProjectItem extends Record({
 
   static fromApiData(data) {
     let item = new EngagementPlanProjectItem(data);
-    item = item.set('objectives', item.objectives.map(
-      (objectiveData) => ProjectObjective.fromApiData(objectiveData)
-    ));
+    item = item.set(
+      'objectives',
+      new List(
+        item.objectives.map((objectiveData) =>
+          ProjectObjective.fromApiData(objectiveData)
+        )
+      )
+    );
+    item = item.set('project', Project.fromApiData(item.project));
     return item;
   }
 }

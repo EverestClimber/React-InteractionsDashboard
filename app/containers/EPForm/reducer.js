@@ -47,12 +47,18 @@ function updateInEPlanForProject(state, projectId, pathStr, updateCb) {
 
 function createEpReducer(state = initialState, action) {
   switch (action.type) {
-    case actions.setEPAction.type:
+    case actions.setEPAction.type: {
+      const ePlan = EngagementPlan.fromApiData(action.engagementPlan);
       return state.merge({
-        engagementPlan: action.engagementPlan,
-        selectedHCPs: new OrderedMap(),
-        selectedProjects: new OrderedMap(),
+        engagementPlan: ePlan,
+        selectedHCPs: new OrderedMap(
+          ePlan.hcp_items.map((it) => [it.hcp_id, it.hcp])
+        ),
+        selectedProjects: new OrderedMap(
+          ePlan.project_items.map((it) => [it.project_id, it.project])
+        ),
       });
+    }
 
     case actions.fetchCreateEPRequiredDataActions.success.type:
       return state.merge({

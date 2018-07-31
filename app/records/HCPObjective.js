@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
 import { Record, List } from 'immutable';
 
-
 export class HCPObjective extends Record({
   id: undefined,
   // relationships
@@ -35,13 +34,17 @@ export class HCPObjective extends Record({
 
   static fromApiData(data) {
     let objective = new HCPObjective(data);
-    objective = objective.set('deliverables', objective.deliverables.map(
-      (deliverableData) => HCPDeliverable.fromApiData(deliverableData)
-    ));
+    objective = objective.set(
+      'deliverables',
+      new List(
+        objective.deliverables.map((deliverableData) =>
+          HCPDeliverable.fromApiData(deliverableData)
+        )
+      )
+    );
     return objective;
   }
 }
-
 
 export class HCPDeliverable extends Record({
   id: undefined,

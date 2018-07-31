@@ -22,7 +22,6 @@ import {
   fetchCommonDataActions,
 } from './actions';
 
-
 export class App extends React.PureComponent {
   static propTypes = {
     refreshToken: PropTypes.func,
@@ -64,15 +63,31 @@ export class App extends React.PureComponent {
         {user && <TopBar />}
         <Loader />
         {/* <pre>{JSON.stringify(queryString.parse(this.props.location.search), null, 2)}</pre> */}
-        {(loadedCommonData || window.location.pathname === '/login') ? (
+        {loadedCommonData || window.location.pathname === '/login' ? (
           <Switch>
             <Route exact path={routes.LOGIN.path} component={Login} />
             {user && (
               <Switch>
-                <Route exact path={routes.DASHBOARD.path} component={Dashboard} />
-                <Route exact path={routes.RECORD_INTERACTION.path} component={RecordInteraction} />
-                <Route exact path={routes.LIST_INTERACTIONS.path} component={ListInteractions} />
-                <Route exact path={routes.CREATE_EP.path} component={CreateEP} />
+                <Route
+                  exact
+                  path={routes.DASHBOARD.path}
+                  component={Dashboard}
+                />
+                <Route
+                  exact
+                  path={routes.RECORD_INTERACTION.path}
+                  component={RecordInteraction}
+                />
+                <Route
+                  exact
+                  path={routes.LIST_INTERACTIONS.path}
+                  component={ListInteractions}
+                />
+                <Route
+                  exact
+                  path={routes.CREATE_EP.path}
+                  component={CreateEP}
+                />
                 <Route path={routes.NOT_FOUND.path} component={NotFound} />
               </Switch>
             )}
@@ -89,23 +104,34 @@ export class App extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     user: state.get('global').get('user'),
-    loading: state.get('global').get('ui').get('loading'),
+    loading: state
+      .get('global')
+      .get('ui')
+      .get('loading'),
     loadedCommonData: state.get('global').get('loadedCommonData'),
   };
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    refreshToken,
-    fetchCommonData: fetchCommonDataActions.request,
-    getCurrentUser: getCurrentUserActions.request,
-  }, dispatch);
+  return bindActionCreators(
+    {
+      refreshToken,
+      fetchCommonData: fetchCommonDataActions.request,
+      getCurrentUser: getCurrentUserActions.request,
+    },
+    dispatch
+  );
 }
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
 const withSaga = injectSaga({ key: 'global', saga });
 
-export default withRouter(compose(
-  withSaga,
-  withConnect
-)(App));
+export default withRouter(
+  compose(
+    withSaga,
+    withConnect
+  )(App)
+);

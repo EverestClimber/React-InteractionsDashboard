@@ -161,7 +161,9 @@
       "padded-blocks": 0,
       "react/sort-comp": 0,
       "no-lonely-if": 0,
-      "camelcase": 0
+      "camelcase": 0,
+      "react/no-unused-prop-types": 0,
+      "react/prop-types": 0
     },
     "settings": {
       "import/resolver": {

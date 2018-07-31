@@ -6,11 +6,10 @@ import { Options } from './forms';
 import HCPSelector from './HCPSelector';
 import SelectedHCP from './SelectedHCP';
 
-
 const CreateEPAddHCPs = ({
   hcps,
   selectedHCPs,
-  hcpItems,
+  engagementPlan,
   fetchHCP,
   searchHCPs,
   selectHCPs,
@@ -30,24 +29,27 @@ const CreateEPAddHCPs = ({
       multiple
     />
 
-    {!!hcpItems.size && Array.from(hcpItems.values()).map((hcpItem) => (
-      <SelectedHCPWithReason
-        key={hcpItem.hcp_id}
-        hcp={hcpItem.hcp}
-        handleRemove={() => selectHCPs(selectedHCPs.delete(hcpItem.hcp_id))}
-        reason={hcpItem.reason}
-        onReasonChange={(reason) => updateHCPItem(hcpItem.hcp_id, { reason })}
-        reasonOther={hcpItem.reason_other}
-        onReasonOtherChange={(reason_other) => updateHCPItem(hcpItem.hcp_id, { reason_other })}
-      />
-    ))}
+    {!!engagementPlan.hcp_items.size &&
+      Array.from(engagementPlan.hcp_items.values()).map((hcpItem) => (
+        <SelectedHCPWithReason
+          key={hcpItem.hcp_id}
+          hcp={hcpItem.hcp}
+          handleRemove={() => selectHCPs(selectedHCPs.delete(hcpItem.hcp_id))}
+          reason={hcpItem.reason}
+          onReasonChange={(reason) => updateHCPItem(hcpItem.hcp_id, { reason })}
+          reasonOther={hcpItem.reason_other}
+          onReasonOtherChange={(reason_other) =>
+            updateHCPItem(hcpItem.hcp_id, { reason_other })
+          }
+        />
+      ))}
   </div>
 );
 
 CreateEPAddHCPs.propTypes = {
   hcps: PropTypes.object,
   selectedHCPs: PropTypes.object,
-  hcpItems: PropTypes.object,
+  engagementPlan: PropTypes.object,
   fetchHCP: PropTypes.func,
   searchHCPs: PropTypes.func,
   selectHCPs: PropTypes.func,
@@ -57,20 +59,28 @@ CreateEPAddHCPs.propTypes = {
 
 export default CreateEPAddHCPs;
 
-
-const SelectedHCPWithReason = ({ hcp, handleRemove, reason, onReasonChange, reasonOther, onReasonOtherChange }) => ( // eslint-disable-line react/prop-types
+const SelectedHCPWithReason = (
+  {
+    hcp,
+    handleRemove,
+    reason,
+    onReasonChange,
+    reasonOther,
+    onReasonOtherChange,
+  } // eslint-disable-line react/prop-types
+) => (
   <SelectedHCP hcp={hcp} handleRemove={handleRemove}>
     <FormControl
       componentClass="select"
       value={reason}
       onChange={(ev) => onReasonChange(ev.target.value)}
     >
-      <option disabled value="">Select reason for adding HCP to the plan</option>
-      <Options
-        choices={Object.entries(EngagementPlanHCPItem.reason_choices)}
-      />
+      <option disabled value="">
+        Select reason for adding HCP to the plan
+      </option>
+      <Options choices={Object.entries(EngagementPlanHCPItem.reason_choices)} />
     </FormControl>
-    {(reason === 'other') && (
+    {reason === 'other' && (
       <FormControl
         componentClass="textarea"
         placeholder="Other reason"

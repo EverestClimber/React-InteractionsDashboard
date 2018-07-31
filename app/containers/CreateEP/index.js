@@ -4,11 +4,12 @@ import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
 import {
   Button,
+  ButtonGroup,
   Col,
-  Grid, Row,
+  Grid,
+  Row,
   // Col,
   // Row,
-  // Button,
   // Panel,
 } from 'react-bootstrap';
 
@@ -53,8 +54,8 @@ import {
   createEPActions,
 } from './actions';
 
-
-class CreateEP extends React.Component { // eslint-disable-line react/prefer-stateless-function
+class CreateEP extends React.Component {
+  // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     // common
     serverError: PropTypes.string,
@@ -97,124 +98,88 @@ class CreateEP extends React.Component { // eslint-disable-line react/prefer-sta
     createEP: PropTypes.func,
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeStep: 0,
+    };
+  }
+
   componentDidMount() {
     this.props.fetchCreateEPRequiredData();
   }
 
-  render() {
-    const {
-      serverError,
-      engagementPlan,
-      // add HCPs
-      hcps,
-      selectedHCPs,
-      searchHCPs,
-      fetchHCP,
-      selectHCPs,
-      removeHCP,
-      // add HCP Objectives
-      bcsfs,
-      medicalPlanObjectives,
-      projects,
-      updateHCPItem,
-      addHCPObjective,
-      updateHCPObjective,
-      removeHCPObjective,
-      addHCPObjectiveDeliverable,
-      updateHCPObjectiveDeliverable,
-      removeHCPObjectiveDeliverable,
-      // add Projects
-      searchedProjects,
-      selectedProjects,
-      searchProjects,
-      fetchProject,
-      selectProjects,
-      removeProject,
-      // add Project Objectives
-      // updateProjectItem,
-      addProjectObjective,
-      updateProjectObjective,
-      removeProjectObjective,
-      addProjectObjectiveDeliverable,
-      updateProjectObjectiveDeliverable,
-      removeProjectObjectiveDeliverable,
-      // create EP
-      createEP,
-    } = this.props;
+  renderStep(step) {
+    if (step === 0) {
+      return <CreateEPAddHCPs {...this.props} />;
+    } else if (step === 1) {
+      return <CreateEPAddHCPObjectives {...this.props} />;
+    } else if (step === 2) {
+      return <CreateEPAddProjects {...this.props} />;
+    } else if (step === 3) {
+      return (
+        <div>
+          <CreateEPAddProjectObjectives {...this.props} />
+          <br />
+          <Row>
+            <Col xs={12} className="text-center">
+              <Button
+                onClick={() => this.props.createEP(this.props.engagementPlan)}
+                bsStyle="primary"
+              >
+                Create Engagement Plan
+              </Button>
+            </Col>
+          </Row>
+        </div>
+      );
+    }
+    return null;
+  }
 
+  render() {
     return (
       <Grid>
         <h2>Create Engagement Plan</h2>
 
-        {serverError && (
+        <Row className="text-center">
+          <ButtonGroup>
+            <Button
+              active={this.state.activeStep === 0}
+              onClick={() => this.setState({ activeStep: 0 })}
+            >
+              1. Add HCPs
+            </Button>
+            <Button
+              active={this.state.activeStep === 1}
+              onClick={() => this.setState({ activeStep: 1 })}
+            >
+              2. HCP Objective
+            </Button>
+            <Button
+              active={this.state.activeStep === 2}
+              onClick={() => this.setState({ activeStep: 2 })}
+            >
+              3. Add Projects
+            </Button>
+            <Button
+              active={this.state.activeStep === 3}
+              onClick={() => this.setState({ activeStep: 3 })}
+            >
+              4. Project Objectives
+            </Button>
+          </ButtonGroup>
+        </Row>
+
+        {this.props.serverError && (
           <CenteredAlert bsStyle="danger">
             An error has occurred. Please refresh the page or try again later.
-            <pre>{serverError}</pre>
+            <pre>{this.props.serverError}</pre>
           </CenteredAlert>
         )}
 
         <hr />
-        <CreateEPAddHCPs
-          hcps={hcps}
-          selectedHCPs={selectedHCPs}
-          hcpItems={engagementPlan.hcp_items}
-          fetchHCP={fetchHCP}
-          searchHCPs={searchHCPs}
-          selectHCPs={selectHCPs}
-          removeHCP={removeHCP}
-          updateHCPItem={updateHCPItem} // (hcpId, data)
-        />
-
-        <hr />
-        <CreateEPAddHCPObjectives
-          selectedHCPs={selectedHCPs}
-          hcpItems={engagementPlan.hcp_items}
-          addHCPObjective={addHCPObjective} // (hcpId)
-          updateHCPObjective={updateHCPObjective} // (hcpId, idx, data)
-          removeHCPObjective={removeHCPObjective} // (hcpId, idx)
-          addDeliverable={addHCPObjectiveDeliverable} // (hcpId, objectiveIdx)
-          updateDeliverable={updateHCPObjectiveDeliverable} // (hcpId, objectiveIdx, deliverableIdx, data)
-          removeDeliverable={removeHCPObjectiveDeliverable} // (hcpId, objectiveIdx, deliverableIdx)
-          bcsfs={bcsfs}
-          medicalPlanObjectives={medicalPlanObjectives}
-          projects={projects}
-        />
-
-        <hr />
-        <CreateEPAddProjects
-          projects={searchedProjects}
-          selectedProjects={selectedProjects}
-          projectItems={engagementPlan.project_items}
-          fetchProject={fetchProject}
-          searchProjects={searchProjects}
-          selectProjects={selectProjects}
-          removeProject={removeProject}
-        />
-
-        <hr />
-        <CreateEPAddProjectObjectives
-          selectedProjects={selectedProjects}
-          projectItems={engagementPlan.project_items}
-          addProjectObjective={addProjectObjective} // (projectId)
-          updateProjectObjective={updateProjectObjective} // (projectId, idx, data)
-          removeProjectObjective={removeProjectObjective} // (projectId, idx)
-          addDeliverable={addProjectObjectiveDeliverable} // (projectId, objectiveIdx)
-          updateDeliverable={updateProjectObjectiveDeliverable} // (projectId, objectiveIdx, deliverableIdx, data)
-          removeDeliverable={removeProjectObjectiveDeliverable} // (projectId, objectiveIdx, deliverableIdx)
-        />
-
-        <br />
-        <Row>
-          <Col xs={12} className="text-center">
-            <Button
-              onClick={() => createEP(engagementPlan)}
-              bsStyle="primary"
-            >
-              Create Engagement Plan
-            </Button>
-          </Col>
-        </Row>
-
+        {this.renderStep(this.state.activeStep)}
       </Grid>
     );
   }
@@ -239,40 +204,46 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({
-    fetchCreateEPRequiredData: fetchCreateEPRequiredDataActions.request,
-    // add HCPs
-    searchHCPs: searchHCPsActions.request,
-    fetchHCP: fetchHCPActions.request,
-    selectHCPs: selectHCPsAction,
-    removeHCP: removeHCPAction,
-    // add HCP Objectives
-    updateHCPItem: updateHCPItemAction,
-    addHCPObjective: addHCPObjectiveAction,
-    updateHCPObjective: updateHCPObjectiveAction,
-    removeHCPObjective: removeHCPObjectiveAction,
-    addHCPObjectiveDeliverable: addHCPObjectiveDeliverableAction,
-    updateHCPObjectiveDeliverable: updateHCPObjectiveDeliverableAction,
-    removeHCPObjectiveDeliverable: removeHCPObjectiveDeliverableAction,
-    // Add Projects
-    searchProjects: searchProjectsActions.request,
-    fetchProject: fetchProjectActions.request,
-    selectProjects: selectProjectsAction,
-    removeProject: removeProjectAction,
-    // add Projects Objectives
-    updateProjectItem: updateProjectItemAction,
-    addProjectObjective: addProjectObjectiveAction,
-    updateProjectObjective: updateProjectObjectiveAction,
-    removeProjectObjective: removeProjectObjectiveAction,
-    addProjectObjectiveDeliverable: addProjectObjectiveDeliverableAction,
-    updateProjectObjectiveDeliverable: updateProjectObjectiveDeliverableAction,
-    removeProjectObjectiveDeliverable: removeProjectObjectiveDeliverableAction,
-    // create EP
-    createEP: createEPActions.request,
-  }, dispatch);
+  return bindActionCreators(
+    {
+      fetchCreateEPRequiredData: fetchCreateEPRequiredDataActions.request,
+      // add HCPs
+      searchHCPs: searchHCPsActions.request,
+      fetchHCP: fetchHCPActions.request,
+      selectHCPs: selectHCPsAction,
+      removeHCP: removeHCPAction,
+      // add HCP Objectives
+      updateHCPItem: updateHCPItemAction,
+      addHCPObjective: addHCPObjectiveAction,
+      updateHCPObjective: updateHCPObjectiveAction,
+      removeHCPObjective: removeHCPObjectiveAction,
+      addHCPObjectiveDeliverable: addHCPObjectiveDeliverableAction,
+      updateHCPObjectiveDeliverable: updateHCPObjectiveDeliverableAction,
+      removeHCPObjectiveDeliverable: removeHCPObjectiveDeliverableAction,
+      // add Projects
+      searchProjects: searchProjectsActions.request,
+      fetchProject: fetchProjectActions.request,
+      selectProjects: selectProjectsAction,
+      removeProject: removeProjectAction,
+      // add Projects Objectives
+      updateProjectItem: updateProjectItemAction,
+      addProjectObjective: addProjectObjectiveAction,
+      updateProjectObjective: updateProjectObjectiveAction,
+      removeProjectObjective: removeProjectObjectiveAction,
+      addProjectObjectiveDeliverable: addProjectObjectiveDeliverableAction,
+      updateProjectObjectiveDeliverable: updateProjectObjectiveDeliverableAction,
+      removeProjectObjectiveDeliverable: removeProjectObjectiveDeliverableAction,
+      // create EP
+      createEP: createEPActions.request,
+    },
+    dispatch
+  );
 }
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
 
 const withReducer = injectReducer({ key: 'createEP', reducer });
 const withSaga = injectSaga({ key: 'createEP', saga });
@@ -280,5 +251,5 @@ const withSaga = injectSaga({ key: 'createEP', saga });
 export default compose(
   withReducer,
   withSaga,
-  withConnect,
+  withConnect
 )(CreateEP);

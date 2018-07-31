@@ -1,16 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Button,
-  Panel,
-} from 'react-bootstrap';
+import { Button, Panel } from 'react-bootstrap';
 import ProjectSelector from './ProjectSelector';
-
 
 const CreateEPAddProjects = ({
   projects,
   selectedProjects,
-  projectItems,
+  engagementPlan,
   fetchProject,
   searchProjects,
   selectProjects,
@@ -29,13 +25,16 @@ const CreateEPAddProjects = ({
       multiple
     />
 
-    {!!projectItems.size && Array.from(projectItems.values()).map((projectItem) => (
-      <SelectedProject
-        key={projectItem.project_id}
-        project={projectItem.project}
-        handleRemove={() => selectProjects(selectedProjects.delete(projectItem.project_id))}
-      />
-    ))}
+    {!!engagementPlan.project_items.size &&
+      Array.from(engagementPlan.project_items.values()).map((projectItem) => (
+        <SelectedProject
+          key={projectItem.project_id}
+          project={projectItem.project}
+          handleRemove={() =>
+            selectProjects(selectedProjects.delete(projectItem.project_id))
+          }
+        />
+      ))}
   </div>
 );
 
@@ -51,8 +50,9 @@ CreateEPAddProjects.propTypes = {
 
 export default CreateEPAddProjects;
 
-
-const SelectedProject = ({ project, handleRemove }) => ( // eslint-disable-line react/prop-types
+const SelectedProject = (
+  { project, handleRemove } // eslint-disable-line react/prop-types
+) => (
   <Panel className="SelectedProject">
     <Panel.Heading>
       <Button className="pull-right" onClick={handleRemove}>

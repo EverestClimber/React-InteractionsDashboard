@@ -50,9 +50,7 @@ CreateEPAddProjects.propTypes = {
 
 export default CreateEPAddProjects;
 
-const SelectedProject = (
-  { project, handleRemove } // eslint-disable-line react/prop-types
-) => (
+const SelectedProject = ({ project, handleRemove }) => (
   <Panel className="SelectedProject">
     <Panel.Heading>
       <Button className="pull-right" onClick={handleRemove}>

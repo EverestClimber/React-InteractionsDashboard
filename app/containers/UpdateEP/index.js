@@ -34,7 +34,7 @@ export class UpdateEP extends React.Component {
         )}
 
         <EPForm
-          onSubmit={() => this.props.updateEP(this.props.engagementPlan)}
+          onSubmit={this.props.updateEP}
           initEngagementPlan={this.props.engagementPlan}
         />
       </Grid>

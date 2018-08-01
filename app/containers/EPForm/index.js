@@ -16,7 +16,6 @@ import {
 import { CenteredAlert } from 'components/forms';
 import injectSaga from 'utils/injectSaga';
 import CreateEPAddHCPs from 'components/CreateEPAddHCPs';
-import CreateEPAddHCPObjectives from 'components/CreateEPAddHCPObjectives';
 import CreateEPAddProjects from 'components/CreateEPAddProjects';
 import CreateEPAddProjectObjectives from 'components/CreateEPAddProjectObjectives';
 import injectReducer from 'utils/injectReducer';
@@ -100,9 +99,8 @@ class EPForm extends React.Component {
 
     const steps = {
       0: <CreateEPAddHCPs {...this.props} />,
-      1: <CreateEPAddHCPObjectives {...this.props} />,
-      2: <CreateEPAddProjects {...this.props} />,
-      3: (
+      1: <CreateEPAddProjects {...this.props} />,
+      2: (
         <div>
           <CreateEPAddProjectObjectives {...this.props} />
           <br />
@@ -136,25 +134,19 @@ class EPForm extends React.Component {
               active={this.state.activeStep === 0}
               onClick={() => this.setState({ activeStep: 0 })}
             >
-              1. Add HCPs
+              1. HCPs & Objectives
             </Button>
             <Button
               active={this.state.activeStep === 1}
               onClick={() => this.setState({ activeStep: 1 })}
             >
-              2. HCP Objective
+              2. Add Projects
             </Button>
             <Button
               active={this.state.activeStep === 2}
               onClick={() => this.setState({ activeStep: 2 })}
             >
-              3. Add Projects
-            </Button>
-            <Button
-              active={this.state.activeStep === 3}
-              onClick={() => this.setState({ activeStep: 3 })}
-            >
-              4. Project Objectives
+              3. Project Objectives
             </Button>
           </ButtonGroup>
         </Row>

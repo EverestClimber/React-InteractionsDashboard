@@ -34,6 +34,7 @@ export class UpdateEP extends React.Component {
         )}
 
         <EPForm
+          mode="update"
           onSubmit={this.props.updateEP}
           initEngagementPlan={this.props.engagementPlan}
         />

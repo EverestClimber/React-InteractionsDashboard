@@ -102,10 +102,12 @@ function createEpReducer(state = initialState, action) {
         );
     }
 
-    case actions.removeHCPAction.type:
-      return state.merge({
-        selectedHCPs: state.get('selectedHCPs').remove(action.hcpId),
-      });
+    // case actions.removeHCPAction.type:
+    //   return state
+    //     .set('selectedHCPs', state.get('selectedHCPs').remove(action.hcpId))
+    //     .updateIn(['engagementPlan', 'hcp_items'], (hcpItems) =>
+    //       hcpItems.filter((it) => it.hcp_id !== action.hcpId)
+    //     );
 
     case actions.updateHCPItemAction.type: {
       const { hcpId, data } = action.payload;

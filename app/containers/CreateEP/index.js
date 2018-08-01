@@ -28,6 +28,7 @@ export class CreateEP extends React.Component {
         )}
 
         <EPForm
+          mode="create"
           onSubmit={this.props.createEP}
           initEngagementPlan={new EngagementPlan()}
         />

@@ -64,6 +64,7 @@ export class EngagementPlanHCPItem extends Record({
   // fields
   reason: '',
   reason_other: '',
+  removed_at: null,
   approved: undefined,
   approved_at: undefined,
   created_at: undefined,
@@ -114,6 +115,7 @@ export class EngagementPlanProjectItem extends Record({
   project: null,
   objectives: new List(),
   // fields
+  removed_at: null,
   approved: undefined,
   approved_at: undefined,
   created_at: undefined,

@@ -15,8 +15,8 @@ import {
 
 import { CenteredAlert } from 'components/forms';
 import injectSaga from 'utils/injectSaga';
-import CreateEPAddHCPs from 'components/CreateEPAddHCPs';
-import CreateEPAddProjects from 'components/CreateEPAddProjects';
+import EPFormAddHCPs from 'components/EPFormAddHCPs';
+import EPFormAddProjects from 'components/EPFormAddProjects';
 import injectReducer from 'utils/injectReducer';
 import reducer from './reducer';
 import saga from './saga';
@@ -97,8 +97,8 @@ class EPForm extends React.Component {
     console.log('% EPForm.render');
 
     const steps = {
-      0: <CreateEPAddHCPs {...this.props} />,
-      1: <CreateEPAddProjects {...this.props} />,
+      0: <EPFormAddHCPs {...this.props} />,
+      1: <EPFormAddProjects {...this.props} />,
       2: (
         <div>
           <h2>Step 3: Review Plan</h2>

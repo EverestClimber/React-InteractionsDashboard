@@ -12,7 +12,7 @@ import ProjectSelector from './ProjectSelector';
 
 const makeKey = (obj, idx) => `${obj.id || ''}.${idx}`;
 
-const CreateEPAddProjects = ({
+const EPFormAddProjects = ({
   projects,
   selectedProjects,
   engagementPlan,
@@ -63,7 +63,7 @@ const CreateEPAddProjects = ({
   </div>
 );
 
-CreateEPAddProjects.propTypes = {
+EPFormAddProjects.propTypes = {
   projects: PropTypes.object,
   selectedProjects: PropTypes.object,
   projectItems: PropTypes.object,
@@ -80,7 +80,7 @@ CreateEPAddProjects.propTypes = {
   removeProjectObjectiveDeliverable: PropTypes.func,
 };
 
-export default CreateEPAddProjects;
+export default EPFormAddProjects;
 
 const ProjectItem = ({
   projectItem,

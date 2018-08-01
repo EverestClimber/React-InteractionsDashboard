@@ -17,7 +17,6 @@ import { CenteredAlert } from 'components/forms';
 import injectSaga from 'utils/injectSaga';
 import CreateEPAddHCPs from 'components/CreateEPAddHCPs';
 import CreateEPAddProjects from 'components/CreateEPAddProjects';
-import CreateEPAddProjectObjectives from 'components/CreateEPAddProjectObjectives';
 import injectReducer from 'utils/injectReducer';
 import reducer from './reducer';
 import saga from './saga';
@@ -102,7 +101,8 @@ class EPForm extends React.Component {
       1: <CreateEPAddProjects {...this.props} />,
       2: (
         <div>
-          <CreateEPAddProjectObjectives {...this.props} />
+          <h2>Step 3: Review Plan</h2>
+          <pre>{JSON.stringify(this.props.engagementPlan.toJS(), null, 2)}</pre>
           <br />
           <Row>
             <Col xs={12} className="text-center">
@@ -110,7 +110,7 @@ class EPForm extends React.Component {
                 onClick={() => this.props.onSubmit(this.props.engagementPlan)}
                 bsStyle="primary"
               >
-                Create Engagement Plan
+                Save
               </Button>
             </Col>
           </Row>
@@ -140,13 +140,13 @@ class EPForm extends React.Component {
               active={this.state.activeStep === 1}
               onClick={() => this.setState({ activeStep: 1 })}
             >
-              2. Add Projects
+              2. Projects & Objectives
             </Button>
             <Button
               active={this.state.activeStep === 2}
               onClick={() => this.setState({ activeStep: 2 })}
             >
-              3. Project Objectives
+              3. Review Plan
             </Button>
           </ButtonGroup>
         </Row>

@@ -24,7 +24,7 @@ const CreateEPAddHCPs = ({
   selectHCPs,
   removeHCP,
   updateHCPItem,
-
+  // objectives:
   bcsfs,
   medicalPlanObjectives,
   projects,
@@ -86,6 +86,16 @@ CreateEPAddHCPs.propTypes = {
   selectHCPs: PropTypes.func,
   removeHCP: PropTypes.func,
   updateHCPItem: PropTypes.func,
+  // objectives:
+  bcsfs: PropTypes.object,
+  medicalPlanObjectives: PropTypes.object,
+  projects: PropTypes.object,
+  addHCPObjective: PropTypes.func,
+  updateHCPObjective: PropTypes.func,
+  removeHCPObjective: PropTypes.func,
+  addHCPObjectiveDeliverable: PropTypes.func,
+  updateHCPObjectiveDeliverable: PropTypes.func,
+  removeHCPObjectiveDeliverable: PropTypes.func,
 };
 
 export default CreateEPAddHCPs;
@@ -140,26 +150,24 @@ const HCPItem = ({
         )}
       </p>
       <br />
-      {hcpItem.objectives
-        .map((objective, objectiveIdx) => (
-          <HCPObjective
-            key={makeKey(objective, objectiveIdx)}
-            {...{
-              hcpItem,
-              objective,
-              objectiveIdx,
-              bcsfs,
-              medicalPlanObjectives,
-              projects,
-              updateHCPObjective,
-              removeHCPObjective,
-              addHCPObjectiveDeliverable,
-              updateHCPObjectiveDeliverable,
-              removeHCPObjectiveDeliverable,
-            }}
-          />
-        ))
-        .toJS()}
+      {hcpItem.objectives.map((objective, objectiveIdx) => (
+        <HCPObjective
+          key={makeKey(objective, objectiveIdx)}
+          {...{
+            hcpItem,
+            objective,
+            objectiveIdx,
+            bcsfs,
+            medicalPlanObjectives,
+            projects,
+            updateHCPObjective,
+            removeHCPObjective,
+            addHCPObjectiveDeliverable,
+            updateHCPObjectiveDeliverable,
+            removeHCPObjectiveDeliverable,
+          }}
+        />
+      ))}
 
       <Row className="text-center">
         <Button onClick={() => addHCPObjective(hcpItem.hcp_id)}>

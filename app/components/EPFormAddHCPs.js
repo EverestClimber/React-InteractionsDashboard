@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  // FormGroup,
+  FormGroup,
   FormControl,
   Button,
   Panel,
@@ -60,18 +60,29 @@ const EPFormAddHCPs = ({
               mode,
               currentQuarter,
               hcpItem,
-              handleRemove: () =>
-                mode === 'create' || !hcpItem.id
-                  ? selectHCPs(selectedHCPs.delete(hcpItem.hcp_id))
-                  : updateHCPItem(hcpItem.hcp_id, {
-                    removed_at: hcpItem.removed_at
-                        ? null
-                        : new Date().toISOString(),
-                  }),
+              // handleRemove: () =>
+              //   mode === 'create' || !hcpItem.id
+              //     ? selectHCPs(selectedHCPs.delete(hcpItem.hcp_id))
+              //     : updateHCPItem(hcpItem.hcp_id, {
+              //       removed_at: hcpItem.removed_at
+              //           ? null
+              //           : new Date().toISOString(),
+              //     }),
+              // simply remove an unsaved HCP
+              remove: () => selectHCPs(selectedHCPs.delete(hcpItem.hcp_id)),
+              // for saved HCP, we set it as removed and save a reason
+              setRemoved: () =>
+                updateHCPItem(hcpItem.hcp_id, {
+                  removed_at: new Date().toISOString(),
+                }),
+              unsetRemoved: () =>
+                updateHCPItem(hcpItem.hcp_id, { removed_at: null }),
               onReasonChange: (reason) =>
                 updateHCPItem(hcpItem.hcp_id, { reason }),
               onReasonOtherChange: (reason_other) =>
                 updateHCPItem(hcpItem.hcp_id, { reason_other }),
+              onReasonRemovedChange: (reason_removed) =>
+                updateHCPItem(hcpItem.hcp_id, { reason_removed }),
               bcsfs,
               medicalPlanObjectives,
               hcps,
@@ -112,182 +123,224 @@ EPFormAddHCPs.propTypes = {
 
 export default EPFormAddHCPs;
 
-const HCPItem = ({
-  mode,
-  currentQuarter,
-  hcpItem,
-  handleRemove,
-  onReasonChange,
-  onReasonOtherChange,
-  // objectives
-  bcsfs,
-  medicalPlanObjectives,
-  hcps,
-  addHCPObjective,
-  updateHCPObjective,
-  removeHCPObjective,
-  addHCPObjectiveDeliverable,
-  updateHCPObjectiveDeliverable,
-  removeHCPObjectiveDeliverable,
-}) => (
-  <Panel className="HCPItem">
-    <Panel.Heading>
-      <Button className="pull-right" onClick={handleRemove}>
-        {hcpItem.removed_at ? '✔' : '✖'}
-      </Button>
-      <p
-        style={
-          hcpItem.removed_at && { textDecoration: 'line-through', color: 'red' }
-        }
-      >
-        {hcpItem.hcp.first_name} {hcpItem.hcp.last_name}
-      </p>
-    </Panel.Heading>
-    <Panel.Body>
-      <br />
-      {mode === 'create' || !hcpItem.id ? (
-        <p>
-          <FormControl
-            componentClass="select"
-            value={hcpItem.reason}
-            onChange={(ev) => onReasonChange(ev.target.value)}
-          >
-            <option disabled value="">
-              Select reason for adding HCP to the plan
-            </option>
-            <Options
-              choices={Object.entries(EngagementPlanHCPItem.reason_choices)}
-            />
-          </FormControl>
-          {hcpItem.reason === 'other' && (
-            <FormControl
-              componentClass="textarea"
-              placeholder="Other reason"
-              value={hcpItem.reasonOther}
-              onChange={(ev) => onReasonOtherChange(ev.target.value)}
-            />
-          )}
-        </p>
-      ) : (
-        <p>
-          <strong>Reason{hcpItem.reason === 'other' ? ' (other)' : ''}:</strong>{' '}
-          {hcpItem.reason === 'other' ? hcpItem.reasonOther : hcpItem.reason}
-        </p>
-      )}
+class HCPItem extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      // 'yes', 'no', 'pending'
+      removed: props.hcpItem.removed_at ? 'yes' : 'no',
+    };
+  }
 
-      <br />
-      {hcpItem.objectives.map((objective, objectiveIdx) => (
-        // <HCPObjective
-        //   key={makeKey(objective, objectiveIdx)}
-        //   {...{
-        //     mode,
-        //     currentQuarter,
-        //     hcpItem,
-        //     objective,
-        //     objectiveIdx,
-        //     bcsfs,
-        //     medicalPlanObjectives,
-        //     HCPs,
-        //     updateHCPObjective,
-        //     removeHCPObjective,
-        //     addHCPObjectiveDeliverable,
-        //     updateHCPObjectiveDeliverable,
-        //     removeHCPObjectiveDeliverable,
-        //   }}
-        // />
-        <EPFormObjective
-          key={makeKey(objective, objectiveIdx)}
-          {...{
-            mode,
-            currentQuarter,
-            itemObjectId: hcpItem.hcp_id,
-            objective,
-            objectiveIdx,
-            updateObjective: updateHCPObjective,
-            removeObjective: removeHCPObjective,
-            addDeliverable: addHCPObjectiveDeliverable,
-            updateDeliverable: updateHCPObjectiveDeliverable,
-            removeDeliverable: removeHCPObjectiveDeliverable,
-            deliverableStatusChoices: HCPDeliverable.status_choices,
-          }}
-        >
-          <Row>
-            <br />
-          </Row>
-          <Row>
-            <Col sm={4}>
-              <FormControl
-                componentClass="select"
-                value={objective.medical_plan_objective_id || ''}
-                onChange={(ev) =>
-                  updateHCPObjective(hcpItem.hcp_id, objectiveIdx, {
-                    medical_plan_objective_id: +ev.target.value || '',
-                  })
-                }
-                disabled={mode === 'update' && objective.id}
-              >
-                <option value="">- Medical Plan Objective -</option>
-                <Options
-                  choices={Array.from(medicalPlanObjectives.values()).map(
-                    (it) => [it.id, it.name]
-                  )}
-                />
-              </FormControl>
-            </Col>
-            <Col sm={4}>
-              <FormControl
-                componentClass="select"
-                value={objective.hcp_id || ''}
-                onChange={(ev) =>
-                  updateHCPObjective(hcpItem.hcp_id, objectiveIdx, {
-                    hcp_id: +ev.target.value || '',
-                  })
-                }
-                disabled={mode === 'update' && objective.id}
-              >
-                <option value="">- HCP -</option>
-                <Options
-                  choices={Array.from(hcps.values()).map((it) => [
-                    it.id,
-                    it.title,
-                  ])}
-                />
-              </FormControl>
-            </Col>
-            <Col sm={4}>
-              <FormControl
-                componentClass="select"
-                value={objective.bcsf_id || ''}
-                onChange={(ev) =>
-                  updateHCPObjective(hcpItem.hcp_id, objectiveIdx, {
-                    bcsf_id: +ev.target.value || '',
-                  })
-                }
-                disabled={mode === 'update' && objective.id}
-              >
-                <option value={null}>- Critical Success Factor -</option>
-                <Options
-                  choices={Array.from(bcsfs.values()).map((it) => [
-                    it.id,
-                    it.name,
-                  ])}
-                />
-              </FormControl>
-            </Col>
-          </Row>
-        </EPFormObjective>
-      ))}
+  handleClickRemoveBtn = () => {
+    if (this.state.removed === 'no') {
+      if (this.props.hcpItem.id) {
+        this.setState({ removed: 'pending' });
+      } else {
+        this.props.remove();
+      }
+    } else if (this.state.removed === 'pending') {
+      this.setState({ removed: 'no' });
+    } else if (this.state.removed === 'yes') {
+      this.props.unsetRemoved();
+      this.setState({ removed: 'no' });
+    }
+  };
 
-      {(mode === 'create' || !hcpItem.id) && (
-        <Row className="text-center">
-          <Button onClick={() => addHCPObjective(hcpItem.hcp_id)}>
-            Add Objective
+  handleClickCommitRemove = () => {
+    this.props.setRemoved();
+    this.setState({ removed: 'yes' });
+  };
+
+  render() {
+    const {
+      mode,
+      currentQuarter,
+      hcpItem,
+      // remove,
+      // setRemoved,
+      // unsetRemoved,
+      onReasonChange,
+      onReasonOtherChange,
+      onReasonRemovedChange,
+      // objectives
+      bcsfs,
+      medicalPlanObjectives,
+      hcps,
+      addHCPObjective,
+      updateHCPObjective,
+      removeHCPObjective,
+      addHCPObjectiveDeliverable,
+      updateHCPObjectiveDeliverable,
+      removeHCPObjectiveDeliverable,
+    } = this.props;
+
+    return (
+      <Panel className="HCPItem">
+        <Panel.Heading>
+          <Button className="pull-right" onClick={this.handleClickRemoveBtn}>
+            {
+              { no: 'REMOVE', pending: 'CANCEL REMOVE', yes: 'UNDO REMOVE' }[
+                this.state.removed
+              ]
+            }
           </Button>
-        </Row>
-      )}
-    </Panel.Body>
-  </Panel>
-);
+          <p
+            style={
+              hcpItem.removed_at && {
+                textDecoration: 'line-through',
+                color: 'red',
+              }
+            }
+          >
+            {hcpItem.hcp.first_name} {hcpItem.hcp.last_name}
+          </p>
+        </Panel.Heading>
+        <Panel.Body>
+          {this.state.removed === 'pending' && (
+            <FormGroup>
+              <FormControl
+                componentClass="textarea"
+                placeholder="Removal reason"
+                value={hcpItem.reason_removed}
+                onChange={(ev) => onReasonRemovedChange(ev.target.value)}
+              />
+              <Button onClick={this.handleClickCommitRemove}>REMOVE</Button>
+              <hr />
+            </FormGroup>
+          )}
+          <br />
+          {mode === 'create' || !hcpItem.id ? (
+            <p>
+              <FormControl
+                componentClass="select"
+                value={hcpItem.reason}
+                onChange={(ev) => onReasonChange(ev.target.value)}
+              >
+                <option disabled value="">
+                  Select reason for adding HCP to the plan
+                </option>
+                <Options
+                  choices={Object.entries(EngagementPlanHCPItem.reason_choices)}
+                />
+              </FormControl>
+              {hcpItem.reason === 'other' && (
+                <FormControl
+                  componentClass="textarea"
+                  placeholder="Other reason"
+                  value={hcpItem.reason_other}
+                  onChange={(ev) => onReasonOtherChange(ev.target.value)}
+                />
+              )}
+            </p>
+          ) : (
+            <p>
+              <strong>
+                Reason{hcpItem.reason === 'other' ? ' (other)' : ''}:
+              </strong>{' '}
+              {hcpItem.reason === 'other'
+                ? hcpItem.reasonOther
+                : hcpItem.reason}
+            </p>
+          )}
+
+          <br />
+          {hcpItem.objectives.map((objective, objectiveIdx) => (
+            <EPFormObjective
+              key={makeKey(objective, objectiveIdx)}
+              {...{
+                mode,
+                currentQuarter,
+                itemObjectId: hcpItem.hcp_id,
+                objective,
+                objectiveIdx,
+                updateObjective: updateHCPObjective,
+                removeObjective: removeHCPObjective,
+                addDeliverable: addHCPObjectiveDeliverable,
+                updateDeliverable: updateHCPObjectiveDeliverable,
+                removeDeliverable: removeHCPObjectiveDeliverable,
+                deliverableStatusChoices: HCPDeliverable.status_choices,
+              }}
+            >
+              <Row>
+                <br />
+              </Row>
+              <Row>
+                <Col sm={4}>
+                  <FormControl
+                    componentClass="select"
+                    value={objective.medical_plan_objective_id || ''}
+                    onChange={(ev) =>
+                      updateHCPObjective(hcpItem.hcp_id, objectiveIdx, {
+                        medical_plan_objective_id: +ev.target.value || '',
+                      })
+                    }
+                    disabled={mode === 'update' && objective.id}
+                  >
+                    <option value="">- Medical Plan Objective -</option>
+                    <Options
+                      choices={Array.from(medicalPlanObjectives.values()).map(
+                        (it) => [it.id, it.name]
+                      )}
+                    />
+                  </FormControl>
+                </Col>
+                <Col sm={4}>
+                  <FormControl
+                    componentClass="select"
+                    value={objective.hcp_id || ''}
+                    onChange={(ev) =>
+                      updateHCPObjective(hcpItem.hcp_id, objectiveIdx, {
+                        hcp_id: +ev.target.value || '',
+                      })
+                    }
+                    disabled={mode === 'update' && objective.id}
+                  >
+                    <option value="">- HCP -</option>
+                    <Options
+                      choices={Array.from(hcps.values()).map((it) => [
+                        it.id,
+                        it.title,
+                      ])}
+                    />
+                  </FormControl>
+                </Col>
+                <Col sm={4}>
+                  <FormControl
+                    componentClass="select"
+                    value={objective.bcsf_id || ''}
+                    onChange={(ev) =>
+                      updateHCPObjective(hcpItem.hcp_id, objectiveIdx, {
+                        bcsf_id: +ev.target.value || '',
+                      })
+                    }
+                    disabled={mode === 'update' && objective.id}
+                  >
+                    <option value={null}>- Critical Success Factor -</option>
+                    <Options
+                      choices={Array.from(bcsfs.values()).map((it) => [
+                        it.id,
+                        it.name,
+                      ])}
+                    />
+                  </FormControl>
+                </Col>
+              </Row>
+            </EPFormObjective>
+          ))}
+
+          {(mode === 'create' || !hcpItem.id) && (
+            <Row className="text-center">
+              <Button onClick={() => addHCPObjective(hcpItem.hcp_id)}>
+                Add Objective
+              </Button>
+            </Row>
+          )}
+        </Panel.Body>
+      </Panel>
+    );
+  }
+}
 
 // const HCPObjective = ({
 //   mode,

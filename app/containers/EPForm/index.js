@@ -96,9 +96,11 @@ class EPForm extends React.Component {
   render() {
     console.log('% EPForm.render');
 
+    const currentQuarter = Math.ceil((new Date().getMonth() + 1) / 3);
+
     const steps = {
-      0: <EPFormAddHCPs {...this.props} />,
-      1: <EPFormAddProjects {...this.props} />,
+      0: <EPFormAddHCPs {...this.props} currentQuarter={currentQuarter} />,
+      1: <EPFormAddProjects {...this.props} currentQuarter={currentQuarter} />,
       2: (
         <div>
           <h2>Step 3: Review Plan</h2>

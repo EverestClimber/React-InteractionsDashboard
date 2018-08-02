@@ -52,9 +52,18 @@ export class HCPDeliverable extends Record({
   objective_id: undefined,
   // fields
   quarter: 1,
+  quarter_type: 'present',
   description: '',
   status: '',
 }) {
+  static READ_ONLY_FIELDS = ['quarter_type', 'created_at', 'updated_at'];
+
+  static status_choices = {
+    on_track: 'On Track',
+    slightly_behind: 'Slightly Behind',
+    major_issue: 'Major Issue',
+  };
+
   toApiData() {
     return this.toJS();
   }

@@ -1,13 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { createStructuredSelector } from 'reselect';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
-import {
-  Grid, Button,
-} from 'react-bootstrap';
-
+import { Grid, Button } from 'react-bootstrap';
 
 import routes from 'routes';
 
@@ -17,8 +14,10 @@ import reducer from './reducer';
 
 // import saga from './saga';
 
-export class Dashboard extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+export class Dashboard extends React.PureComponent {
+  // eslint-disable-line react/prefer-stateless-function
   render() {
+    const { engagementPlans } = this.props;
     return (
       <Grid>
         <Helmet>
@@ -40,7 +39,11 @@ export class Dashboard extends React.PureComponent { // eslint-disable-line reac
           </Link>
         </p>
         <p>
-          <Link to={`${routes.RECORD_INTERACTION.path}?origin_of_interaction=engagement_plan`}>
+          <Link
+            to={`${
+              routes.RECORD_INTERACTION.path
+            }?origin_of_interaction=engagement_plan`}
+          >
             <Button>Record Interaction from EP</Button>
           </Link>
         </p>
@@ -54,21 +57,41 @@ export class Dashboard extends React.PureComponent { // eslint-disable-line reac
             <Button>Create Engagement Plan</Button>
           </Link>
         </p>
-
+        <p>
+          <h3>Edit EP:</h3>
+          <ul>
+            {engagementPlans.map((ep) => (
+              <li key={ep.id}>
+                <Link to={routes.UPDATE_EP.makePath(ep.id)}>EP #{ep.id}</Link>
+              </li>
+            ))}
+          </ul>
+        </p>
       </Grid>
     );
   }
 }
 
-Dashboard.propTypes = {};
+Dashboard.propTypes = {
+  user: PropTypes.object,
+  engagementPlan: PropTypes.object,
+};
 
 export function mapDispatchToProps() {
   return {};
 }
 
-const mapStateToProps = createStructuredSelector({});
+function mapStateToProps(state) {
+  return {
+    user: state.get('global').get('user'),
+    engagementPlans: state.get('global').get('engagementPlans'),
+  };
+}
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
 
 const withReducer = injectReducer({ key: 'home', reducer });
 // const withSaga = injectSaga({ key: 'home', saga });
@@ -76,5 +99,5 @@ const withReducer = injectReducer({ key: 'home', reducer });
 export default compose(
   withReducer,
   // withSaga,
-  withConnect,
+  withConnect
 )(Dashboard);

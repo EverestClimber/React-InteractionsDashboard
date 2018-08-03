@@ -2,28 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
-import {
-  Button,
-  ButtonGroup,
-  Col,
-  Grid,
-  Row,
-  // Col,
-  // Row,
-  // Panel,
-} from 'react-bootstrap';
+import { Button, ButtonGroup, Col, Grid, Row } from 'react-bootstrap';
 
 import { CenteredAlert } from 'components/forms';
 import injectSaga from 'utils/injectSaga';
-import EPFormAddHCPs from 'components/EPFormAddHCPs';
-import EPFormAddProjects from 'components/EPFormAddProjects';
+import EPFormHCPs from 'components/EPFormHCPs';
+import EPFormProjects from 'components/EPFormProjects';
 import injectReducer from 'utils/injectReducer';
 import reducer from './reducer';
 import saga from './saga';
 import * as actions from './actions';
 
 class EPForm extends React.Component {
-  // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     // outside provided
     mode: PropTypes.string, // 'create' | 'edit'
@@ -93,29 +83,28 @@ class EPForm extends React.Component {
     }
   }
 
+  handleClickBack = () =>
+    this.setState((prevState) => ({
+      activeStep: prevState.activeStep > 0 ? prevState.activeStep - 1 : 0,
+    }));
+
+  handleClickNext = () =>
+    this.setState((prevState) => ({
+      activeStep: prevState.activeStep + 1,
+    }));
+
   render() {
     console.log('% EPForm.render');
 
     const currentQuarter = Math.ceil((new Date().getMonth() + 1) / 3);
 
     const steps = {
-      0: <EPFormAddHCPs {...this.props} currentQuarter={currentQuarter} />,
-      1: <EPFormAddProjects {...this.props} currentQuarter={currentQuarter} />,
+      0: <EPFormHCPs {...this.props} currentQuarter={currentQuarter} />,
+      1: <EPFormProjects {...this.props} currentQuarter={currentQuarter} />,
       2: (
         <div>
           <h2>Step 3: Review Plan</h2>
           <pre>{JSON.stringify(this.props.engagementPlan.toJS(), null, 2)}</pre>
-          <br />
-          <Row>
-            <Col xs={12} className="text-center">
-              <Button
-                onClick={() => this.props.onSubmit(this.props.engagementPlan)}
-                bsStyle="primary"
-              >
-                Save
-              </Button>
-            </Col>
-          </Row>
         </div>
       ),
     };
@@ -155,6 +144,29 @@ class EPForm extends React.Component {
 
         <hr />
         {renderedStep}
+
+        <br />
+        <Row>
+          <Col xs={12} className="text-center">
+            <Button onClick={this.handleClickBack}>Back</Button>{' '}
+            {this.state.activeStep !== 2 ? (
+              <Button onClick={this.handleClickNext} bsStyle="primary">
+                Next
+              </Button>
+            ) : (
+              <Button
+                onClick={() => this.props.onSubmit(this.props.engagementPlan)}
+                bsStyle="primary"
+              >
+                {this.props.mode === 'create'
+                  ? 'Create Engagemen Plan'
+                  : 'Update Engagement Plan'}
+              </Button>
+            )}
+          </Col>
+        </Row>
+        <br />
+        <br />
       </Grid>
     );
   }

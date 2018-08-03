@@ -5,10 +5,12 @@ import { List } from 'immutable';
 import User from 'records/User';
 import AffiliateGroup from 'records/AffiliateGroup';
 import TherapeuticArea from 'records/TherapeuticArea';
+import { EngagementPlan } from 'records/EngagementPlan';
 import { postRefreshToken } from 'api/auth';
 import { getSelf } from 'api/users';
 import { getAffiliateGroups } from 'api/affiliateGroups';
 import { getTherapeuticAreas } from 'api/therapeuticAreas';
+import { getEngagementPlans } from 'api/engagementPlans';
 import HCP from 'records/HCP';
 import { getHCP, getHCPs } from 'api/hcps';
 import { delay } from 'utils/misc';
@@ -22,7 +24,6 @@ import {
 } from './actions';
 import { selectGlobal } from './selectors';
 
-
 export function makeSearchHCPsSaga(successActionCreator, errorActionCreator) {
   return function* searchHCPsSaga({ search }) {
     // debounce
@@ -35,19 +36,19 @@ export function makeSearchHCPsSaga(successActionCreator, errorActionCreator) {
       const tasById = globalState.get('therapeuticAreas');
       const affiliateGroupsById = globalState.get('affiliateGroups');
 
-      const hcps = new List(res.data.map(
-        (hcpData) => HCP.fromApiData(hcpData, tasById, affiliateGroupsById))
+      const hcps = new List(
+        res.data.map((hcpData) =>
+          HCP.fromApiData(hcpData, tasById, affiliateGroupsById)
+        )
       );
       // yield put(searchHCPsActions.success(hcps));
       yield put(successActionCreator(hcps));
-
     } catch (error) {
       // yield put(searchHCPsActions.error(error.message));
       yield put(errorActionCreator(error.message));
     }
   };
 }
-
 
 export function makeFetchHCPSaga(successActionCreator, errorActionCreator) {
   return function* fetchHCPSaga({ hcpId }) {
@@ -66,14 +67,12 @@ export function makeFetchHCPSaga(successActionCreator, errorActionCreator) {
       const hcp = HCP.fromApiData(res.data, tasById, affiliateGroupsById);
       // yield put(fetchHCPActions.success(hcp));
       yield put(successActionCreator(hcp));
-
     } catch (error) {
       // yield put(fetchHCPActions.error(error.message));
       yield put(errorActionCreator(error.message));
     }
   };
 }
-
 
 function* refreshTokenSaga() {
   const token = localStorage.getItem('token');
@@ -102,7 +101,6 @@ function* getCurrentUserSaga() {
 
       yield put(setLoading(false));
       yield put(setUser(user));
-
     } catch (error) {
       yield put(getCurrentUserActions.error(error.message));
       yield put(setLoading(false));
@@ -110,9 +108,7 @@ function* getCurrentUserSaga() {
   }
 }
 
-
 function* getCommonDataSaga() {
-
   console.log('~~~ in getCommonDataSaga');
 
   yield put(setLoading(true));
@@ -121,38 +117,48 @@ function* getCommonDataSaga() {
     const [
       therapeuticAreasResponse,
       affiliateGroupsResponse,
+      // DEBUG
+      engagementPlansResponse,
     ] = yield [
       call(getTherapeuticAreas),
       call(getAffiliateGroups),
+      call(getEngagementPlans),
     ];
 
     const commonData = {
-      therapeuticAreas: new List(therapeuticAreasResponse.data.map(
-        (ta) => TherapeuticArea.fromApiData(ta)
-      )),
-      affiliateGroups: new List(affiliateGroupsResponse.data.map(
-        (affiliateGroup) => AffiliateGroup.fromApiData(affiliateGroup)
-      )),
+      therapeuticAreas: new List(
+        therapeuticAreasResponse.data.map((ta) =>
+          TherapeuticArea.fromApiData(ta)
+        )
+      ),
+      affiliateGroups: new List(
+        affiliateGroupsResponse.data.map((affiliateGroup) =>
+          AffiliateGroup.fromApiData(affiliateGroup)
+        )
+      ),
+      // DEBUG
+      engagementPlans: new List(
+        engagementPlansResponse.data.map((engagementPlan) =>
+          EngagementPlan.fromApiData(engagementPlan)
+        )
+      ),
     };
 
     yield put(setLoading(false));
     console.log('--- common data:', commonData);
     // yield delay(3000);
     yield put(fetchCommonDataActions.success(commonData));
-
   } catch (error) {
     yield put(fetchCommonDataActions.error(error.message));
     yield put(setLoading(false));
   }
 }
 
-
 function* logoutSaga() {
   localStorage.removeItem('token');
 
   yield put(push('/login'));
 }
-
 
 export default function* appRootSaga() {
   yield takeEvery(getCurrentUserActions.request.type, getCurrentUserSaga);

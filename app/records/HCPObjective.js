@@ -42,6 +42,13 @@ export class HCPObjective extends Record({
         )
       )
     );
+    if (!objective.deliverables.size) {
+      const currentQuarter = Math.ceil((new Date().getMonth() + 1) / 3);
+      objective = objective.set(
+        'deliverables',
+        new List([HCPDeliverable.fromApiData({ quarter: currentQuarter })])
+      );
+    }
     return objective;
   }
 }

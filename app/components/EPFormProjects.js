@@ -65,6 +65,7 @@ const EPFormProjects = ({
                 key={makeKey(objective, objectiveIdx)}
                 {...{
                   mode,
+                  hideRemove: projectItem.objectives.size <= 1,
                   currentQuarter,
                   itemObjectId: projectItem.project_id,
                   objective,

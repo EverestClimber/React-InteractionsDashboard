@@ -118,6 +118,7 @@ const EPFormHCPs = ({
                 key={makeKey(objective, objectiveIdx)}
                 {...{
                   mode,
+                  hideRemove: hcpItem.objectives.size <= 1,
                   currentQuarter,
                   itemObjectId: hcpItem.hcp_id,
                   objective,

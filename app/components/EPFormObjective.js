@@ -13,6 +13,7 @@ const makeKey = (obj, idx) => `${obj.id || ''}.${idx}`;
 
 export const EPFormObjective = ({
   mode,
+  hideRemove,
   currentQuarter,
   itemObjectId,
   objective,
@@ -29,14 +30,15 @@ export const EPFormObjective = ({
     <Col xs={10} xsOffset={1}>
       <Panel>
         <Panel.Heading className="EPFormObjective__heading">
-          {(mode === 'create' || !objective.id) && (
-            <Button
-              className="pull-right"
-              onClick={() => removeObjective(itemObjectId, objectiveIdx)}
-            >
-              ✖
-            </Button>
-          )}
+          {(mode === 'create' || !objective.id) &&
+            !hideRemove && (
+              <Button
+                className="pull-right"
+                onClick={() => removeObjective(itemObjectId, objectiveIdx)}
+              >
+                ✖
+              </Button>
+            )}
           Objective
         </Panel.Heading>
         <Panel.Body className="EPFormObjective__body">
@@ -64,6 +66,7 @@ export const EPFormObjective = ({
               key={makeKey(deliverable, deliverableIdx)}
               {...{
                 mode,
+                hideRemove: objective.deliverables.size <= 1,
                 currentQuarter,
                 itemObjectId,
                 objective,
@@ -95,6 +98,7 @@ export const EPFormObjective = ({
 
 export const EPFormDeliverable = ({
   mode,
+  hideRemove,
   currentQuarter,
   itemObjectId,
   objective,
@@ -148,30 +152,35 @@ export const EPFormDeliverable = ({
           />
         </Col>
         <Col xs={2}>
-          <FormControl
-            componentClass="select"
-            value={deliverable.status}
-            onChange={(ev) =>
-              updateDeliverable(itemObjectId, objectiveIdx, deliverableIdx, {
-                status: ev.target.value,
-              })
-            }
-            disabled={deliverable.quarter_type === 'past'}
-          >
-            <option value="">- Pick Status -</option>
-            <Options choices={Object.entries(deliverableStatusChoices)} />
-          </FormControl>
-        </Col>
-        <Col xs={1}>
-          {(mode === 'create' || !objective.id) && (
-            <Button
-              onClick={() =>
-                removeDeliverable(itemObjectId, objectiveIdx, deliverableIdx)
+          {deliverable.id && (
+            <FormControl
+              componentClass="select"
+              value={deliverable.status}
+              onChange={(ev) =>
+                updateDeliverable(itemObjectId, objectiveIdx, deliverableIdx, {
+                  status: ev.target.value,
+                })
+              }
+              disabled={
+                deliverable.quarter_type === 'past' && deliverable.status !== ''
               }
             >
-              ✖
-            </Button>
+              <option value="">- Pick Status -</option>
+              <Options choices={Object.entries(deliverableStatusChoices)} />
+            </FormControl>
           )}
+        </Col>
+        <Col xs={1}>
+          {(mode === 'create' || !objective.id) &&
+            !hideRemove && (
+              <Button
+                onClick={() =>
+                  removeDeliverable(itemObjectId, objectiveIdx, deliverableIdx)
+                }
+              >
+                ✖
+              </Button>
+            )}
         </Col>
       </Row>
     </FormGroup>

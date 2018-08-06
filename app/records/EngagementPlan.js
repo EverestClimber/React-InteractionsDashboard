@@ -106,6 +106,9 @@ export class EngagementPlanHCPItem extends Record({
         )
       )
     );
+    if (!item.objectives.size) {
+      item = item.set('objectives', new List([HCPObjective.fromApiData()]));
+    }
     item = item.set(
       'comments',
       new List(
@@ -160,6 +163,9 @@ export class EngagementPlanProjectItem extends Record({
         )
       )
     );
+    if (!item.objectives.size) {
+      item = item.set('objectives', new List([ProjectObjective.fromApiData()]));
+    }
     item = item.set(
       'comments',
       new List(

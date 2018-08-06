@@ -6,6 +6,7 @@ import { ProjectObjective } from './ProjectObjective';
 import { HCPObjective } from './HCPObjective';
 import HCP from './HCP';
 import Project from './Project';
+import Comment from './Comment';
 
 // set fields to undefined to omit them on create request
 export class EngagementPlan extends Record({
@@ -61,6 +62,7 @@ export class EngagementPlanHCPItem extends Record({
   hcp_id: undefined,
   hcp: null,
   objectives: new List(),
+  comments: new List(),
   // fields
   reason: '',
   reason_other: '',
@@ -73,6 +75,7 @@ export class EngagementPlanHCPItem extends Record({
 }) {
   static READ_ONLY_FIELDS = [
     'hcp',
+    'comments',
     'approved',
     'approved_at',
     'created_at',
@@ -103,6 +106,12 @@ export class EngagementPlanHCPItem extends Record({
         )
       )
     );
+    item = item.set(
+      'comments',
+      new List(
+        item.comments.map((commentData) => Comment.fromApiData(commentData))
+      )
+    );
     item = item.set('hcp', HCP.fromApiData(item.hcp));
     return item;
   }
@@ -115,6 +124,7 @@ export class EngagementPlanProjectItem extends Record({
   project_id: undefined,
   project: null,
   objectives: new List(),
+  comments: new List(),
   // fields
   removed_at: null,
   reason_removed: '',
@@ -125,6 +135,7 @@ export class EngagementPlanProjectItem extends Record({
 }) {
   static READ_ONLY_FIELDS = [
     'project',
+    'comments',
     'approved',
     'approved_at',
     'created_at',
@@ -147,6 +158,12 @@ export class EngagementPlanProjectItem extends Record({
         item.objectives.map((objectiveData) =>
           ProjectObjective.fromApiData(objectiveData)
         )
+      )
+    );
+    item = item.set(
+      'comments',
+      new List(
+        item.comments.map((commentData) => Comment.fromApiData(commentData))
       )
     );
     item = item.set('project', Project.fromApiData(item.project));

@@ -15,7 +15,6 @@ import reducer from './reducer';
 // import saga from './saga';
 
 export class Dashboard extends React.PureComponent {
-  // eslint-disable-line react/prefer-stateless-function
   render() {
     const { engagementPlans } = this.props;
     return (
@@ -57,16 +56,14 @@ export class Dashboard extends React.PureComponent {
             <Button>Create Engagement Plan</Button>
           </Link>
         </p>
-        <p>
-          <h3>Edit EP:</h3>
-          <ul>
-            {engagementPlans.map((ep) => (
-              <li key={ep.id}>
-                <Link to={routes.UPDATE_EP.makePath(ep.id)}>EP #{ep.id}</Link>
-              </li>
-            ))}
-          </ul>
-        </p>
+        <h3>Edit EP:</h3>
+        <ul>
+          {engagementPlans.map((ep) => (
+            <li key={ep.id}>
+              <Link to={routes.UPDATE_EP.makePath(ep.id)}>EP #{ep.id}</Link>
+            </li>
+          ))}
+        </ul>
       </Grid>
     );
   }

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { FormControl, Button, Col, Row } from 'react-bootstrap';
 import { EngagementPlanHCPItem } from 'records/EngagementPlan';
 import { EPFormObjective } from 'components/EPFormObjective';
+import Comment from 'components/Comment';
 import { HCPDeliverable } from 'records/HCPObjective';
 import { EPFormPlanItem } from 'components/EPFormPlanItem';
 import { Options } from './forms';
@@ -64,6 +65,9 @@ const EPFormHCPs = ({
                 updateHCPItem(hcpItem.hcp_id, { reason_removed }),
             }}
           >
+            {hcpItem.comments.map((comment) => (
+              <Comment comment={comment} key={comment.id} />
+            ))}
             {mode === 'create' || !hcpItem.id ? (
               <p>
                 <FormControl

@@ -23,16 +23,124 @@ const initialState = fromJS({
   // project: null,
   searchedProjects: new List(),
   selectedProjects: new OrderedMap(),
+  // Validation:
+  stepsErrors: { 0: [], 1: [] },
+  stepsPristine: { 0: true, 1: true },
+  fieldsErrors: { 0: {}, 1: {} },
+  fieldsTouched: { 0: {}, 1: {} },
 });
 
-function updateInEPlanForHCP(state, hcpId, pathStr, updateCb) {
+function validateSteps(state, keepPristine = false) {
+  const stepsErrors = { 0: [], 1: [] };
+  const stepsPristine = { 0: true, 1: true };
+
+  const hcpItems = state.getIn(['engagementPlan', 'hcp_items']);
+  if (hcpItems.size < 1) {
+    stepsErrors[0].push('At least one HCP must be added to the plan');
+    if (!keepPristine) {
+      stepsPristine[0] = false;
+    }
+  }
+
+  return state.merge({
+    stepsErrors: fromJS(stepsErrors),
+    stepsPristine: fromJS(stepsPristine),
+  });
+}
+
+function validateFields(state) {
+  const fieldsErrors = { 0: {}, 1: {} };
+
+  const hcpItems = state.getIn(['engagementPlan', 'hcp_items']);
+  for (const [hcpItemIdx, hcpItem] of hcpItems.entries()) {
+    if (!hcpItem.reason) {
+      fieldsErrors[0][`hcp_items.${hcpItemIdx}.reason`] = [
+        'A reason must be specified for adding HCP to the plan',
+      ];
+    }
+    if (hcpItem.reason === 'other' && !hcpItem.reason_other) {
+      fieldsErrors[0][`hcp_items.${hcpItemIdx}.reason_other`] = [
+        'A reason must be specified for adding HCP to the plan',
+      ];
+    }
+    for (const [objectiveIdx, objective] of hcpItem.objectives.entries()) {
+      if (!objective.description) {
+        fieldsErrors[0][
+          `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.description`
+        ] = ['A description is required for HCP objective'];
+      }
+      for (const [
+        deliverableIdx,
+        deliverable,
+      ] of objective.deliverables.entries()) {
+        if (!deliverable.description) {
+          fieldsErrors[0][
+            `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}` +
+              `.deliverables.${deliverableIdx}.description`
+          ] = ['A description is required for HCP deliverable'];
+        }
+      }
+    }
+  }
+
+  const projectItems = state.getIn(['engagementPlan', 'project_items']);
+  for (const [projectItemIdx, projectItem] of projectItems.entries()) {
+    for (const [objectiveIdx, objective] of projectItem.objectives.entries()) {
+      if (!objective.description) {
+        fieldsErrors[1][
+          `project_items.${projectItemIdx}.objectives.${objectiveIdx}.description`
+        ] = ['A description is required for Project objective'];
+      }
+      for (const [
+        deliverableIdx,
+        deliverable,
+      ] of objective.deliverables.entries()) {
+        if (!deliverable.description) {
+          fieldsErrors[1][
+            `project_items.${projectItemIdx}.objectives.${objectiveIdx}` +
+              `.deliverables.${deliverableIdx}.description`
+          ] = ['A description is required for Project deliverable'];
+        }
+      }
+    }
+  }
+
+  return state.set('fieldsErrors', fromJS(fieldsErrors));
+}
+
+function updateInEPlanForHCP(state, hcpId, pathStr, update) {
   const ePlan = state.get('engagementPlan');
   const hcpItemIdx = ePlan.hcp_items.findIndex((it) => it.hcp_id === hcpId);
   const path = pathStr
     .split('.')
     .map((s) => (s === 'HCP_ITEM_IDX' ? hcpItemIdx : s));
-  return state.set('engagementPlan', ePlan.updateIn(path, updateCb));
+  let newState = state;
+
+  // either A. update with a function
+  if (typeof update === 'function') {
+    newState = newState
+      .set('engagementPlan', ePlan.updateIn(path, update))
+      .setIn(['fieldsTouched', '0', path.join('.')], true);
+  } else {
+    // ...or B. update with a dict
+    for (const field of Object.keys(update)) {
+      newState = newState.setIn(
+        ['fieldsTouched', '0', [...path, field].join('.')],
+        true
+      );
+    }
+    newState = newState
+      .set(
+        'engagementPlan',
+        ePlan.updateIn(path, (fields) => fields.merge(update))
+      )
+      .setIn(['fieldsTouched', '0', path.join('.')], true);
+  }
+
+  return validateFields(newState);
 }
+
+// function updateFieldInEPlanForHCP()
 
 function updateInEPlanForProject(state, projectId, pathStr, updateCb) {
   const ePlan = state.get('engagementPlan');
@@ -42,30 +150,40 @@ function updateInEPlanForProject(state, projectId, pathStr, updateCb) {
   const path = pathStr
     .split('.')
     .map((s) => (s === 'PROJECT_ITEM_IDX' ? projectItemIdx : s));
-  return state.set('engagementPlan', ePlan.updateIn(path, updateCb));
+  return validateFields(
+    state
+      .set('engagementPlan', ePlan.updateIn(path, updateCb))
+      .setIn(['fieldsTouched', '1', path.join('.')], true)
+  );
 }
 
 function createEpReducer(state = initialState, action) {
   switch (action.type) {
     case actions.setEPAction.type: {
       const ePlan = EngagementPlan.fromApiData(action.engagementPlan);
-      return state.merge({
-        engagementPlan: ePlan,
-        selectedHCPs: new OrderedMap(
-          ePlan.hcp_items.map((it) => [it.hcp_id, it.hcp])
-        ),
-        selectedProjects: new OrderedMap(
-          ePlan.project_items.map((it) => [it.project_id, it.project])
-        ),
-      });
+      return validateSteps(
+        state.merge({
+          engagementPlan: ePlan,
+          selectedHCPs: new OrderedMap(
+            ePlan.hcp_items.map((it) => [it.hcp_id, it.hcp])
+          ),
+          selectedProjects: new OrderedMap(
+            ePlan.project_items.map((it) => [it.project_id, it.project])
+          ),
+        }),
+        true
+      );
     }
 
     case actions.fetchCreateEPRequiredDataActions.success.type:
-      return state.merge({
-        bcsfs: action.payload.bcsfs,
-        medicalPlanObjectives: action.payload.medicalPlanObjectives,
-        projects: action.payload.projects,
-      });
+      return validateSteps(
+        state.merge({
+          bcsfs: action.payload.bcsfs,
+          medicalPlanObjectives: action.payload.medicalPlanObjectives,
+          projects: action.payload.projects,
+        }),
+        true
+      );
 
     case actions.searchHCPsActions.success.type:
       return state.merge({ hcps: action.hcps });
@@ -83,7 +201,8 @@ function createEpReducer(state = initialState, action) {
             .get('engagementPlan')
             .hcp_items.find((it) => it.hcp_id === hcp.id)
       );
-      return state
+
+      const newState = state
         .set('selectedHCPs', selectedHCPs)
         .updateIn(['engagementPlan', 'hcp_items'], (hcpItems) =>
           hcpItems
@@ -100,6 +219,8 @@ function createEpReducer(state = initialState, action) {
               )
             )
         );
+
+      return validateSteps(validateFields(newState));
     }
 
     // case actions.removeHCPAction.type:
@@ -111,9 +232,7 @@ function createEpReducer(state = initialState, action) {
 
     case actions.updateHCPItemAction.type: {
       const { hcpId, data } = action.payload;
-      return updateInEPlanForHCP(state, hcpId, 'hcp_items.HCP_ITEM_IDX', (it) =>
-        it.merge(data)
-      );
+      return updateInEPlanForHCP(state, hcpId, 'hcp_items.HCP_ITEM_IDX', data);
     }
 
     case actions.addHCPObjectiveAction.type: {
@@ -267,7 +386,8 @@ function createEpReducer(state = initialState, action) {
             .get('engagementPlan')
             .project_items.find((it) => it.project_id === project.id)
       );
-      return state
+
+      const newState = state
         .set('selectedProjects', selectedProjects)
         .updateIn(['engagementPlan', 'project_items'], (projectItems) =>
           projectItems
@@ -287,6 +407,8 @@ function createEpReducer(state = initialState, action) {
               )
             )
         );
+
+      return validateSteps(validateFields(newState));
     }
 
     default:

@@ -1,0 +1,32 @@
+.StepsNav {
+  &__steps {
+    display: flex;
+    justify-content: space-between;
+    width: 50%;
+    margin: 0 auto;
+    height: 18px;
+    border-bottom: 1px solid $n-grey;
+  }
+  &__step {
+    display: flex;
+    justify-content: center;
+    width: 37px;
+    height: 37px;
+    line-height: 37px;
+    border: 1px solid $n-grey;
+    border-radius: 100%;
+    background: $n-grey;
+    color: $n-grey-lighter;
+    &--active {
+      background: $n-white;
+      border-color: $n-blue;
+      color: $n-blue;
+      cursor: default;
+    }
+    &--inactive {
+      background: $n-grey-lighter;
+      color: $n-grey;
+      cursor: default;
+    }
+  }
+}

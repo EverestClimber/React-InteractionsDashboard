@@ -24,6 +24,10 @@ export const EPFormObjective = ({
   updateDeliverable,
   removeDeliverable,
   deliverableStatusChoices,
+  fieldPrefix,
+  fieldsErrors,
+  fieldsTouched,
+  showAllStepErrors,
   children,
 }) => (
   <Row className="EPFormObjective">
@@ -44,16 +48,30 @@ export const EPFormObjective = ({
         <Panel.Body className="EPFormObjective__body">
           <br />
           {mode === 'create' || !objective.id ? (
-            <FormControl
-              componentClass="textarea"
-              placeholder="Objective Description"
-              value={objective.description}
-              onChange={(ev) =>
-                updateObjective(itemObjectId, objectiveIdx, {
-                  description: ev.target.value,
-                })
+            <FormGroup
+              validationState={
+                (fieldsTouched.get(
+                  `${fieldPrefix}.objectives.${objectiveIdx}.description`
+                ) ||
+                  showAllStepErrors) &&
+                fieldsErrors.get(
+                  `${fieldPrefix}.objectives.${objectiveIdx}.description`
+                )
+                  ? 'error'
+                  : null
               }
-            />
+            >
+              <FormControl
+                componentClass="textarea"
+                placeholder="Objective Description"
+                value={objective.description}
+                onChange={(ev) =>
+                  updateObjective(itemObjectId, objectiveIdx, {
+                    description: ev.target.value,
+                  })
+                }
+              />
+            </FormGroup>
           ) : (
             <p>{objective.description}</p>
           )}
@@ -76,6 +94,10 @@ export const EPFormObjective = ({
                 deliverableStatusChoices,
                 updateDeliverable,
                 removeDeliverable,
+                fieldPrefix,
+                fieldsErrors,
+                fieldsTouched,
+                showAllStepErrors,
               }}
             />
           ))}
@@ -108,6 +130,10 @@ export const EPFormDeliverable = ({
   deliverableStatusChoices,
   updateDeliverable,
   removeDeliverable,
+  fieldPrefix,
+  fieldsErrors,
+  fieldsTouched,
+  showAllStepErrors,
 }) => (
   <div
     key={makeKey(deliverable, deliverableIdx)}
@@ -139,17 +165,33 @@ export const EPFormDeliverable = ({
           </FormControl>
         </Col>
         <Col xs={8}>
-          <FormControl
-            type="text"
-            placeholder="Deliverable description"
-            value={deliverable.description}
-            onChange={(ev) =>
-              updateDeliverable(itemObjectId, objectiveIdx, deliverableIdx, {
-                description: ev.target.value,
-              })
+          <FormGroup
+            validationState={
+              (fieldsTouched.get(
+                `${fieldPrefix}.objectives.${objectiveIdx}.deliverables` +
+                  `.${deliverableIdx}.description`
+              ) ||
+                showAllStepErrors) &&
+              fieldsErrors.get(
+                `${fieldPrefix}.objectives.${objectiveIdx}.deliverables` +
+                  `.${deliverableIdx}.description`
+              )
+                ? 'error'
+                : null
             }
-            disabled={deliverable.quarter_type === 'past'}
-          />
+          >
+            <FormControl
+              type="text"
+              placeholder="Deliverable description"
+              value={deliverable.description}
+              onChange={(ev) =>
+                updateDeliverable(itemObjectId, objectiveIdx, deliverableIdx, {
+                  description: ev.target.value,
+                })
+              }
+              disabled={deliverable.quarter_type === 'past'}
+            />
+          </FormGroup>
         </Col>
         <Col xs={2}>
           {deliverable.id && (

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormControl, Button, Col, Row } from 'react-bootstrap';
+import { FormControl, FormGroup, Button, Col, Row } from 'react-bootstrap';
 import { EngagementPlanHCPItem } from 'records/EngagementPlan';
 import { EPFormObjective } from 'components/EPFormObjective';
 import Comment from 'components/Comment';
@@ -32,6 +32,10 @@ const EPFormHCPs = ({
   addHCPObjectiveDeliverable,
   updateHCPObjectiveDeliverable,
   removeHCPObjectiveDeliverable,
+  // validation
+  fieldsErrors,
+  fieldsTouched,
+  showAllStepErrors,
 }) => (
   <div>
     <h2>Step 1: Add HCPs</h2>
@@ -48,7 +52,7 @@ const EPFormHCPs = ({
 
     {!!engagementPlan.hcp_items.size &&
       engagementPlan.hcp_items
-        .map((hcpItem) => (
+        .map((hcpItem, hcpItemIdx) => (
           <EPFormPlanItem
             key={hcpItem.hcp_id}
             {...{
@@ -69,38 +73,60 @@ const EPFormHCPs = ({
               <Comment comment={comment} key={comment.id} />
             ))}
             {mode === 'create' || !hcpItem.id ? (
-              <p>
-                <FormControl
-                  componentClass="select"
-                  value={hcpItem.reason}
-                  onChange={(ev) =>
-                    updateHCPItem(hcpItem.hcp_id, {
-                      reason: ev.target.value,
-                    })
+              <div>
+                <FormGroup
+                  validationState={
+                    (fieldsTouched.get(`hcp_items.${hcpItemIdx}.reason`) ||
+                      showAllStepErrors) &&
+                    fieldsErrors.get(`hcp_items.${hcpItemIdx}.reason`)
+                      ? 'error'
+                      : null
                   }
                 >
-                  <option disabled value="">
-                    Select reason for adding HCP to the plan
-                  </option>
-                  <Options
-                    choices={Object.entries(
-                      EngagementPlanHCPItem.reason_choices
-                    )}
-                  />
-                </FormControl>
-                {hcpItem.reason === 'other' && (
                   <FormControl
-                    componentClass="textarea"
-                    placeholder="Other reason"
-                    value={hcpItem.reason_other}
+                    componentClass="select"
+                    value={hcpItem.reason}
                     onChange={(ev) =>
                       updateHCPItem(hcpItem.hcp_id, {
-                        reason_other: ev.target.value,
+                        reason: ev.target.value,
                       })
                     }
-                  />
+                  >
+                    <option disabled value="">
+                      Select reason for adding HCP to the plan
+                    </option>
+                    <Options
+                      choices={Object.entries(
+                        EngagementPlanHCPItem.reason_choices
+                      )}
+                    />
+                  </FormControl>
+                </FormGroup>
+                {hcpItem.reason === 'other' && (
+                  <FormGroup
+                    validationState={
+                      (fieldsTouched.get(
+                        `hcp_items.${hcpItemIdx}.reason_other`
+                      ) ||
+                        showAllStepErrors) &&
+                      fieldsErrors.get(`hcp_items.${hcpItemIdx}.reason_other`)
+                        ? 'error'
+                        : null
+                    }
+                  >
+                    <FormControl
+                      componentClass="textarea"
+                      placeholder="Other reason"
+                      value={hcpItem.reason_other}
+                      onChange={(ev) =>
+                        updateHCPItem(hcpItem.hcp_id, {
+                          reason_other: ev.target.value,
+                        })
+                      }
+                    />
+                  </FormGroup>
                 )}
-              </p>
+              </div>
             ) : (
               <p>
                 <strong>
@@ -121,6 +147,10 @@ const EPFormHCPs = ({
                   hideRemove: hcpItem.objectives.size <= 1,
                   currentQuarter,
                   itemObjectId: hcpItem.hcp_id,
+                  fieldPrefix: `hcp_items.${hcpItemIdx}`,
+                  fieldsErrors,
+                  fieldsTouched,
+                  showAllStepErrors,
                   objective,
                   objectiveIdx,
                   updateObjective: updateHCPObjective,
@@ -231,6 +261,10 @@ EPFormHCPs.propTypes = {
   addHCPObjectiveDeliverable: PropTypes.func,
   updateHCPObjectiveDeliverable: PropTypes.func,
   removeHCPObjectiveDeliverable: PropTypes.func,
+  // validation
+  fieldsErrors: PropTypes.object,
+  fieldsTouched: PropTypes.object,
+  showAllStepErrors: PropTypes.bool,
 };
 
 export default EPFormHCPs;

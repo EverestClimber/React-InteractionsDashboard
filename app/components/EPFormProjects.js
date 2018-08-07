@@ -26,6 +26,10 @@ const EPFormProjects = ({
   addProjectObjectiveDeliverable,
   updateProjectObjectiveDeliverable,
   removeProjectObjectiveDeliverable,
+  // validation
+  fieldsErrors,
+  fieldsTouched,
+  showAllStepErrors,
 }) => (
   <div>
     <h2>Step 2: Add Projects & Objectives</h2>
@@ -42,7 +46,7 @@ const EPFormProjects = ({
 
     {!!engagementPlan.project_items.size &&
       engagementPlan.project_items
-        .map((projectItem) => (
+        .map((projectItem, projectItemIdx) => (
           <EPFormPlanItem
             key={projectItem.project_id}
             {...{
@@ -68,6 +72,10 @@ const EPFormProjects = ({
                   hideRemove: projectItem.objectives.size <= 1,
                   currentQuarter,
                   itemObjectId: projectItem.project_id,
+                  fieldPrefix: `project_items.${projectItemIdx}`,
+                  fieldsErrors,
+                  fieldsTouched,
+                  showAllStepErrors,
                   objective,
                   objectiveIdx,
                   updateObjective: updateProjectObjective,
@@ -112,6 +120,10 @@ EPFormProjects.propTypes = {
   addProjectObjectiveDeliverable: PropTypes.func,
   updateProjectObjectiveDeliverable: PropTypes.func,
   removeProjectObjectiveDeliverable: PropTypes.func,
+  // validation
+  fieldsErrors: PropTypes.object,
+  fieldsTouched: PropTypes.object,
+  showAllStepErrors: PropTypes.bool,
 };
 
 export default EPFormProjects;

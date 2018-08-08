@@ -31,9 +31,7 @@ const EPFormProjects = ({
   fieldsTouched,
   showAllStepErrors,
 }) => (
-  <div>
-    <h2>Step 2: Add Projects & Objectives</h2>
-
+  <div className="EPFormProjects EPForm__step">
     <ProjectSelector
       items={projects.toJS()}
       selectedItems={selectedProjects}

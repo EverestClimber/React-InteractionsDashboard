@@ -15,6 +15,7 @@ const StepsNav = ({ steps, step, gotoStep }) => (
           tabIndex={stepIdx}
         >
           {stepIdx + 1}
+          <div className="StepsNav__step__label">{stepLabel}</div>
         </div>
       ))}
     </div>

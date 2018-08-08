@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormGroup, FormControl, Button, Panel } from 'react-bootstrap';
+import * as classNames from 'classnames';
 
 export class EPFormPlanItem extends React.PureComponent {
   constructor(props) {
@@ -24,23 +25,29 @@ export class EPFormPlanItem extends React.PureComponent {
   };
 
   render() {
-    const { planItem, title, onReasonRemovedChange, children } = this.props;
+    const {
+      planItem,
+      title,
+      onReasonRemovedChange,
+      children,
+      className,
+    } = this.props;
+
+    const baseClassName = 'EPForm__PlanItem';
+
     return (
-      <Panel className="SelectedProject">
+      <Panel
+        className={classNames({
+          [baseClassName]: true,
+          [className]: true,
+          [`${baseClassName}--removed`]: this.state.removed,
+        })}
+      >
         <Panel.Heading>
           <Button className="pull-right" onClick={this.handleClickRemoveBtn}>
             {this.state.removed ? 'UNDO REMOVE' : 'REMOVE'}
           </Button>
-          <p
-            style={
-              planItem.removed_at && {
-                textDecoration: 'line-through',
-                color: 'red',
-              }
-            }
-          >
-            {title}
-          </p>
+          <div className={`${baseClassName}__heading`}>{title}</div>
         </Panel.Heading>
         <Panel.Body>
           {this.state.removed && (

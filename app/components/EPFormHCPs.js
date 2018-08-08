@@ -1,6 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { FormControl, FormGroup, Button, Col, Row } from 'react-bootstrap';
+import {
+  Badge,
+  FormControl,
+  FormGroup,
+  Button,
+  Col,
+  Row,
+} from 'react-bootstrap';
 import { EngagementPlanHCPItem } from 'records/EngagementPlan';
 import { EPFormObjective } from 'components/EPFormObjective';
 import Comment from 'components/Comment';
@@ -37,9 +44,7 @@ const EPFormHCPs = ({
   fieldsTouched,
   showAllStepErrors,
 }) => (
-  <div>
-    <h2>Step 1: Add HCPs</h2>
-
+  <div className="EPFormHCPs EPForm__step">
     <HCPSelector
       items={hcps.toJS()}
       selectedItems={selectedHCPs}
@@ -50,14 +55,27 @@ const EPFormHCPs = ({
       multiple
     />
 
+    <h2 className="EPForm__step__title">
+      My HCPs <Badge>{selectedHCPs.size}</Badge>
+    </h2>
+
     {!!engagementPlan.hcp_items.size &&
       engagementPlan.hcp_items
         .map((hcpItem, hcpItemIdx) => (
           <EPFormPlanItem
             key={hcpItem.hcp_id}
             {...{
+              className: 'EPForm__HCPItem',
               planItem: hcpItem,
-              title: `${hcpItem.hcp.first_name} ${hcpItem.hcp.last_name}`,
+              title: (
+                <div className="title">
+                  {hcpItem.hcp.first_name} {hcpItem.hcp.last_name}
+                  <Badge className="status">STATUS</Badge>
+                  <Badge className="objscount">
+                    {hcpItem.objectives.size} OBJECTIVES
+                  </Badge>
+                </div>
+              ),
               remove: () => selectHCPs(selectedHCPs.delete(hcpItem.hcp_id)),
               setRemoved: () =>
                 updateHCPItem(hcpItem.hcp_id, {

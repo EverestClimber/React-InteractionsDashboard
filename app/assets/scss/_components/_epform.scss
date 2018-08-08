@@ -1,0 +1,36 @@
+.EPForm {
+  &__step {
+    padding-top: 30px;
+    &__title {
+      text-align: left;
+    }
+  }
+  &__PlanItem {
+    &--removed {
+      border-color: $n-red;
+      background: $n-dark-rose;
+    }
+    .panel-heading .badge {
+      background-color: transparent;
+      border: 1px solid $n-darkest;
+      color: $n-darkest;
+      font-size: rem(10);
+      margin-top: -2px;
+    }
+    &__heading {
+      color: $n-blue;
+      font-size: rem(16);
+      font-weight: normal;
+    }
+  }
+  &__HCPItem {
+    .title {
+    }
+    .status {
+    }
+    .objscount {
+    }
+    .EPForm__PlanItem {
+    }
+  }
+}

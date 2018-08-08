@@ -165,7 +165,7 @@ class EPForm extends React.Component {
     );
 
     return (
-      <Grid>
+      <Grid className="EPForm">
         {this.props.serverError && (
           <CenteredAlert bsStyle="danger">
             An error has occurred. Please refresh the page or try again later.
@@ -173,18 +173,14 @@ class EPForm extends React.Component {
           </CenteredAlert>
         )}
 
-        <pre>
+        {/* <pre>
           {this.state.showStepFieldsValidation[this.state.activeStep]
             ? JSON.stringify(activeStepFieldsErrors.toJS(), null, 2)
-            : 'DO NOT SHOW FIELDS ERRORS'}
-        </pre>
+            : 'NOT SHOWING FIELDS ERRORS'}
+        </pre> */}
 
         <StepsNav
-          steps={[
-            '1. HCPs & Objectives',
-            '2. Projects & Objectives',
-            '3. Review Plan',
-          ]}
+          steps={['HCPs & OBJECTIVES', 'PROJECTS', 'REVIEW']}
           step={this.state.activeStep}
           gotoStep={(stepIdx) =>
             stepIdx < this.state.activeStep &&
@@ -192,7 +188,6 @@ class EPForm extends React.Component {
           }
         />
 
-        <hr />
         {renderedStep}
 
         <br />

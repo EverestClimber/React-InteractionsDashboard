@@ -1,3 +1,4 @@
+// Nominal
 $n-white: #fff;
 $n-black: #000;
 $n-blue: #5679bc;
@@ -10,15 +11,17 @@ $n-yellow: #f9ffbc;
 $n-green: #55bd79;
 $n-red: #ba0d2b;
 $n-rose: #ffe1e1;
-
+$n-dark-rose: #ffcccc;
+// Semantic
+// errors
 $s-error-bg: $n-rose;
 $s-error-text: $n-red;
 $s-error-border: $n-grey-light;
-
+// body
 $s-border-light: $n-grey-light;
 $s-body-bg: $n-grey-lighter;
 $s-text-color: $n-darkest;
-
+// controls
 $s-btn-border: $n-blue;
 $s-btn-text-color: $n-blue;
 $s-btn-primary-bg: $n-blue;
@@ -28,10 +31,9 @@ $s-ctrl-bg: $n-white;
 $s-ctrl-bg-disabled: $n-grey-lighter;
 $s-ctrl-primary-bg: $n-white;
 $s-ctrl-focused-bg: $n-yellow;
-
+// checkboxes
 $s-cb-box-bg: $n-white;
 $s-cb-box-border: $n-blue;
 $s-cb-box-active-bg: $n-blue;
 $s-cb-box-active-border: $n-blue;
 $s-cb-box-active-mark: $n-white;
-

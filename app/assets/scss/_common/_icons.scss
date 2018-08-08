@@ -3,20 +3,24 @@
   width: 13px;
   height: 13px;
   margin-bottom: -2px;
-
   &--left {
     margin-right: 5px;
   }
-
   &--right {
     margin-right: 5px;
   }
-
   &__logout {
     background: url(../images/svg/icon-logout.svg) center center no-repeat;
   }
-
   &__folder {
     background: url(../images/svg/icon-folder.svg) center center no-repeat;
   }
+}
+
+.badge {
+  background: $n-blue;
+  margin: -4px 5px 0 5px; // padding: 0 4px;
+  font-weight: normal;
+  padding: 3px 10px;
+  color: $n-white;
 }

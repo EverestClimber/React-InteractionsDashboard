@@ -42,7 +42,7 @@ export const Options = ({ choices }) => choices.map(([val, text]) => ( // eslint
 ));
 
 
-export const SearchSelect = ({ input, meta, options, label, isMulti, ...rest }) => { // eslint-disable-line
+export const SearchSelect = ({ input, meta = {}, options, label, isMulti, ...rest }) => { // eslint-disable-line
   // NOTE: react-select's Select expects the value to be of form
   //  `{label, value}` or `null` (NOT undefined! if it receives undefined, it keeps
   //  showing the old selected value instead!)

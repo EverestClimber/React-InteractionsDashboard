@@ -33,13 +33,17 @@ export class EngagementPlan extends Record({
     return this.toJS();
   }
 
-  static fromApiData(data) {
+  static fromApiData(data, tasById = null, affiliateGroupsById = null) {
     let ep = new EngagementPlan(data);
     ep = ep.set(
       'hcp_items',
       new List(
         ep.hcp_items.map((hcpItemData) =>
-          EngagementPlanHCPItem.fromApiData(hcpItemData)
+          EngagementPlanHCPItem.fromApiData(
+            hcpItemData,
+            tasById,
+            affiliateGroupsById
+          )
         )
       )
     );
@@ -47,7 +51,11 @@ export class EngagementPlan extends Record({
       'project_items',
       new List(
         ep.project_items.map((projectItemData) =>
-          EngagementPlanProjectItem.fromApiData(projectItemData)
+          EngagementPlanProjectItem.fromApiData(
+            projectItemData,
+            tasById,
+            affiliateGroupsById
+          )
         )
       )
     );
@@ -96,7 +104,7 @@ export class EngagementPlanHCPItem extends Record({
     return data;
   }
 
-  static fromApiData(data) {
+  static fromApiData(data, tasById = null, affiliateGroupsById = null) {
     let item = new EngagementPlanHCPItem(data);
     item = item.set(
       'objectives',
@@ -115,7 +123,10 @@ export class EngagementPlanHCPItem extends Record({
         item.comments.map((commentData) => Comment.fromApiData(commentData))
       )
     );
-    item = item.set('hcp', HCP.fromApiData(item.hcp));
+    item = item.set(
+      'hcp',
+      HCP.fromApiData(item.hcp, tasById, affiliateGroupsById)
+    );
     return item;
   }
 }
@@ -153,7 +164,7 @@ export class EngagementPlanProjectItem extends Record({
     return data;
   }
 
-  static fromApiData(data) {
+  static fromApiData(data, tasById = null, affiliateGroupsById = null) {
     let item = new EngagementPlanProjectItem(data);
     item = item.set(
       'objectives',
@@ -172,7 +183,10 @@ export class EngagementPlanProjectItem extends Record({
         item.comments.map((commentData) => Comment.fromApiData(commentData))
       )
     );
-    item = item.set('project', Project.fromApiData(item.project));
+    item = item.set(
+      'project',
+      Project.fromApiData(item.project, tasById, affiliateGroupsById)
+    );
     return item;
   }
 }

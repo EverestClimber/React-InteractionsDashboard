@@ -61,6 +61,12 @@ export class ProjectDeliverable extends Record({
     major_issue: 'Major Issue',
   };
 
+  static quarter_type_choices = {
+    past: 'past',
+    current: 'current',
+    future: 'future',
+  };
+
   toApiData() {
     return this.toJS();
   }

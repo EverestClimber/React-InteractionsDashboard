@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { List } from 'immutable';
+import { List, OrderedMap } from 'immutable';
 import { call, put, takeLatest, select } from 'redux-saga/es/effects';
 import { setLoading } from 'containers/App/actions';
 import {
@@ -39,14 +39,20 @@ function* fetchCreateEPRequiredDataSaga() {
     ];
 
     const payload = {
-      bcsfs: new List(bcfsResponse.data.map((data) => BCSF.fromApiData(data))),
-      medicalPlanObjectives: new List(
-        medicalPlanObjectivesResponse.data.map((data) =>
-          MedicalPlanObjective.fromApiData(data)
-        )
+      bcsfs: new OrderedMap(
+        bcfsResponse.data.map((data) => [data.id, BCSF.fromApiData(data)])
       ),
-      projects: new List(
-        projectsResponse.data.map((data) => Project.fromApiData(data))
+      medicalPlanObjectives: new OrderedMap(
+        medicalPlanObjectivesResponse.data.map((data) => [
+          data.id,
+          MedicalPlanObjective.fromApiData(data),
+        ])
+      ),
+      projects: new OrderedMap(
+        projectsResponse.data.map((data) => [
+          data.id,
+          Project.fromApiData(data),
+        ])
       ),
     };
 

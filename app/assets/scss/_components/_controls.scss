@@ -1,9 +1,9 @@
 $ctrl-height: 36px;
-
 .btn {
   height: $ctrl-height;
   padding: 6px 10px;
-  &, &:hover {
+  &,
+  &:hover {
     border-color: $s-btn-border;
     color: $s-btn-text-color;
   }
@@ -17,7 +17,6 @@ $ctrl-height: 36px;
     margin-left: 7.5px;
     margin-right: 7.5px;
   }
-
   .fi-icon {
     position: relative;
     top: 6px;
@@ -53,7 +52,8 @@ $ctrl-height: 36px;
   height: $ctrl-height;
   padding: 6px 15px;
   border-color: $s-border-light;
-  &, &[readonly].flatpickr-input:not([disabled]) {
+  &,
+  &[readonly].flatpickr-input:not([disabled]) {
     background: $s-ctrl-bg;
   }
   &--primary {
@@ -68,7 +68,6 @@ $ctrl-height: 36px;
   option[disabled] {
     color: $s-placeholder-color;
   }
-
   .has-error & {
     background: $s-error-bg;
     border-color: $s-error-border;
@@ -77,6 +76,12 @@ $ctrl-height: 36px;
       color: $s-error-text;
     }
   }
+}
+
+.control-label {
+  font-size: rem(11);
+  font-weight: normal;
+  color: $n-grey-darker;
 }
 
 .checkbox label,
@@ -101,7 +106,7 @@ label.checkbox-inline {
 
 input[type="checkbox"] {
   &:before {
-    content: '';
+    content: "";
     position: absolute;
     top: -1px;
     left: 1035px;
@@ -112,14 +117,13 @@ input[type="checkbox"] {
   }
   position: relative;
   left: -1000px;
-
   &:checked {
     &:before {
       display: block;
       background: $s-cb-box-active-bg;
     }
     &:after {
-      content: '\2714';
+      content: "\2714";
       font-size: 12px;
       position: absolute;
       left: 1037px;

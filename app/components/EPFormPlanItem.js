@@ -1,12 +1,13 @@
 import React from 'react';
-import { FormGroup, FormControl, Button, Panel } from 'react-bootstrap';
 import * as classNames from 'classnames';
+import { FormGroup, FormControl, Panel } from 'react-bootstrap';
 
 export class EPFormPlanItem extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       removed: !!props.planItem.removed_at,
+      collapsed: false,
     };
   }
 
@@ -23,6 +24,11 @@ export class EPFormPlanItem extends React.PureComponent {
       this.props.unsetRemoved();
     }
   };
+
+  handleClickCollapseBtn = () =>
+    this.setState((prevState) => ({
+      collapsed: !prevState.collapsed,
+    }));
 
   render() {
     const {
@@ -43,26 +49,51 @@ export class EPFormPlanItem extends React.PureComponent {
           [`${baseClassName}--removed`]: this.state.removed,
         })}
       >
-        <Panel.Heading>
-          <Button className="pull-right" onClick={this.handleClickRemoveBtn}>
-            {this.state.removed ? 'UNDO REMOVE' : 'REMOVE'}
-          </Button>
-          <div className={`${baseClassName}__heading`}>{title}</div>
+        <Panel.Heading className={`${baseClassName}__heading`}>
+          <div className={`${baseClassName}__title`}>{title}</div>
+          <div
+            className={classNames({
+              [`${baseClassName}__removeBtn`]: true,
+              'icon-delete': !this.state.removed,
+              'icon-consent-yes-sign': this.state.removed,
+            })}
+            role="button"
+            tabIndex={0}
+            onClick={this.handleClickRemoveBtn}
+          />
         </Panel.Heading>
-        <Panel.Body>
-          {this.state.removed && (
-            <FormGroup>
-              <FormControl
-                componentClass="textarea"
-                placeholder="Removal reason"
-                value={planItem.reason_removed}
-                onChange={(ev) => onReasonRemovedChange(ev.target.value)}
-              />
-              <hr />
-            </FormGroup>
+        <Panel.Body
+          className={classNames({
+            [`${baseClassName}__body`]: true,
+            [`${baseClassName}__body--collapsed`]: this.state.collapsed,
+          })}
+        >
+          {this.state.collapsed || (
+            <div className={`${baseClassName}__body__content`}>
+              {this.state.removed && (
+                <FormGroup>
+                  <br />
+                  <FormControl
+                    componentClass="input"
+                    placeholder="Enter Reason for Removing HCP..."
+                    value={planItem.reason_removed}
+                    onChange={(ev) => onReasonRemovedChange(ev.target.value)}
+                  />
+                  <hr />
+                </FormGroup>
+              )}
+              <br />
+              {children}
+            </div>
           )}
-          <br />
-          {children}
+          <div
+            className={`${baseClassName}__collapseBtn`}
+            onClick={this.handleClickCollapseBtn}
+            role="button"
+            tabIndex={0}
+          >
+            {this.state.collapsed ? '⌄' : '⌃'}
+          </div>
         </Panel.Body>
       </Panel>
     );

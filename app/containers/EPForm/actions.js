@@ -83,7 +83,9 @@ export const removeHCPObjectiveAction = makeActionCreator(
 
 export const addHCPObjectiveDeliverableAction = makeActionCreator(
   'EP_FORM/ADD_HCP_OBJECTIVE_DELIVERABLE',
-  (hcpId, objectiveIdx) => ({ payload: { hcpId, objectiveIdx } })
+  (hcpId, objectiveIdx, quarter) => ({
+    payload: { hcpId, objectiveIdx, quarter },
+  })
 );
 
 export const updateHCPObjectiveDeliverableAction = makeActionCreator(

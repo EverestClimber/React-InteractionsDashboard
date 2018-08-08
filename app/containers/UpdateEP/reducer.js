@@ -1,5 +1,4 @@
 import { fromJS } from 'immutable';
-import { EngagementPlan } from 'records/EngagementPlan';
 import * as actions from './actions';
 
 const initialState = fromJS({
@@ -14,10 +13,7 @@ function createEpReducer(state = initialState, action) {
       return state.merge({ serverError: action.message });
 
     case actions.fetchEPActions.success.type:
-      return state.set(
-        'engagementPlan',
-        EngagementPlan.fromApiData(action.engagementPlan)
-      );
+      return state.set('engagementPlan', action.engagementPlan);
 
     default:
       return state;

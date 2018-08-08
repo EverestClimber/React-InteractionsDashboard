@@ -59,7 +59,7 @@ export class HCPDeliverable extends Record({
   objective_id: undefined,
   // fields
   quarter: 1,
-  quarter_type: 'present',
+  quarter_type: 'current',
   description: '',
   status: '',
 }) {
@@ -69,6 +69,13 @@ export class HCPDeliverable extends Record({
     on_track: 'On Track',
     slightly_behind: 'Slightly Behind',
     major_issue: 'Major Issue',
+    '': 'No Status',
+  };
+
+  static quarter_type_choices = {
+    past: 'past',
+    current: 'current',
+    future: 'future',
   };
 
   toApiData() {

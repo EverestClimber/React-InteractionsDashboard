@@ -255,7 +255,7 @@ function createEpReducer(state = initialState, action) {
         state,
         hcpId,
         `hcp_items.HCP_ITEM_IDX.objectives.${idx}`,
-        (objective) => objective.merge(data)
+        data
       );
     }
 
@@ -270,12 +270,13 @@ function createEpReducer(state = initialState, action) {
     }
 
     case actions.addHCPObjectiveDeliverableAction.type: {
-      const { hcpId, objectiveIdx } = action.payload;
+      const { hcpId, objectiveIdx, quarter } = action.payload;
       return updateInEPlanForHCP(
         state,
         hcpId,
         `hcp_items.HCP_ITEM_IDX.objectives.${objectiveIdx}.deliverables`,
-        (deliverables) => deliverables.push(HCPDeliverable.fromApiData())
+        (deliverables) =>
+          deliverables.push(HCPDeliverable.fromApiData({ quarter }))
       );
     }
 
@@ -285,7 +286,7 @@ function createEpReducer(state = initialState, action) {
         state,
         hcpId,
         `hcp_items.HCP_ITEM_IDX.objectives.${objectiveIdx}.deliverables.${deliverableIdx}`,
-        (deliverable) => deliverable.merge(data)
+        data
       );
     }
 

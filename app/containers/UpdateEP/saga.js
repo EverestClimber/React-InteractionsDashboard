@@ -1,8 +1,10 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, select, takeLatest } from 'redux-saga/effects';
 import { push } from 'react-router-redux';
 
 import { setLoading } from 'containers/App/actions';
+import { selectGlobal } from 'containers/App/selectors';
 import { patchEngagementPlan, getEngagementPlan } from 'api/engagementPlans';
+import { EngagementPlan } from 'records/EngagementPlan';
 import * as actions from './actions';
 
 function* updateEPSaga({ engagementPlan }) {
@@ -23,7 +25,16 @@ function* fetchEPSaga({ engagementPlanId }) {
   yield put(setLoading(true));
   try {
     const res = yield call(getEngagementPlan, engagementPlanId);
-    yield put(actions.fetchEPActions.success(res.data));
+    const globalState = yield select(selectGlobal);
+    yield put(
+      actions.fetchEPActions.success(
+        EngagementPlan.fromApiData(
+          res.data,
+          globalState.get('therapeuticAreas'),
+          globalState.get('affiliateGroups')
+        )
+      )
+    );
   } catch (error) {
     yield put(actions.fetchEPActions.error(error.message));
   }

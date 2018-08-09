@@ -7,7 +7,7 @@ const makeKey = (obj, idx) => `${obj.id || ''}.${idx}`;
 export const EPFormObjective = ({
   mode,
   hideRemove,
-  // currentQuarter,
+  currentQuarter,
   itemObjectId,
   objective,
   objectiveIdx,
@@ -102,180 +102,171 @@ export const EPFormObjective = ({
         {children}
         <ControlLabel>DELIVERABLES</ControlLabel>
 
-        {[1, 2, 3, 4].map((quarterN) => (
-          <div key={quarterN} className="EPFormDeliverables__quarter">
-            <div
-              className={`EPFormDeliverables__quarterLabel EPFormDeliverables__quarterLabel--${
-                quarterStatuses[quarterN]
-              }`}
-            >
-              Q{quarterN}
-            </div>
+        {[1, 2, 3, 4].map((quarterN) => {
+          if (
+            !deliverablesByQuarter[quarterN].length &&
+            (quarterN < currentQuarter || mode === 'view')
+          ) {
+            return null;
+          }
+          return (
+            <div key={quarterN} className="EPFormDeliverables__quarter">
+              <div
+                className={`EPFormDeliverables__quarterLabel EPFormDeliverables__quarterLabel--${
+                  quarterStatuses[quarterN]
+                }`}
+              >
+                Q{quarterN}
+              </div>
 
-            <div className="EPFormDeliverables__deliverables">
-              {deliverablesByQuarter[quarterN].map(
-                ([deliverableIdx, deliverable], deliverableN) => (
-                  <div
-                    key={`${deliverableIdx}:${deliverable.id}`}
-                    className="EPFormDeliverable__deliverable"
-                  >
+              <div className="EPFormDeliverables__deliverables">
+                {deliverablesByQuarter[quarterN].map(
+                  ([deliverableIdx, deliverable], deliverableN) => (
                     <div
-                      className={`EPFormDeliverable__deliverableLabel EPFormDeliverable__deliverableLabel--${
-                        deliverable.status
-                      }`}
+                      key={`${deliverableIdx}:${deliverable.id}`}
+                      className="EPFormDeliverable__deliverable"
                     >
                       <div
-                        className={`EPFormDeliverable__deliverableLabel__label EPFormDeliverable__deliverableLabel__label--${
+                        className={`EPFormDeliverable__deliverableLabel EPFormDeliverable__deliverableLabel--${
                           deliverable.status
                         }`}
                       >
-                        Q{quarterN} / DELIVERABLE {deliverableN + 1}
-                      </div>
-                      <div
-                        className={`EPFormDeliverable__deliverableLabel__status EPFormDeliverable__deliverableLabel__status--${
-                          deliverable.status
-                        }`}
-                      >
-                        {(
-                          deliverableStatusChoices[deliverable.status] || ''
-                        ).toUpperCase()}
-                      </div>
-                    </div>
-
-                    <div className="EPFormDeliverable__deliverableMain">
-                      <div className="EPFormDeliverable__deliverableMain__description">
-                        {deliverable.quarter_type !== 'past' ? (
-                          <FormGroup
-                            validationState={
-                              (fieldsTouched.get(
-                                `${fieldPrefix}.objectives.${objectiveIdx}.deliverables` +
-                                  `.${deliverableIdx}.description`
-                              ) ||
-                                showAllStepErrors) &&
-                              fieldsErrors.get(
-                                `${fieldPrefix}.objectives.${objectiveIdx}.deliverables` +
-                                  `.${deliverableIdx}.description`
-                              )
-                                ? 'error'
-                                : null
-                            }
-                          >
-                            <FormControl
-                              type="text"
-                              placeholder="Deliverable description"
-                              value={deliverable.description}
-                              onChange={(ev) =>
-                                updateDeliverable(
-                                  itemObjectId,
-                                  objectiveIdx,
-                                  deliverableIdx,
-                                  {
-                                    description: ev.target.value,
-                                  }
-                                )
-                              }
-                            />
-                          </FormGroup>
-                        ) : (
-                          <p>{deliverable.description}</p>
-                        )}
-                      </div>
-                      {(deliverable.quarter_type !== 'past' ||
-                        !deliverable.id ||
-                        !deliverable.status) && (
-                        <div className="EPFormDeliverable__deliverableMain__status">
-                          <ControlLabel>SELECT STATUS</ControlLabel>
-                          <div>
-                            {Object.entries(deliverableStatusChoices).map(
-                              ([value, label]) => (
-                                <Button
-                                  key={value}
-                                  className={`EPFormDeliverable__deliverableMain__status__btn EPFormDeliverable__deliverableMain__status__btn--${value} ${
-                                    deliverable.status === value
-                                      ? `EPFormDeliverable__deliverableMain__status__btn--${value}--active`
-                                      : ''
-                                  }`}
-                                  onClick={() =>
-                                    updateDeliverable(
-                                      itemObjectId,
-                                      objectiveIdx,
-                                      deliverableIdx,
-                                      {
-                                        status: value,
-                                      }
-                                    )
-                                  }
-                                >
-                                  {label.toUpperCase()}
-                                </Button>
-                              )
-                            )}
-                          </div>
+                        <div
+                          className={`EPFormDeliverable__deliverableLabel__label EPFormDeliverable__deliverableLabel__label--${
+                            deliverable.status
+                          }`}
+                        >
+                          Q{quarterN} / DELIVERABLE {deliverableN + 1}
                         </div>
-                      )}
-                      <div className="EPFormDeliverable__deliverableMain__removeBtn">
-                        {(mode === 'create' || !objective.id) &&
-                          !hideRemove && (
-                            <Button
-                              onClick={() =>
-                                removeDeliverable(
-                                  itemObjectId,
-                                  objectiveIdx,
-                                  deliverableIdx
+                        <div
+                          className={`EPFormDeliverable__deliverableLabel__status EPFormDeliverable__deliverableLabel__status--${
+                            deliverable.status
+                          }`}
+                        >
+                          {(
+                            deliverableStatusChoices[deliverable.status] || ''
+                          ).toUpperCase()}
+                        </div>
+                      </div>
+
+                      <div className="EPFormDeliverable__deliverableMain">
+                        <div className="EPFormDeliverable__deliverableMain__description">
+                          {deliverable.quarter_type !== 'past' &&
+                          !deliverable.id ? (
+                            <FormGroup
+                              validationState={
+                                (fieldsTouched.get(
+                                  `${fieldPrefix}.objectives.${objectiveIdx}.deliverables` +
+                                    `.${deliverableIdx}.description`
+                                ) ||
+                                  showAllStepErrors) &&
+                                fieldsErrors.get(
+                                  `${fieldPrefix}.objectives.${objectiveIdx}.deliverables` +
+                                    `.${deliverableIdx}.description`
                                 )
+                                  ? 'error'
+                                  : null
                               }
                             >
-                              ✖
-                            </Button>
+                              <FormControl
+                                type="text"
+                                placeholder="Deliverable description"
+                                value={deliverable.description}
+                                onChange={(ev) =>
+                                  updateDeliverable(
+                                    itemObjectId,
+                                    objectiveIdx,
+                                    deliverableIdx,
+                                    {
+                                      description: ev.target.value,
+                                    }
+                                  )
+                                }
+                              />
+                            </FormGroup>
+                          ) : (
+                            <p>{deliverable.description}</p>
                           )}
+                        </div>
+                        {// when to have deliverable status editable
+                        // never in 'view' mode
+                        mode !== 'view' &&
+                          // editable when freshly added
+                          (!deliverable.id ||
+                            // or it didn't have status set
+                            !deliverable.status ||
+                            // or just had it set after not having it
+                            fieldsTouched.get(
+                              `${fieldPrefix}.objectives.${objectiveIdx}.deliverables.${deliverableIdx}.status`
+                            )) &&
+                          // and never for future quarters
+                          deliverable.status_type !== 'future' && (
+                            <div className="EPFormDeliverable__deliverableMain__status">
+                              <ControlLabel>SELECT STATUS</ControlLabel>
+                              <div>
+                                {Object.entries(deliverableStatusChoices).map(
+                                  ([value, label]) => (
+                                    <Button
+                                      key={value}
+                                      className={`EPFormDeliverable__deliverableMain__status__btn EPFormDeliverable__deliverableMain__status__btn--${value} ${
+                                        deliverable.status === value
+                                          ? `EPFormDeliverable__deliverableMain__status__btn--${value}--active`
+                                          : ''
+                                      }`}
+                                      onClick={() =>
+                                        updateDeliverable(
+                                          itemObjectId,
+                                          objectiveIdx,
+                                          deliverableIdx,
+                                          {
+                                            status: value,
+                                          }
+                                        )
+                                      }
+                                    >
+                                      {label.toUpperCase()}
+                                    </Button>
+                                  )
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        <div className="EPFormDeliverable__deliverableMain__removeBtn">
+                          {(mode === 'create' || !objective.id) &&
+                            !hideRemove && (
+                              <Button
+                                onClick={() =>
+                                  removeDeliverable(
+                                    itemObjectId,
+                                    objectiveIdx,
+                                    deliverableIdx
+                                  )
+                                }
+                              >
+                                ✖
+                              </Button>
+                            )}
+                        </div>
+                        <div className="EPFormDeliverable__deliverableMain__comments" />
                       </div>
-                      <div className="EPFormDeliverable__deliverableMain__comments" />
                     </div>
-                  </div>
-                )
-              )}
-              <Button
-                onClick={() =>
-                  addDeliverable(itemObjectId, objectiveIdx, quarterN)
-                }
-                className="EPFormDeliverable__addDeliverableBtn"
-              >
-                + DELIVERABLE
-              </Button>
+                  )
+                )}
+                {mode !== 'view' &&
+                  quarterN >= currentQuarter && (
+                    <Button
+                      onClick={() =>
+                        addDeliverable(itemObjectId, objectiveIdx, quarterN)
+                      }
+                      className="EPFormDeliverable__addDeliverableBtn"
+                    >
+                      + DELIVERABLE
+                    </Button>
+                  )}
+              </div>
             </div>
-          </div>
-        ))}
-
-        {/* {objective.deliverables.map((deliverable, deliverableIdx) => (
-          <EPFormDeliverable
-            key={makeKey(deliverable, deliverableIdx)}
-            {...{
-              mode,
-              hideRemove: objective.deliverables.size <= 1,
-              currentQuarter,
-              itemObjectId,
-              objective,
-              objectiveIdx,
-              deliverable,
-              deliverableIdx,
-              deliverableStatusChoices,
-              updateDeliverable,
-              removeDeliverable,
-              fieldPrefix,
-              fieldsErrors,
-              fieldsTouched,
-              showAllStepErrors,
-            }}
-          />
-        ))} */}
-
-        {/* {(mode === 'create' || !objective.id) && (
-          <Row className="text-center">
-            <Button onClick={() => addDeliverable(itemObjectId, objectiveIdx)}>
-              Add Deliverable
-            </Button>
-          </Row>
-        )} */}
+          );
+        })}
       </div>
     </div>
   );

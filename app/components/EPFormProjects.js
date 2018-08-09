@@ -127,6 +127,7 @@ export const EPProjectItem = ({
 }) => (
   <EPFormPlanItem
     {...{
+      mode,
       className: 'EPForm__ProjectItem',
       planItem: projectItem,
       title: (

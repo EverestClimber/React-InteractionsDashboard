@@ -160,6 +160,7 @@ export const EPHCPItem = ({
   return (
     <EPFormPlanItem
       {...{
+        mode,
         className: 'EPForm__HCPItem',
         planItem: hcpItem,
         title: (

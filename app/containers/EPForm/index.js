@@ -10,6 +10,7 @@ import { CenteredAlert } from 'components/forms';
 import StepsNav from 'components/StepsNav';
 import EPFormHCPs from 'components/EPFormHCPs';
 import EPFormProjects from 'components/EPFormProjects';
+import EPFormReview from 'components/EPFormReview';
 import reducer from './reducer';
 import saga from './saga';
 import * as actions from './actions';
@@ -145,7 +146,8 @@ class EPForm extends React.Component {
           currentQuarter={currentQuarter}
         />
       ),
-      2: (
+      2: <EPFormReview {...this.props} currentQuarter={currentQuarter} />,
+      20: (
         <div>
           <h2>Step 3: Review Plan</h2>
           <pre>{JSON.stringify(this.props.engagementPlan.toJS(), null, 2)}</pre>
@@ -183,7 +185,7 @@ class EPForm extends React.Component {
           steps={['HCPs & OBJECTIVES', 'PROJECTS', 'REVIEW']}
           step={this.state.activeStep}
           gotoStep={(stepIdx) =>
-            stepIdx < this.state.activeStep &&
+            /* stepIdx < this.state.activeStep && */
             this.setState({ activeStep: stepIdx })
           }
         />

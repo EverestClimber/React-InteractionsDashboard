@@ -42,72 +42,37 @@ const EPFormProjects = ({
       multiple
     />
 
+    <h2 className="EPForm__step__title">
+      My Projects <Badge>{engagementPlan.project_items.size}</Badge>
+    </h2>
+
     {!!engagementPlan.project_items.size &&
       engagementPlan.project_items
         .map((projectItem, projectItemIdx) => (
-          <EPFormPlanItem
+          <EPProjectItem
             key={projectItem.project_id}
             {...{
-              className: 'EPForm__ProjectItem',
-              planItem: projectItem,
-              title: (
-                <div className="EPForm__ProjectItem__title">
-                  {projectItem.project.title}
-                  <Badge className="objscount">
-                    {projectItem.objectives.size} OBJECTIVES
-                  </Badge>
-                  <div className="affiliateGroups">
-                    {projectItem.project.affiliate_group_names.map((name) => (
-                      <Badge key={name}>{name.toUpperCase()}</Badge>
-                    ))}
-                  </div>
-                </div>
-              ),
-              remove: () =>
-                selectProjects(selectedProjects.delete(projectItem.project_id)),
-              setRemoved: () =>
-                updateProjectItem(projectItem.project_id, {
-                  removed_at: new Date().toISOString(),
-                }),
-              unsetRemoved: () =>
-                updateProjectItem(projectItem.project_id, { removed_at: null }),
-              onReasonRemovedChange: (reason_removed) =>
-                updateProjectItem(projectItem.project_id, { reason_removed }),
+              mode,
+              currentQuarter,
+              projectItem,
+              projectItemIdx,
+              // medicalPlanObjectives,
+              // bcsfs,
+              // for create/edit mode:
+              updateProjectItem,
+              selectProjects,
+              selectedProjects,
+              fieldsTouched,
+              fieldsErrors,
+              showAllStepErrors,
+              addProjectObjective,
+              updateProjectObjective,
+              removeProjectObjective,
+              addProjectObjectiveDeliverable,
+              updateProjectObjectiveDeliverable,
+              removeProjectObjectiveDeliverable,
             }}
-          >
-            {projectItem.objectives.map((objective, objectiveIdx) => (
-              <EPFormObjective
-                key={makeKey(objective, objectiveIdx)}
-                {...{
-                  mode,
-                  hideRemove: projectItem.objectives.size <= 1,
-                  currentQuarter,
-                  itemObjectId: projectItem.project_id,
-                  fieldPrefix: `project_items.${projectItemIdx}`,
-                  fieldsErrors,
-                  fieldsTouched,
-                  showAllStepErrors,
-                  objective,
-                  objectiveIdx,
-                  updateObjective: updateProjectObjective,
-                  removeObjective: removeProjectObjective,
-                  addDeliverable: addProjectObjectiveDeliverable,
-                  updateDeliverable: updateProjectObjectiveDeliverable,
-                  removeDeliverable: removeProjectObjectiveDeliverable,
-                  deliverableStatusChoices: ProjectDeliverable.status_choices,
-                }}
-              />
-            ))}
-            {(mode === 'create' || !projectItem.id) && (
-              <Row className="text-center">
-                <Button
-                  onClick={() => addProjectObjective(projectItem.project_id)}
-                >
-                  Add Objective
-                </Button>
-              </Row>
-            )}
-          </EPFormPlanItem>
+          />
         ))
         .toJS()}
   </div>
@@ -138,3 +103,87 @@ EPFormProjects.propTypes = {
 };
 
 export default EPFormProjects;
+
+export const EPProjectItem = ({
+  mode,
+  currentQuarter,
+  projectItem,
+  projectItemIdx,
+  // medicalPlanObjectives,
+  // bcsfs,
+  // for create/edit mode:
+  updateProjectItem,
+  selectProjects,
+  selectedProjects,
+  fieldsTouched,
+  fieldsErrors,
+  showAllStepErrors,
+  addProjectObjective,
+  updateProjectObjective,
+  removeProjectObjective,
+  addProjectObjectiveDeliverable,
+  updateProjectObjectiveDeliverable,
+  removeProjectObjectiveDeliverable,
+}) => (
+  <EPFormPlanItem
+    {...{
+      className: 'EPForm__ProjectItem',
+      planItem: projectItem,
+      title: (
+        <div className="EPForm__ProjectItem__title">
+          {projectItem.project.title}
+          <Badge className="objscount">
+            {projectItem.objectives.size} OBJECTIVES
+          </Badge>
+          <div className="affiliateGroups">
+            {projectItem.project.affiliate_group_names.map((name) => (
+              <Badge key={name}>{name.toUpperCase()}</Badge>
+            ))}
+          </div>
+        </div>
+      ),
+      remove: () =>
+        selectProjects(selectedProjects.delete(projectItem.project_id)),
+      setRemoved: () =>
+        updateProjectItem(projectItem.project_id, {
+          removed_at: new Date().toISOString(),
+        }),
+      unsetRemoved: () =>
+        updateProjectItem(projectItem.project_id, { removed_at: null }),
+      onReasonRemovedChange: (reason_removed) =>
+        updateProjectItem(projectItem.project_id, { reason_removed }),
+    }}
+  >
+    {projectItem.objectives.map((objective, objectiveIdx) => (
+      <EPFormObjective
+        key={makeKey(objective, objectiveIdx)}
+        {...{
+          mode,
+          hideRemove: projectItem.objectives.size <= 1,
+          currentQuarter,
+          itemObjectId: projectItem.project_id,
+          fieldPrefix: `project_items.${projectItemIdx}`,
+          objective,
+          objectiveIdx,
+          deliverableStatusChoices: ProjectDeliverable.status_choices,
+          fieldsTouched,
+          // for create/edit mode:
+          fieldsErrors,
+          showAllStepErrors,
+          updateObjective: updateProjectObjective,
+          removeObjective: removeProjectObjective,
+          addDeliverable: addProjectObjectiveDeliverable,
+          updateDeliverable: updateProjectObjectiveDeliverable,
+          removeDeliverable: removeProjectObjectiveDeliverable,
+        }}
+      />
+    ))}
+    {(mode === 'create' || !projectItem.id) && (
+      <Row className="text-center">
+        <Button onClick={() => addProjectObjective(projectItem.project_id)}>
+          Add Objective
+        </Button>
+      </Row>
+    )}
+  </EPFormPlanItem>
+);

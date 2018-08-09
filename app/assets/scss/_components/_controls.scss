@@ -30,11 +30,11 @@ $ctrl-height: 36px;
     background: transparent;
     border-color: $s-border-light;
     border-right: transparent;
-    & + input {
+    &+input {
       border-left: transparent;
     }
   }
-  input + .input-group-btn {
+  input+.input-group-btn {
     button {
       border-color: $s-border-light;
       background: $n-grey-lighter;
@@ -42,6 +42,10 @@ $ctrl-height: 36px;
     }
   }
 }
+
+// .btn-default:active {
+  //   background-color: inherit;
+  // }
 
 .btn-primary {
   background: $s-btn-primary-bg;

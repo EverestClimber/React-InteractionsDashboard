@@ -33,8 +33,8 @@
     &__removeBtn {
       font-size: rem(30);
       position: absolute;
-      top: 8px;
-      right: 5px;
+      top: 15px;
+      right: 10px;
       cursor: pointer;
     }
     &__collapseBtn {
@@ -65,36 +65,54 @@
     }
   }
   &__HCPItem {
-    .title {
+    &__title {
+      .tas {
+        font-size: rem(14);
+        color: $n-grey-darker;
+        margin: 8px 0;
+      }
+      .badge {
+        &.status {
+          &--new {
+            background: $n-violet;
+            border-color: $n-violet;
+            color: $n-white;
+          }
+          &--updated {
+            background: $n-orange;
+            border-color: $n-orange;
+            color: $n-white;
+          }
+        }
+      }
+      [class^="icon-"] {
+        font-size: rem(26);
+        position: relative;
+        top: 4px;
+        line-height: 10px;
+        margin-left: -10px;
+      }
+      .institution_name,
+      .location {
+        float: right;
+        color: $n-grey;
+        font-size: rem(14);
+      }
+      .institution_name {
+      }
+      .location {
+        margin: 0 35px 0 25px;
+        &__city {
+        }
+        &__country {
+        }
+      }
     }
-    .status {
-    }
-    .objscount {
-    }
+  }
+  &__ProjectItem {
     .affiliateGroups {
       float: right;
       margin: 2px 30px 0 0;
-    }
-    .tas {
-      font-size: rem(14);
-      color: $n-grey-darker;
-      margin: 8px 0;
-    }
-    .EPForm__PlanItem {
-    }
-    .panel-heading .badge {
-      &.status {
-        &--new {
-          background: $n-violet;
-          border-color: $n-violet;
-          color: $n-white;
-        }
-        &--updated {
-          background: $n-orange;
-          border-color: $n-orange;
-          color: $n-white;
-        }
-      }
     }
   }
 }
@@ -126,6 +144,16 @@
     border-radius: 100%;
     background-color: $n-grey;
     color: $n-white;
+    &--on_track {
+      background-color: $s-status-on-track;
+    }
+    &--slightly_behind {
+      background-color: $s-status-slightly-behind;
+      color: $n-darkest;
+    }
+    &--major_issue {
+      background-color: $s-status-major-issue;
+    }
   }
   &__deliverables {
     float: left;
@@ -137,6 +165,7 @@
   &__deliverable {
     display: flex;
     width: 100%;
+    margin-bottom: 15px;
   }
   &__deliverableLabel {
     margin: 0 15px;
@@ -150,17 +179,30 @@
       padding: 0 8px;
       line-height: 20px;
     }
+    &--on_track {
+      border-color: $s-status-on-track;
+    }
+    &--slightly_behind {
+      border-color: $s-status-slightly-behind;
+    }
+    &--major_issue {
+      border-color: $s-status-major-issue;
+    }
     &__label {
-      &--on_track {
-      }
-      &--slightly_behind {
-      }
-      &--major_issue {
-      }
     }
     &__status {
       background: $n-darkest;
       color: $n-white;
+      &--on_track {
+        background-color: $s-status-on-track;
+      }
+      &--slightly_behind {
+        background-color: $s-status-slightly-behind;
+        color: $n-darkest;
+      }
+      &--major_issue {
+        background-color: $s-status-major-issue;
+      }
     }
   }
   &__deliverableMain {
@@ -169,6 +211,38 @@
     &__description {
     }
     &__status {
+      &__btn {
+        font-size: 10px;
+        padding: 1px 2px;
+        height: 18px;
+        min-width: 100px;
+        margin: 0 20px 0 0;
+        background: transparent;
+        border: 1px solid $s-status-no-status;
+        color: $n-darkest;
+        border-radius: 0;
+        &--on_track {
+          border-color: $s-status-on-track;
+          &--active {
+            background-color: $s-status-on-track !important;
+            color: $n-white !important;
+          }
+        }
+        &--slightly_behind {
+          border-color: $s-status-slightly-behind;
+          &--active {
+            background-color: $s-status-slightly-behind !important;
+            color: $n-black !important;
+          }
+        }
+        &--major_issue {
+          border-color: $s-status-major-issue;
+          &--active {
+            background-color: $s-status-major-issue !important;
+            color: $n-white !important;
+          }
+        }
+      }
     }
     &__removeBtn {
     }
@@ -177,7 +251,13 @@
   }
   &__addDeliverableBtn {
     clear: both;
-    margin: 15px 0 15px 15px;
+    margin: 10px 0 15px 15px;
     width: 135px;
+    height: 20px;
+    font-size: 12px;
+    line-height: 18px;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
   }
 }

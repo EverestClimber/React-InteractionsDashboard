@@ -101,10 +101,21 @@ const EPFormHCPs = ({
                     <Badge className="objscount">
                       {hcpItem.objectives.size} OBJECTIVES
                     </Badge>
-                    <div className="affiliateGroups">
-                      {hcpItem.hcp.affiliate_group_names.map((name) => (
-                        <Badge key={name}>{name.toUpperCase()}</Badge>
-                      ))}
+                    <div className="pull-right">
+                      <div className="location">
+                        <span className="icon-hcp-location" />
+                        <span className="location__city">
+                          {hcpItem.hcp.city}
+                        </span>
+                        {', '}
+                        <span className="location__country">
+                          {hcpItem.hcp.country}
+                        </span>
+                      </div>
+                      <div className="institution_name">
+                        <span className="icon-hcp-hospital" />{' '}
+                        {hcpItem.hcp.institution_name}
+                      </div>
                     </div>
                     <div className="tas">{hcpItem.hcp.ta_names.join(', ')}</div>
                   </div>
@@ -220,11 +231,12 @@ const EPFormHCPs = ({
                         <ControlLabel>MEDICAL PLAN OBJECTIVE</ControlLabel>
                         {objective.id ? (
                           <div className="selection">
-                            {objective.medical_plan_objective_id &&
+                            {(objective.medical_plan_objective_id &&
                               medicalPlanObjectives.getIn([
                                 objective.medical_plan_objective_id,
                                 'name',
-                              ])}
+                              ])) ||
+                              '-'}
                           </div>
                         ) : (
                           <SearchSelect
@@ -252,8 +264,12 @@ const EPFormHCPs = ({
                         <ControlLabel>PROJECT</ControlLabel>
                         {objective.id ? (
                           <div className="selection">
-                            {objective.project_id &&
-                              projects.getIn([objective.project_id, 'title'])}
+                            {(objective.project_id &&
+                              projects.getIn([
+                                objective.project_id,
+                                'title',
+                              ])) ||
+                              '-'}
                           </div>
                         ) : (
                           <SearchSelect
@@ -283,8 +299,9 @@ const EPFormHCPs = ({
                         </ControlLabel>
                         {objective.id ? (
                           <div className="selection">
-                            {objective.bcsf_id &&
-                              projects.getIn([objective.bcsf_id, 'name'])}
+                            {(objective.bcsf_id &&
+                              projects.getIn([objective.bcsf_id, 'name'])) ||
+                              '-'}
                           </div>
                         ) : (
                           <SearchSelect

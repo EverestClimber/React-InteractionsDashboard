@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Row } from 'react-bootstrap';
+import { Badge, Button, Row } from 'react-bootstrap';
 import { EPFormObjective } from 'components/EPFormObjective';
 import { ProjectDeliverable } from 'records/ProjectObjective';
 import { EPFormPlanItem } from 'components/EPFormPlanItem';
@@ -33,7 +33,7 @@ const EPFormProjects = ({
 }) => (
   <div className="EPFormProjects EPForm__step">
     <ProjectSelector
-      items={projects.toJS()}
+      items={projects.valueSeq().toJS()}
       selectedItems={selectedProjects}
       searchItems={searchProjects}
       fetchItem={fetchProject}
@@ -48,8 +48,21 @@ const EPFormProjects = ({
           <EPFormPlanItem
             key={projectItem.project_id}
             {...{
+              className: 'EPForm__ProjectItem',
               planItem: projectItem,
-              title: projectItem.project.title,
+              title: (
+                <div className="EPForm__ProjectItem__title">
+                  {projectItem.project.title}
+                  <Badge className="objscount">
+                    {projectItem.objectives.size} OBJECTIVES
+                  </Badge>
+                  <div className="affiliateGroups">
+                    {projectItem.project.affiliate_group_names.map((name) => (
+                      <Badge key={name}>{name.toUpperCase()}</Badge>
+                    ))}
+                  </div>
+                </div>
+              ),
               remove: () =>
                 selectProjects(selectedProjects.delete(projectItem.project_id)),
               setRemoved: () =>

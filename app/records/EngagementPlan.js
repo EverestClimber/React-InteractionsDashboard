@@ -110,12 +110,18 @@ export class EngagementPlanHCPItem extends Record({
       'objectives',
       new List(
         item.objectives.map((objectiveData) =>
-          HCPObjective.fromApiData(objectiveData)
+          HCPObjective.fromApiData({
+            ...objectiveData,
+            hcp_id: item.hcp_id,
+          })
         )
       )
     );
     if (!item.objectives.size) {
-      item = item.set('objectives', new List([HCPObjective.fromApiData()]));
+      item = item.set(
+        'objectives',
+        new List([HCPObjective.fromApiData({ hcp_id: item.hcp_id })])
+      );
     }
     item = item.set(
       'comments',
@@ -170,12 +176,20 @@ export class EngagementPlanProjectItem extends Record({
       'objectives',
       new List(
         item.objectives.map((objectiveData) =>
-          ProjectObjective.fromApiData(objectiveData)
+          ProjectObjective.fromApiData({
+            ...objectiveData,
+            project_id: item.project_id,
+          })
         )
       )
     );
     if (!item.objectives.size) {
-      item = item.set('objectives', new List([ProjectObjective.fromApiData()]));
+      item = item.set(
+        'objectives',
+        new List([
+          ProjectObjective.fromApiData({ project_id: item.project_id }),
+        ])
+      );
     }
     item = item.set(
       'comments',

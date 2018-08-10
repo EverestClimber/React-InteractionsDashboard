@@ -24,6 +24,7 @@
     &__body {
       margin-top: -10px;
       padding-top: 0;
+      padding-bottom: 30px;
     }
     &__title {
       color: $n-blue;
@@ -55,7 +56,11 @@
         font-size: rem(11);
         margin: 0 0 4px 0;
       }
-      &__body {}
+      &__body {
+      }
+    }
+    &__addObjective {
+      margin: 0 0 15px 0;
     }
   }
   &__HCPItem {
@@ -97,11 +102,14 @@
         color: $n-grey;
         font-size: rem(14);
       }
-      .institution_name {}
+      .institution_name {
+      }
       .location {
         margin: 0 35px 0 25px;
-        &__city {}
-        &__country {}
+        &__city {
+        }
+        &__country {
+        }
       }
     }
   }
@@ -125,6 +133,11 @@
       top: 3px;
       margin-right: 5px;
     }
+  }
+  &__removeBtn {
+    font-size: rem(24);
+    cursor: pointer;
+    margin-right: -5px;
   }
 }
 
@@ -179,7 +192,7 @@
     text-align: center;
     font-size: rem(12);
     min-width: 135px;
-    >* {
+    > * {
       padding: 0 8px;
       line-height: 20px;
     }
@@ -192,7 +205,8 @@
     &--major_issue {
       border-color: $s-status-major-issue;
     }
-    &__label {}
+    &__label {
+    }
     &__status {
       background: $n-darkest;
       color: $n-white;
@@ -211,7 +225,8 @@
   &__deliverableMain {
     flex: 1;
     width: 100%;
-    &__description {}
+    &__description {
+    }
     &__status {
       &__btn {
         font-size: 10px;
@@ -246,8 +261,17 @@
         }
       }
     }
-    &__removeBtn {}
-    &__comments {}
+    &__removeBtn {
+      float: right;
+      cursor: pointer;
+      [class^="icon-"] {
+        font-size: rem(22);
+        line-height: 30px;
+        margin-right: -5px;
+      }
+    }
+    &__comments {
+    }
   }
   &__addDeliverableBtn {
     clear: both;

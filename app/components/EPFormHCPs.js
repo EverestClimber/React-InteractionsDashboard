@@ -381,9 +381,9 @@ export const EPHCPItem = ({
       ))}
 
       {(mode === 'create' || !hcpItem.id) && (
-        <Row className="text-center">
+        <Row className="text-center EPForm__PlanItem__addObjective">
           <Button onClick={() => addHCPObjective(hcpItem.hcp_id)}>
-            New Objective
+            <span className="icon-button-new-objective" /> New Objective
           </Button>
         </Row>
       )}

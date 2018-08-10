@@ -62,12 +62,12 @@ export const EPFormObjective = ({
       <div className="EPForm__PlanItem__section__heading EPFormObjective__heading">
         {(mode === 'create' || !objective.id) &&
           !hideRemove && (
-            <Button
-              className="pull-right"
+            <div
+              className="EPFormObjective__removeBtn pull-right icon-delete"
               onClick={() => removeObjective(itemObjectId, objectiveIdx)}
-            >
-              ✖
-            </Button>
+              role="button"
+              tabIndex={0}
+            />
           )}
         <span className="icon-objective" /> Objective {objectiveIdx + 1}
         {objective.comments.map((comment) => (
@@ -154,7 +154,34 @@ export const EPFormObjective = ({
                       </div>
 
                       <div className="EPFormDeliverable__deliverableMain">
-                        <div className="EPFormDeliverable__deliverableMain__description">
+                        <div className="EPFormDeliverable__deliverableMain__removeBtn">
+                          {(mode === 'create' || !objective.id) &&
+                            deliverablesByQuarter[quarterN].length > 1 && (
+                              <div
+                                className="icon-delete"
+                                onClick={() =>
+                                  removeDeliverable(
+                                    itemObjectId,
+                                    objectiveIdx,
+                                    deliverableIdx
+                                  )
+                                }
+                                role="button"
+                                tabIndex={0}
+                              />
+                            )}
+                        </div>
+                        <div
+                          className="EPFormDeliverable__deliverableMain__description"
+                          style={{
+                            // make roon for remove btn. when shown
+                            width:
+                              (mode === 'create' || !objective.id) &&
+                              deliverablesByQuarter[quarterN].length > 1
+                                ? 'calc(100% - 25px)'
+                                : '100%',
+                          }}
+                        >
                           {deliverable.quarter_type !== 'past' &&
                           (!deliverable.id && mode !== 'view') ? (
                             <FormGroup
@@ -235,22 +262,6 @@ export const EPFormObjective = ({
                               </div>
                             </div>
                           )}
-                        <div className="EPFormDeliverable__deliverableMain__removeBtn">
-                          {(mode === 'create' || !objective.id) &&
-                            !hideRemove && (
-                              <Button
-                                onClick={() =>
-                                  removeDeliverable(
-                                    itemObjectId,
-                                    objectiveIdx,
-                                    deliverableIdx
-                                  )
-                                }
-                              >
-                                ✖
-                              </Button>
-                            )}
-                        </div>
                         <div className="EPFormDeliverable__deliverableMain__comments">
                           {deliverable.comments.map((comment) => (
                             <Comment comment={comment} key={comment.id} />

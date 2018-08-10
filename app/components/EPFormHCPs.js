@@ -214,6 +214,7 @@ export const EPHCPItem = ({
             validationState={
               (fieldsTouched.get(`hcp_items.${hcpItemIdx}.reason`) ||
                 showAllStepErrors) &&
+              fieldsErrors &&
               fieldsErrors.get(`hcp_items.${hcpItemIdx}.reason`)
                 ? 'error'
                 : null
@@ -262,7 +263,8 @@ export const EPHCPItem = ({
       ) : (
         <div className="EPForm__PlanItem__section">
           <div className="EPForm__PlanItem__section__heading">
-            REASON{hcpItem.reason === 'other' ? ' (OTHER)' : ''}
+            REASON
+            {hcpItem.reason === 'other' ? ' (OTHER)' : ''}
           </div>
           <div className="EPForm__PlanItem__section__body">
             {hcpItem.reason === 'other' ? hcpItem.reasonOther : hcpItem.reason}
@@ -357,7 +359,7 @@ export const EPHCPItem = ({
                 {objective.id ? (
                   <div className="selection">
                     {(objective.bcsf_id &&
-                      projects.getIn([objective.bcsf_id, 'name'])) ||
+                      bcsfs.getIn([objective.bcsf_id, 'name'])) ||
                       '-'}
                   </div>
                 ) : (

@@ -1,9 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Badge, Button, Row } from 'react-bootstrap';
+import {
+  Badge,
+  Button,
+  Col,
+  ControlLabel,
+  FormGroup,
+  Row,
+} from 'react-bootstrap';
 import { EPFormObjective } from 'components/EPFormObjective';
 import { ProjectDeliverable } from 'records/ProjectObjective';
 import { EPFormPlanItem } from 'components/EPFormPlanItem';
+import { SearchSelect } from './forms';
 import ProjectSelector from './ProjectSelector';
 
 const makeKey = (obj, idx) => `${obj.id || ''}.${idx}`;
@@ -20,6 +28,8 @@ const EPFormProjects = ({
   removeProject,
   updateProjectItem,
   // objectives:
+  medicalPlanObjectives,
+  bcsfs,
   addProjectObjective,
   updateProjectObjective,
   removeProjectObjective,
@@ -56,8 +66,8 @@ const EPFormProjects = ({
               currentQuarter,
               projectItem,
               projectItemIdx,
-              // medicalPlanObjectives,
-              // bcsfs,
+              medicalPlanObjectives,
+              bcsfs,
               // for create/edit mode:
               updateProjectItem,
               selectProjects,
@@ -109,8 +119,8 @@ export const EPProjectItem = ({
   currentQuarter,
   projectItem,
   projectItemIdx,
-  // medicalPlanObjectives,
-  // bcsfs,
+  medicalPlanObjectives,
+  bcsfs,
   // for create/edit mode:
   updateProjectItem,
   selectProjects,
@@ -177,7 +187,74 @@ export const EPProjectItem = ({
           updateDeliverable: updateProjectObjectiveDeliverable,
           removeDeliverable: removeProjectObjectiveDeliverable,
         }}
-      />
+      >
+        <Row>
+          <Col sm={6}>
+            <FormGroup>
+              <ControlLabel>MEDICAL PLAN OBJECTIVE</ControlLabel>
+              {objective.id ? (
+                <div className="selection">
+                  {(objective.medical_plan_objective_id &&
+                    medicalPlanObjectives.getIn([
+                      objective.medical_plan_objective_id,
+                      'name',
+                    ])) ||
+                    '-'}
+                </div>
+              ) : (
+                <SearchSelect
+                  input={{
+                    value: objective.medical_plan_objective_id || '',
+                    onChange: (val) =>
+                      updateProjectObjective(
+                        projectItem.project_id,
+                        objectiveIdx,
+                        {
+                          medical_plan_objective_id: +val || '',
+                        }
+                      ),
+                  }}
+                  disabled={mode === 'update' && objective.id}
+                  options={Array.from(medicalPlanObjectives.values()).map(
+                    (it) => ({ value: it.id, label: it.name })
+                  )}
+                />
+              )}
+            </FormGroup>
+          </Col>
+          <Col sm={6}>
+            <FormGroup>
+              <ControlLabel>BRAND CRITICAL SUCCESS FACTOR</ControlLabel>
+              {objective.id ? (
+                <div className="selection">
+                  {(objective.bcsf_id &&
+                    bcsfs.getIn([objective.bcsf_id, 'name'])) ||
+                    '-'}
+                </div>
+              ) : (
+                <SearchSelect
+                  input={{
+                    value: objective.bcsf_id || '',
+                    onChange: (val) =>
+                      updateProjectObjective(
+                        projectItem.project_id,
+                        objectiveIdx,
+                        {
+                          bcsf_id: +val || '',
+                        }
+                      ),
+                  }}
+                  disabled={mode === 'update' && objective.id}
+                  options={Array.from(bcsfs.values()).map((it) => ({
+                    value: it.id,
+                    label: it.name,
+                  }))}
+                />
+              )}
+            </FormGroup>
+          </Col>
+        </Row>
+      </EPFormObjective>
     ))}
     {(mode === 'create' || !projectItem.id) && (
       <Row className="text-center">

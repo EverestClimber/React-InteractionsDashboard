@@ -7,6 +7,8 @@ export class ProjectObjective extends Record({
   engagement_plan_item_id: undefined,
   project_id: undefined,
   deliverables: new List(),
+  bcsf_id: null,
+  medical_plan_objective_id: null,
   // fields
   description: '',
   created_at: undefined,

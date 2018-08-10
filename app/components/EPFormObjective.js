@@ -1,5 +1,6 @@
 import React from 'react';
 import { FormControl, FormGroup, ControlLabel, Button } from 'react-bootstrap';
+import Comment from 'components/Comment';
 import { Options } from './forms';
 
 const makeKey = (obj, idx) => `${obj.id || ''}.${idx}`;
@@ -68,10 +69,13 @@ export const EPFormObjective = ({
               ✖
             </Button>
           )}
-        Objective {objectiveIdx + 1}
+        <span className="icon-objective" /> Objective {objectiveIdx + 1}
+        {objective.comments.map((comment) => (
+          <Comment comment={comment} key={comment.id} />
+        ))}
       </div>
       <div className="EPForm__PlanItem__section__body EPFormObjective__body">
-        {mode === 'create' || !objective.id ? (
+        {mode === 'create' || (!objective.id && mode !== 'view') ? (
           <FormGroup
             validationState={
               (fieldsTouched.get(
@@ -152,7 +156,7 @@ export const EPFormObjective = ({
                       <div className="EPFormDeliverable__deliverableMain">
                         <div className="EPFormDeliverable__deliverableMain__description">
                           {deliverable.quarter_type !== 'past' &&
-                          !deliverable.id ? (
+                          (!deliverable.id && mode !== 'view') ? (
                             <FormGroup
                               validationState={
                                 (fieldsTouched.get(
@@ -247,7 +251,11 @@ export const EPFormObjective = ({
                               </Button>
                             )}
                         </div>
-                        <div className="EPFormDeliverable__deliverableMain__comments" />
+                        <div className="EPFormDeliverable__deliverableMain__comments">
+                          {deliverable.comments.map((comment) => (
+                            <Comment comment={comment} key={comment.id} />
+                          ))}
+                        </div>
                       </div>
                     </div>
                   )

@@ -41,16 +41,11 @@
       position: absolute;
       bottom: 0;
       left: 50%;
-      margin-left: -50px;
-      width: 50px;
-      height: 25px;
-      line-height: 20px;
-      text-align: center;
       cursor: pointer;
-      border: 1px solid $n-blue;
-      border-bottom: 0;
       color: $n-blue;
-      font-size: rem(26);
+      font-size: 40px;
+      line-height: 20px;
+      transform: translateX(-50%);
     }
     &__section {
       border-top: 1px solid $n-grey-light;
@@ -60,8 +55,7 @@
         font-size: rem(11);
         margin: 0 0 4px 0;
       }
-      &__body {
-      }
+      &__body {}
     }
   }
   &__HCPItem {
@@ -83,6 +77,11 @@
             border-color: $n-orange;
             color: $n-white;
           }
+          &--commented {
+            background: $n-blue;
+            border-color: $n-blue;
+            color: $n-white;
+          }
         }
       }
       [class^="icon-"] {
@@ -98,30 +97,34 @@
         color: $n-grey;
         font-size: rem(14);
       }
-      .institution_name {
-      }
+      .institution_name {}
       .location {
         margin: 0 35px 0 25px;
-        &__city {
-        }
-        &__country {
-        }
+        &__city {}
+        &__country {}
       }
     }
   }
   &__ProjectItem {
     .affiliateGroups {
       float: right;
-      margin: 2px 30px 0 0;
+      margin: 0 30px 0 0;
+      padding: 0 0 15px 0;
     }
   }
 }
 
 .EPFormObjective {
   &__heading {
-    font-size: rem(20);
+    font-size: rem(16);
     color: $n-darkest;
     margin: 8px 0 10px 0;
+    [class^="icon-"] {
+      font-size: rem(22);
+      position: relative;
+      top: 3px;
+      margin-right: 5px;
+    }
   }
 }
 
@@ -166,6 +169,7 @@
     display: flex;
     width: 100%;
     margin-bottom: 15px;
+    padding-top: 10px;
   }
   &__deliverableLabel {
     margin: 0 15px;
@@ -175,7 +179,7 @@
     text-align: center;
     font-size: rem(12);
     min-width: 135px;
-    > * {
+    >* {
       padding: 0 8px;
       line-height: 20px;
     }
@@ -188,8 +192,7 @@
     &--major_issue {
       border-color: $s-status-major-issue;
     }
-    &__label {
-    }
+    &__label {}
     &__status {
       background: $n-darkest;
       color: $n-white;
@@ -208,8 +211,7 @@
   &__deliverableMain {
     flex: 1;
     width: 100%;
-    &__description {
-    }
+    &__description {}
     &__status {
       &__btn {
         font-size: 10px;
@@ -244,10 +246,8 @@
         }
       }
     }
-    &__removeBtn {
-    }
-    &__comments {
-    }
+    &__removeBtn {}
+    &__comments {}
   }
   &__addDeliverableBtn {
     clear: both;

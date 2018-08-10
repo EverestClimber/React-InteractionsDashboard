@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import { Record, List } from 'immutable';
+import Comment from './Comment';
 
 export class ProjectObjective extends Record({
   id: undefined,
@@ -9,6 +10,7 @@ export class ProjectObjective extends Record({
   deliverables: new List(),
   bcsf_id: null,
   medical_plan_objective_id: null,
+  comments: new List(),
   // fields
   description: '',
   created_at: undefined,
@@ -41,6 +43,14 @@ export class ProjectObjective extends Record({
         new List([ProjectDeliverable.fromApiData({ quarter: currentQuarter })])
       );
     }
+    objective = objective.set(
+      'comments',
+      new List(
+        objective.comments.map((commentData) =>
+          Comment.fromApiData(commentData)
+        )
+      )
+    );
     return objective;
   }
 }
@@ -49,6 +59,7 @@ export class ProjectDeliverable extends Record({
   id: undefined,
   // relationships
   objective_id: undefined,
+  comments: new List(),
   // fields
   quarter: 1,
   quarter_type: 'present',
@@ -74,6 +85,13 @@ export class ProjectDeliverable extends Record({
   }
 
   static fromApiData(data) {
-    return new ProjectDeliverable(data);
+    let item = new ProjectDeliverable(data);
+    item = item.set(
+      'comments',
+      new List(
+        item.comments.map((commentData) => Comment.fromApiData(commentData))
+      )
+    );
+    return item;
   }
 }

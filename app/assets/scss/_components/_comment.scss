@@ -1,0 +1,30 @@
+.Comment {
+  &__message {
+    position: relative;
+    padding: 8px 15px;
+    margin: 15px 0 10px 0;
+    background: $n-blue;
+    color: $n-white;
+    border-radius: 3px;
+    font-size: rem(13);
+    &:after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 15px;
+      width: 0;
+      height: 0;
+      border-top: 8px solid $n-blue;
+      border-right: 15px solid transparent;
+    }
+  }
+  &__details {
+    color: $n-blue;
+    font-size: rem(10);
+    text-transform: uppercase;
+    &__name {
+    }
+    &__date {
+    }
+  }
+}

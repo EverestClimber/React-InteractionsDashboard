@@ -1,13 +1,19 @@
 import React from 'react';
-import { Alert } from 'react-bootstrap';
+import moment from 'moment';
 
 const Comment = ({ comment, ...rest }) => (
-  <Alert className="Comment" bsStyle="info" {...rest}>
-    {comment.message}
-    <em className="pull-right">
-      by <strong>{comment.user.email}</strong>
-    </em>
-  </Alert>
+  <div className="Comment" {...rest}>
+    <div className="Comment__message">{comment.message}</div>
+    <div className="Comment__details">
+      <span className="Comment__details__name">
+        {comment.user.first_name} {comment.user.last_name}
+      </span>
+      {', '}
+      <span className="Comment__details__date">
+        {moment(comment.created_at).format('MMM DD, YYYY - HH:mm (UTCZ)')}
+      </span>
+    </div>
+  </div>
 );
 
 export default Comment;

@@ -25,6 +25,12 @@ $ctrl-height: 36px;
   }
 }
 
+:focus {
+  outline-style: none;
+  box-shadow: none;
+  border-color: transparent;
+}
+
 .input-group {
   .input-group-addon {
     background: transparent;
@@ -44,12 +50,14 @@ $ctrl-height: 36px;
 }
 
 // .btn-default:active {
-  //   background-color: inherit;
-  // }
-
+//   background-color: inherit;
+// }
 .btn-primary {
   background: $s-btn-primary-bg;
   color: $s-btn-primary-text-color;
+  .text-center>&:last-child {
+    margin-right: 0;
+  }
 }
 
 .form-control {

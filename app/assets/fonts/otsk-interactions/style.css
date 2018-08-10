@@ -1,17 +1,17 @@
 @font-face {
-  font-family: 'otsk-interactions-20180712';
-  src:  url('fonts/otsk-interactions-20180712.eot?8ckdd3');
-  src:  url('fonts/otsk-interactions-20180712.eot?8ckdd3#iefix') format('embedded-opentype'),
-    url('fonts/otsk-interactions-20180712.ttf?8ckdd3') format('truetype'),
-    url('fonts/otsk-interactions-20180712.woff?8ckdd3') format('woff'),
-    url('fonts/otsk-interactions-20180712.svg?8ckdd3#otsk-interactions-20180712') format('svg');
+  font-family: 'otsk-interactions-20180808';
+  src:  url('fonts/otsk-interactions-20180808.eot?m32woq');
+  src:  url('fonts/otsk-interactions-20180808.eot?m32woq#iefix') format('embedded-opentype'),
+    url('fonts/otsk-interactions-20180808.ttf?m32woq') format('truetype'),
+    url('fonts/otsk-interactions-20180808.woff?m32woq') format('woff'),
+    url('fonts/otsk-interactions-20180808.svg?m32woq#otsk-interactions-20180808') format('svg');
   font-weight: normal;
   font-style: normal;
 }
 
 [class^="icon-"], [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'otsk-interactions-20180712' !important;
+  font-family: 'otsk-interactions-20180808' !important;
   speak: none;
   font-style: normal;
   font-weight: normal;
@@ -24,6 +24,48 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-add-plus:before {
+  content: "\e913";
+}
+.icon-button-approve:before {
+  content: "\e914";
+}
+.icon-button-comment-off:before {
+  content: "\e915";
+}
+.icon-button-comment-on:before {
+  content: "\e916";
+}
+.icon-button-new-objective:before {
+  content: "\e917";
+}
+.icon-button-rec-interaction:before {
+  content: "\e918";
+}
+.icon-button-update-plan:before {
+  content: "\e919";
+}
+.icon-empty-quarters:before {
+  content: "\e91a";
+}
+.icon-filled-quarters:before {
+  content: "\e91b";
+}
+.icon-objective:before {
+  content: "\e91c";
+}
+.icon-read-more:before {
+  content: "\e91d";
+}
+.icon-revert:before {
+  content: "\e91e";
+}
+.icon-section-collapse:before {
+  content: "\e91f";
+}
+.icon-section-expand:before {
+  content: "\e920";
+}
 .icon-calendar:before {
   content: "\e900";
 }

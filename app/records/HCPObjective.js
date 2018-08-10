@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import { Record, List } from 'immutable';
+import Comment from './Comment';
 
 export class HCPObjective extends Record({
   id: undefined,
@@ -10,6 +11,7 @@ export class HCPObjective extends Record({
   bcsf_id: null,
   medical_plan_objective_id: null,
   project_id: null,
+  comments: new List(),
   // fields
   description: '',
   approved: undefined,
@@ -49,6 +51,14 @@ export class HCPObjective extends Record({
         new List([HCPDeliverable.fromApiData({ quarter: currentQuarter })])
       );
     }
+    objective = objective.set(
+      'comments',
+      new List(
+        objective.comments.map((commentData) =>
+          Comment.fromApiData(commentData)
+        )
+      )
+    );
     return objective;
   }
 }
@@ -57,6 +67,7 @@ export class HCPDeliverable extends Record({
   id: undefined,
   // relationships
   objective_id: undefined,
+  comments: new List(),
   // fields
   quarter: 1,
   quarter_type: 'current',
@@ -83,6 +94,13 @@ export class HCPDeliverable extends Record({
   }
 
   static fromApiData(data) {
-    return new HCPDeliverable(data);
+    let item = new HCPDeliverable(data);
+    item = item.set(
+      'comments',
+      new List(
+        item.comments.map((commentData) => Comment.fromApiData(commentData))
+      )
+    );
+    return item;
   }
 }

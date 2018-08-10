@@ -10,9 +10,23 @@
 (function() {
 	function addIcon(el, entity) {
 		var html = el.innerHTML;
-		el.innerHTML = '<span style="font-family: \'otsk-interactions-20180712\'">' + entity + '</span>' + html;
+		el.innerHTML = '<span style="font-family: \'otsk-interactions-20180808\'">' + entity + '</span>' + html;
 	}
 	var icons = {
+		'icon-add-plus': '&#xe913;',
+		'icon-button-approve': '&#xe914;',
+		'icon-button-comment-off': '&#xe915;',
+		'icon-button-comment-on': '&#xe916;',
+		'icon-button-new-objective': '&#xe917;',
+		'icon-button-rec-interaction': '&#xe918;',
+		'icon-button-update-plan': '&#xe919;',
+		'icon-empty-quarters': '&#xe91a;',
+		'icon-filled-quarters': '&#xe91b;',
+		'icon-objective': '&#xe91c;',
+		'icon-read-more': '&#xe91d;',
+		'icon-revert': '&#xe91e;',
+		'icon-section-collapse': '&#xe91f;',
+		'icon-section-expand': '&#xe920;',
 		'icon-calendar': '&#xe900;',
 		'icon-delete': '&#xe901;',
 		'icon-hcp-hospital': '&#xe902;',

@@ -1,5 +1,6 @@
 import React from 'react';
 import * as classNames from 'classnames';
+import Comment from 'components/Comment';
 import { ControlLabel, FormGroup, FormControl, Panel } from 'react-bootstrap';
 
 export class EPFormPlanItem extends React.PureComponent {
@@ -36,8 +37,8 @@ export class EPFormPlanItem extends React.PureComponent {
       planItem,
       title,
       onReasonRemovedChange,
-      children,
       className,
+      children,
     } = this.props;
 
     const baseClassName = 'EPForm__PlanItem';
@@ -57,7 +58,7 @@ export class EPFormPlanItem extends React.PureComponent {
               className={classNames({
                 [`${baseClassName}__removeBtn`]: true,
                 'icon-delete': !this.state.removed,
-                'icon-consent-yes-sign': this.state.removed,
+                'icon-revert': this.state.removed,
               })}
               role="button"
               tabIndex={0}
@@ -71,6 +72,9 @@ export class EPFormPlanItem extends React.PureComponent {
             [`${baseClassName}__body--collapsed`]: this.state.collapsed,
           })}
         >
+          {planItem.comments.map((comment) => (
+            <Comment comment={comment} key={comment.id} />
+          ))}
           {this.state.collapsed || (
             <div className={`${baseClassName}__body__content`}>
               {this.state.removed &&
@@ -99,13 +103,15 @@ export class EPFormPlanItem extends React.PureComponent {
             </div>
           )}
           <div
-            className={`${baseClassName}__collapseBtn`}
+            className={classNames({
+              [`${baseClassName}__collapseBtn`]: true,
+              'icon-section-expand': this.state.collapsed,
+              'icon-section-collapse': !this.state.collapsed,
+            })}
             onClick={this.handleClickCollapseBtn}
             role="button"
             tabIndex={0}
-          >
-            {this.state.collapsed ? '⌄' : '⌃'}
-          </div>
+          />
         </Panel.Body>
       </Panel>
     );

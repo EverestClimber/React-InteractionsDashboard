@@ -12,7 +12,6 @@ import {
 import * as classNames from 'classnames';
 import { EngagementPlanHCPItem } from 'records/EngagementPlan';
 import { EPFormObjective } from 'components/EPFormObjective';
-import Comment from 'components/Comment';
 import { HCPDeliverable } from 'records/HCPObjective';
 import { EPFormPlanItem } from 'components/EPFormPlanItem';
 import { Options, SearchSelect } from './forms';
@@ -205,10 +204,7 @@ export const EPHCPItem = ({
           updateHCPItem(hcpItem.hcp_id, { reason_removed }),
       }}
     >
-      {hcpItem.comments.map((comment) => (
-        <Comment comment={comment} key={comment.id} />
-      ))}
-      {mode === 'create' || !hcpItem.id ? (
+      {mode === 'create' || (!hcpItem.id && mode !== 'view') ? (
         <div>
           <FormGroup
             validationState={
@@ -300,7 +296,7 @@ export const EPHCPItem = ({
             <Col sm={4}>
               <FormGroup>
                 <ControlLabel>MEDICAL PLAN OBJECTIVE</ControlLabel>
-                {objective.id ? (
+                {objective.id || mode === 'view' ? (
                   <div className="selection">
                     {(objective.medical_plan_objective_id &&
                       medicalPlanObjectives.getIn([
@@ -329,7 +325,7 @@ export const EPHCPItem = ({
             <Col sm={4}>
               <FormGroup>
                 <ControlLabel>PROJECT</ControlLabel>
-                {objective.id ? (
+                {objective.id || mode === 'view' ? (
                   <div className="selection">
                     {(objective.project_id &&
                       projects.getIn([objective.project_id, 'title'])) ||
@@ -356,7 +352,7 @@ export const EPHCPItem = ({
             <Col sm={4}>
               <FormGroup>
                 <ControlLabel>BRAND CRITICAL SUCCESS FACTOR</ControlLabel>
-                {objective.id ? (
+                {objective.id || mode === 'view' ? (
                   <div className="selection">
                     {(objective.bcsf_id &&
                       bcsfs.getIn([objective.bcsf_id, 'name'])) ||

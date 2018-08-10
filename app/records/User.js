@@ -10,6 +10,8 @@ export class User extends Record({
   ta_names: new List(),
   // fields
   email: '',
+  first_name: '',
+  last_name: '',
   group_names: [],
   permissions: [],
 }) {
@@ -33,14 +35,20 @@ export class User extends Record({
     user = user.set('affiliate_groups', new List(user.affiliate_groups));
     user = user.set('tas', new List(user.tas));
     if (tasById) {
-      user = user.set('ta_names', new List(user.tas.map(
-        (taId) => tasById.getIn([taId, 'name'], '')
-      )));
+      user = user.set(
+        'ta_names',
+        new List(user.tas.map((taId) => tasById.getIn([taId, 'name'], '')))
+      );
     }
     if (affiliateGroupsById) {
-      user = user.set('affiliate_group_names', new List(user.affiliate_groups.map(
-        (agId) => affiliateGroupsById.getIn([agId, 'name'], '')
-      )));
+      user = user.set(
+        'affiliate_group_names',
+        new List(
+          user.affiliate_groups.map((agId) =>
+            affiliateGroupsById.getIn([agId, 'name'], '')
+          )
+        )
+      );
     }
     return user;
   }

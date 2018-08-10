@@ -192,7 +192,7 @@ export const EPProjectItem = ({
           <Col sm={6}>
             <FormGroup>
               <ControlLabel>MEDICAL PLAN OBJECTIVE</ControlLabel>
-              {objective.id ? (
+              {objective.id || mode === 'view' ? (
                 <div className="selection">
                   {(objective.medical_plan_objective_id &&
                     medicalPlanObjectives.getIn([
@@ -225,7 +225,7 @@ export const EPProjectItem = ({
           <Col sm={6}>
             <FormGroup>
               <ControlLabel>BRAND CRITICAL SUCCESS FACTOR</ControlLabel>
-              {objective.id ? (
+              {objective.id || mode === 'view' ? (
                 <div className="selection">
                   {(objective.bcsf_id &&
                     bcsfs.getIn([objective.bcsf_id, 'name'])) ||

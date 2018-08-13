@@ -7,6 +7,7 @@ export const EPFormObjective = ({
   hideRemove,
   currentQuarter,
   itemObjectId,
+  itemObject,
   objective,
   objectiveIdx,
   updateObjective,
@@ -57,7 +58,8 @@ export const EPFormObjective = ({
   return (
     <div className="EPForm__PlanItem__section">
       <div className="EPForm__PlanItem__section__heading EPFormObjective__heading">
-        {(mode === 'create' || !objective.id) &&
+        {mode !== 'view' &&
+          (mode === 'create' || !objective.id) &&
           !hideRemove && (
             <div
               className="EPFormObjective__removeBtn pull-right icon-delete"
@@ -72,7 +74,9 @@ export const EPFormObjective = ({
         ))}
       </div>
       <div className="EPForm__PlanItem__section__body EPFormObjective__body">
-        {mode === 'create' || (!objective.id && mode !== 'view') ? (
+        {!itemObject.removed_at &&
+        mode !== 'view' &&
+        (mode === 'create' || !objective.id) ? (
           <FormGroup
             validationState={
               (fieldsTouched.get(
@@ -182,9 +186,11 @@ export const EPFormObjective = ({
                           }}
                         >
                           {deliverable.quarter_type !== 'past' &&
-                          (!deliverable.id && mode !== 'view') ? (
-                            <FormGroup
-                              validationState={
+                          (!itemObject.removed_at &&
+                            !deliverable.id &&
+                            mode !== 'view') ? (
+                              <FormGroup
+                                validationState={
                                 (fieldsTouched.get(
                                   `${fieldPrefix}.objectives.${objectiveIdx}.deliverables` +
                                     `.${deliverableIdx}.description`
@@ -197,12 +203,12 @@ export const EPFormObjective = ({
                                   ? 'error'
                                   : null
                               }
-                            >
-                              <FormControl
-                                type="text"
-                                placeholder="Deliverable description"
-                                value={deliverable.description}
-                                onChange={(ev) =>
+                              >
+                                <FormControl
+                                  type="text"
+                                  placeholder="Deliverable description"
+                                  value={deliverable.description}
+                                  onChange={(ev) =>
                                   updateDeliverable(
                                     itemObjectId,
                                     objectiveIdx,
@@ -212,15 +218,17 @@ export const EPFormObjective = ({
                                     }
                                   )
                                 }
-                              />
-                            </FormGroup>
+                                />
+                              </FormGroup>
                           ) : (
                             <p>{deliverable.description}</p>
                           )}
                         </div>
                         {// when to have deliverable status editable
-                        // never in 'view' or 'create' mode
-                        mode !== 'view' &&
+                        // never for removed item
+                        !itemObject.removed_at &&
+                          // never in 'view' or 'create' mode
+                          mode !== 'view' &&
                           mode !== 'create' &&
                           // editable when freshly added
                           (!deliverable.id ||

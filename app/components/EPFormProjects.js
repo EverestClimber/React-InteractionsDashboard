@@ -172,6 +172,7 @@ export const EPProjectItem = ({
           mode,
           hideRemove: projectItem.objectives.size <= 1,
           currentQuarter,
+          itemObject: projectItem,
           itemObjectId: projectItem.project_id,
           fieldPrefix: `project_items.${projectItemIdx}`,
           objective,

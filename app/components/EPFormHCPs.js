@@ -276,6 +276,7 @@ export const EPHCPItem = ({
             mode,
             hideRemove: hcpItem.objectives.size <= 1,
             currentQuarter,
+            itemObject: hcpItem,
             itemObjectId: hcpItem.hcp_id,
             fieldPrefix: `hcp_items.${hcpItemIdx}`,
             objective,
@@ -310,7 +311,7 @@ export const EPHCPItem = ({
                 }
               >
                 <ControlLabel>MEDICAL PLAN OBJECTIVE</ControlLabel>
-                {objective.id || mode === 'view' ? (
+                {hcpItem.removed_at || objective.id || mode === 'view' ? (
                   <div className="selection">
                     {(objective.medical_plan_objective_id &&
                       medicalPlanObjectives.getIn([
@@ -353,7 +354,7 @@ export const EPHCPItem = ({
                 }
               >
                 <ControlLabel>PROJECT</ControlLabel>
-                {objective.id || mode === 'view' ? (
+                {hcpItem.removed_at || objective.id || mode === 'view' ? (
                   <div className="selection">
                     {(objective.project_id &&
                       projects.getIn([objective.project_id, 'title'])) ||
@@ -394,7 +395,7 @@ export const EPHCPItem = ({
                 }
               >
                 <ControlLabel>BRAND CRITICAL SUCCESS FACTOR</ControlLabel>
-                {objective.id || mode === 'view' ? (
+                {hcpItem.removed_at || objective.id || mode === 'view' ? (
                   <div className="selection">
                     {(objective.bcsf_id &&
                       bcsfs.getIn([objective.bcsf_id, 'name'])) ||

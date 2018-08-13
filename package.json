@@ -163,7 +163,8 @@
       "no-lonely-if": 0,
       "camelcase": 0,
       "react/no-unused-prop-types": 0,
-      "react/prop-types": 0
+      "react/prop-types": 0,
+      "no-continue": 0
     },
     "settings": {
       "import/resolver": {

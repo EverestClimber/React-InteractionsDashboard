@@ -58,12 +58,19 @@ function validateFields(state) {
         'A reason must be specified for adding HCP to the plan',
       ];
     }
-    if (hcpItem.reason === 'other' && !hcpItem.reason_other) {
+    if (
+      !hcpItem.removed_at &&
+      hcpItem.reason === 'other' &&
+      !hcpItem.reason_other
+    ) {
       fieldsErrors[0][`hcp_items.${hcpItemIdx}.reason_other`] = [
         'A reason must be specified for adding HCP to the plan',
       ];
     }
     for (const [objectiveIdx, objective] of hcpItem.objectives.entries()) {
+      if (hcpItem.removed_at) {
+        continue;
+      }
       if (!objective.description) {
         fieldsErrors[0][
           `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.description`

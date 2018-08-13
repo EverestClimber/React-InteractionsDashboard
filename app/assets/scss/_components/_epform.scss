@@ -13,12 +13,35 @@
     }
     &__heading {
       padding-top: 10px;
+      .badge {}
       &.panel-heading .badge {
         background-color: transparent;
         border: 1px solid $n-darkest;
         color: $n-darkest;
         font-size: rem(10);
         margin-top: -2px;
+        &.status {
+          &--new {
+            background: $n-violet;
+            border-color: $n-violet;
+            color: $n-white;
+          }
+          &--updated {
+            background: $n-orange;
+            border-color: $n-orange;
+            color: $n-white;
+          }
+          &--commented {
+            background: $n-blue;
+            border-color: $n-blue;
+            color: $n-white;
+          }
+          &--removed {
+            background: $n-red;
+            border-color: $n-red;
+            color: $n-white;
+          }
+        }
       }
     }
     &__body {
@@ -56,8 +79,7 @@
         font-size: rem(11);
         margin: 0 0 4px 0;
       }
-      &__body {
-      }
+      &__body {}
     }
     &__addObjective {
       margin: 0 0 15px 0;
@@ -69,25 +91,6 @@
         font-size: rem(14);
         color: $n-grey-darker;
         margin: 8px 0;
-      }
-      .badge {
-        &.status {
-          &--new {
-            background: $n-violet;
-            border-color: $n-violet;
-            color: $n-white;
-          }
-          &--updated {
-            background: $n-orange;
-            border-color: $n-orange;
-            color: $n-white;
-          }
-          &--commented {
-            background: $n-blue;
-            border-color: $n-blue;
-            color: $n-white;
-          }
-        }
       }
       [class^="icon-"] {
         font-size: rem(26);
@@ -102,14 +105,11 @@
         color: $n-grey;
         font-size: rem(14);
       }
-      .institution_name {
-      }
+      .institution_name {}
       .location {
         margin: 0 35px 0 25px;
-        &__city {
-        }
-        &__country {
-        }
+        &__city {}
+        &__country {}
       }
     }
   }
@@ -192,7 +192,7 @@
     text-align: center;
     font-size: rem(12);
     min-width: 135px;
-    > * {
+    >* {
       padding: 0 8px;
       line-height: 20px;
     }
@@ -205,8 +205,7 @@
     &--major_issue {
       border-color: $s-status-major-issue;
     }
-    &__label {
-    }
+    &__label {}
     &__status {
       background: $n-darkest;
       color: $n-white;
@@ -225,8 +224,7 @@
   &__deliverableMain {
     flex: 1;
     width: 100%;
-    &__description {
-    }
+    &__description {}
     &__status {
       &__btn {
         font-size: 10px;
@@ -270,8 +268,7 @@
         margin-right: -5px;
       }
     }
-    &__comments {
-    }
+    &__comments {}
   }
   &__addDeliverableBtn {
     clear: both;

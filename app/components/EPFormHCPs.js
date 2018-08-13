@@ -30,6 +30,7 @@ const EPFormHCPs = ({
   selectHCPs,
   removeHCP,
   updateHCPItem,
+  itemsStatuses,
   // objectives:
   bcsfs,
   medicalPlanObjectives,
@@ -70,6 +71,7 @@ const EPFormHCPs = ({
               currentQuarter,
               hcpItem,
               hcpItemIdx,
+              itemStatuses: itemsStatuses[hcpItemIdx],
               medicalPlanObjectives,
               projects,
               bcsfs,
@@ -104,6 +106,7 @@ EPFormHCPs.propTypes = {
   selectHCPs: PropTypes.func,
   removeHCP: PropTypes.func,
   updateHCPItem: PropTypes.func,
+  itemsStatuses: PropTypes.object,
   // objectives:
   bcsfs: PropTypes.object,
   medicalPlanObjectives: PropTypes.object,
@@ -126,6 +129,7 @@ export const EPHCPItem = ({
   currentQuarter,
   hcpItem,
   hcpItemIdx,
+  itemStatuses,
   updateHCPItem,
   selectHCPs,
   selectedHCPs,
@@ -141,295 +145,280 @@ export const EPHCPItem = ({
   medicalPlanObjectives,
   projects,
   bcsfs,
-}) => {
-  const wasUpdated = (itemIdx) =>
-    fieldsTouched
-      .keySeq()
-      .find((fieldName) => fieldName.indexOf(`hcp_items.${itemIdx}`) !== -1);
-
-  const getStatuses = (item, itemIdx) => {
-    const statuses = {};
-    if (!item.id) statuses.new = 1;
-    if (wasUpdated(itemIdx)) statuses.updated = 1;
-    if (item.approved) statuses.approved = 1;
-    if (item.comments.size) statuses.commented = 1;
-    return Object.keys(statuses);
-  };
-
-  return (
-    <EPFormPlanItem
-      {...{
-        mode,
-        className: 'EPForm__HCPItem',
-        planItem: hcpItem,
-        title: (
-          <div className="EPForm__HCPItem__title">
-            {hcpItem.hcp.first_name} {hcpItem.hcp.last_name}
-            {getStatuses(hcpItem, hcpItemIdx).map((status) => (
-              <Badge
-                key={status}
-                className={classNames({
-                  status: true,
-                  [`status--${status}`]: true,
-                })}
-              >
-                {status.toUpperCase()}
-              </Badge>
-            ))}
-            <Badge className="objscount">
-              {hcpItem.objectives.size} OBJECTIVES
+}) => (
+  <EPFormPlanItem
+    {...{
+      mode,
+      className: 'EPForm__HCPItem',
+      planItem: hcpItem,
+      title: (
+        <div className="EPForm__HCPItem__title">
+          {hcpItem.hcp.first_name} {hcpItem.hcp.last_name}
+          {itemStatuses.map((status) => (
+            <Badge
+              key={status}
+              className={classNames({
+                status: true,
+                [`status--${status}`]: true,
+              })}
+            >
+              {status.toUpperCase()}
             </Badge>
-            <div className="pull-right">
-              <div className="location">
-                <span className="icon-hcp-location" />
-                <span className="location__city">{hcpItem.hcp.city}</span>
-                {', '}
-                <span className="location__country">{hcpItem.hcp.country}</span>
-              </div>
-              <div className="institution_name">
-                <span className="icon-hcp-hospital" />{' '}
-                {hcpItem.hcp.institution_name}
-              </div>
+          ))}
+          <Badge className="objscount">
+            {hcpItem.objectives.size} OBJECTIVES
+          </Badge>
+          <div className="pull-right">
+            <div className="location">
+              <span className="icon-hcp-location" />
+              <span className="location__city">{hcpItem.hcp.city}</span>
+              {', '}
+              <span className="location__country">{hcpItem.hcp.country}</span>
             </div>
-            <div className="tas">{hcpItem.hcp.ta_names.join(', ')}</div>
+            <div className="institution_name">
+              <span className="icon-hcp-hospital" />{' '}
+              {hcpItem.hcp.institution_name}
+            </div>
           </div>
-        ),
-        remove: () => selectHCPs(selectedHCPs.delete(hcpItem.hcp_id)),
-        setRemoved: () =>
-          updateHCPItem(hcpItem.hcp_id, {
-            removed_at: new Date().toISOString(),
-          }),
-        unsetRemoved: () => updateHCPItem(hcpItem.hcp_id, { removed_at: null }),
-        onReasonRemovedChange: (reason_removed) =>
-          updateHCPItem(hcpItem.hcp_id, { reason_removed }),
-      }}
-    >
-      {mode === 'create' || (!hcpItem.id && mode !== 'view') ? (
-        <div>
+          <div className="tas">{hcpItem.hcp.ta_names.join(', ')}</div>
+        </div>
+      ),
+      remove: () => selectHCPs(selectedHCPs.delete(hcpItem.hcp_id)),
+      setRemoved: () =>
+        updateHCPItem(hcpItem.hcp_id, {
+          removed_at: new Date().toISOString(),
+        }),
+      unsetRemoved: () => updateHCPItem(hcpItem.hcp_id, { removed_at: null }),
+      onReasonRemovedChange: (reason_removed) =>
+        updateHCPItem(hcpItem.hcp_id, { reason_removed }),
+    }}
+  >
+    {mode === 'create' || (!hcpItem.id && mode !== 'view') ? (
+      <div>
+        <FormGroup
+          validationState={
+            (fieldsTouched.get(`hcp_items.${hcpItemIdx}.reason`) ||
+              showAllStepErrors) &&
+            fieldsErrors &&
+            fieldsErrors.get(`hcp_items.${hcpItemIdx}.reason`)
+              ? 'error'
+              : null
+          }
+        >
+          <FormControl
+            componentClass="select"
+            value={hcpItem.reason}
+            onChange={(ev) =>
+              updateHCPItem(hcpItem.hcp_id, {
+                reason: ev.target.value,
+              })
+            }
+          >
+            <option disabled value="">
+              Select reason for adding HCP to the plan
+            </option>
+            <Options
+              choices={Object.entries(EngagementPlanHCPItem.reason_choices)}
+            />
+          </FormControl>
+        </FormGroup>
+        {hcpItem.reason === 'other' && (
           <FormGroup
             validationState={
-              (fieldsTouched.get(`hcp_items.${hcpItemIdx}.reason`) ||
+              (fieldsTouched.get(`hcp_items.${hcpItemIdx}.reason_other`) ||
                 showAllStepErrors) &&
-              fieldsErrors &&
-              fieldsErrors.get(`hcp_items.${hcpItemIdx}.reason`)
+              fieldsErrors.get(`hcp_items.${hcpItemIdx}.reason_other`)
                 ? 'error'
                 : null
             }
           >
             <FormControl
-              componentClass="select"
-              value={hcpItem.reason}
+              componentClass="textarea"
+              placeholder="Other reason"
+              value={hcpItem.reason_other}
               onChange={(ev) =>
                 updateHCPItem(hcpItem.hcp_id, {
-                  reason: ev.target.value,
+                  reason_other: ev.target.value,
                 })
               }
-            >
-              <option disabled value="">
-                Select reason for adding HCP to the plan
-              </option>
-              <Options
-                choices={Object.entries(EngagementPlanHCPItem.reason_choices)}
-              />
-            </FormControl>
+            />
           </FormGroup>
-          {hcpItem.reason === 'other' && (
+        )}
+      </div>
+    ) : (
+      <div className="EPForm__PlanItem__section">
+        <div className="EPForm__PlanItem__section__heading">
+          REASON
+          {hcpItem.reason === 'other' ? ' (OTHER)' : ''}
+        </div>
+        <div className="EPForm__PlanItem__section__body">
+          {hcpItem.reason === 'other' ? hcpItem.reason_other : hcpItem.reason}
+        </div>
+      </div>
+    )}
+
+    <br />
+    {hcpItem.objectives.map((objective, objectiveIdx) => (
+      <EPFormObjective
+        key={makeKey(objective, objectiveIdx)}
+        {...{
+          mode,
+          hideRemove: hcpItem.objectives.size <= 1,
+          currentQuarter,
+          itemObject: hcpItem,
+          itemObjectId: hcpItem.hcp_id,
+          fieldPrefix: `hcp_items.${hcpItemIdx}`,
+          objective,
+          objectiveIdx,
+          deliverableStatusChoices: HCPDeliverable.status_choices,
+          fieldsTouched,
+          // for create/edit mode:
+          fieldsErrors,
+          showAllStepErrors,
+          updateObjective: updateHCPObjective,
+          removeObjective: removeHCPObjective,
+          addDeliverable: addHCPObjectiveDeliverable,
+          updateDeliverable: updateHCPObjectiveDeliverable,
+          removeDeliverable: removeHCPObjectiveDeliverable,
+        }}
+      >
+        <Row>
+          <Col sm={4}>
             <FormGroup
               validationState={
-                (fieldsTouched.get(`hcp_items.${hcpItemIdx}.reason_other`) ||
+                !objective.id &&
+                mode !== 'view' &&
+                ((fieldsTouched.get(
+                  `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.medical_plan_objective_id`
+                ) ||
                   showAllStepErrors) &&
-                fieldsErrors.get(`hcp_items.${hcpItemIdx}.reason_other`)
+                  fieldsErrors.get(
+                    `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.medical_plan_objective_id`
+                  ))
                   ? 'error'
                   : null
               }
             >
-              <FormControl
-                componentClass="textarea"
-                placeholder="Other reason"
-                value={hcpItem.reason_other}
-                onChange={(ev) =>
-                  updateHCPItem(hcpItem.hcp_id, {
-                    reason_other: ev.target.value,
-                  })
-                }
-              />
+              <ControlLabel>MEDICAL PLAN OBJECTIVE</ControlLabel>
+              {hcpItem.removed_at || objective.id || mode === 'view' ? (
+                <div className="selection">
+                  {(objective.medical_plan_objective_id &&
+                    medicalPlanObjectives.getIn([
+                      objective.medical_plan_objective_id,
+                      'name',
+                    ])) ||
+                    '-'}
+                </div>
+              ) : (
+                <SearchSelect
+                  input={{
+                    value: objective.medical_plan_objective_id || '',
+                    onChange: (val) =>
+                      updateHCPObjective(hcpItem.hcp_id, objectiveIdx, {
+                        medical_plan_objective_id: +val || '',
+                      }),
+                  }}
+                  disabled={mode === 'update' && objective.id}
+                  options={Array.from(medicalPlanObjectives.values()).map(
+                    (it) => ({ value: it.id, label: it.name })
+                  )}
+                />
+              )}
             </FormGroup>
-          )}
-        </div>
-      ) : (
-        <div className="EPForm__PlanItem__section">
-          <div className="EPForm__PlanItem__section__heading">
-            REASON
-            {hcpItem.reason === 'other' ? ' (OTHER)' : ''}
-          </div>
-          <div className="EPForm__PlanItem__section__body">
-            {hcpItem.reason === 'other' ? hcpItem.reason_other : hcpItem.reason}
-          </div>
-        </div>
-      )}
-
-      <br />
-      {hcpItem.objectives.map((objective, objectiveIdx) => (
-        <EPFormObjective
-          key={makeKey(objective, objectiveIdx)}
-          {...{
-            mode,
-            hideRemove: hcpItem.objectives.size <= 1,
-            currentQuarter,
-            itemObject: hcpItem,
-            itemObjectId: hcpItem.hcp_id,
-            fieldPrefix: `hcp_items.${hcpItemIdx}`,
-            objective,
-            objectiveIdx,
-            deliverableStatusChoices: HCPDeliverable.status_choices,
-            fieldsTouched,
-            // for create/edit mode:
-            fieldsErrors,
-            showAllStepErrors,
-            updateObjective: updateHCPObjective,
-            removeObjective: removeHCPObjective,
-            addDeliverable: addHCPObjectiveDeliverable,
-            updateDeliverable: updateHCPObjectiveDeliverable,
-            removeDeliverable: removeHCPObjectiveDeliverable,
-          }}
-        >
-          <Row>
-            <Col sm={4}>
-              <FormGroup
-                validationState={
-                  !objective.id &&
-                  mode !== 'view' &&
-                  ((fieldsTouched.get(
-                    `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.medical_plan_objective_id`
-                  ) ||
-                    showAllStepErrors) &&
-                    fieldsErrors.get(
-                      `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.medical_plan_objective_id`
-                    ))
-                    ? 'error'
-                    : null
-                }
-              >
-                <ControlLabel>MEDICAL PLAN OBJECTIVE</ControlLabel>
-                {hcpItem.removed_at || objective.id || mode === 'view' ? (
-                  <div className="selection">
-                    {(objective.medical_plan_objective_id &&
-                      medicalPlanObjectives.getIn([
-                        objective.medical_plan_objective_id,
-                        'name',
-                      ])) ||
-                      '-'}
-                  </div>
-                ) : (
-                  <SearchSelect
-                    input={{
-                      value: objective.medical_plan_objective_id || '',
-                      onChange: (val) =>
-                        updateHCPObjective(hcpItem.hcp_id, objectiveIdx, {
-                          medical_plan_objective_id: +val || '',
-                        }),
-                    }}
-                    disabled={mode === 'update' && objective.id}
-                    options={Array.from(medicalPlanObjectives.values()).map(
-                      (it) => ({ value: it.id, label: it.name })
-                    )}
-                  />
-                )}
-              </FormGroup>
-            </Col>
-            <Col sm={4}>
-              <FormGroup
-                validationState={
-                  !objective.id &&
-                  mode !== 'view' &&
-                  ((fieldsTouched.get(
+          </Col>
+          <Col sm={4}>
+            <FormGroup
+              validationState={
+                !objective.id &&
+                mode !== 'view' &&
+                ((fieldsTouched.get(
+                  `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.project_id`
+                ) ||
+                  showAllStepErrors) &&
+                  fieldsErrors.get(
                     `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.project_id`
-                  ) ||
-                    showAllStepErrors) &&
-                    fieldsErrors.get(
-                      `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.project_id`
-                    ))
-                    ? 'error'
-                    : null
-                }
-              >
-                <ControlLabel>PROJECT</ControlLabel>
-                {hcpItem.removed_at || objective.id || mode === 'view' ? (
-                  <div className="selection">
-                    {(objective.project_id &&
-                      projects.getIn([objective.project_id, 'title'])) ||
-                      '-'}
-                  </div>
-                ) : (
-                  <SearchSelect
-                    input={{
-                      value: objective.project_id || '',
-                      onChange: (val) =>
-                        updateHCPObjective(hcpItem.hcp_id, objectiveIdx, {
-                          project_id: +val || '',
-                        }),
-                    }}
-                    disabled={mode === 'update' && objective.id}
-                    options={Array.from(projects.values()).map((it) => ({
-                      value: it.id,
-                      label: it.title,
-                    }))}
-                  />
-                )}
-              </FormGroup>
-            </Col>
-            <Col sm={4}>
-              <FormGroup
-                validationState={
-                  !objective.id &&
-                  mode !== 'view' &&
-                  ((fieldsTouched.get(
+                  ))
+                  ? 'error'
+                  : null
+              }
+            >
+              <ControlLabel>PROJECT</ControlLabel>
+              {hcpItem.removed_at || objective.id || mode === 'view' ? (
+                <div className="selection">
+                  {(objective.project_id &&
+                    projects.getIn([objective.project_id, 'title'])) ||
+                    '-'}
+                </div>
+              ) : (
+                <SearchSelect
+                  input={{
+                    value: objective.project_id || '',
+                    onChange: (val) =>
+                      updateHCPObjective(hcpItem.hcp_id, objectiveIdx, {
+                        project_id: +val || '',
+                      }),
+                  }}
+                  disabled={mode === 'update' && objective.id}
+                  options={Array.from(projects.values()).map((it) => ({
+                    value: it.id,
+                    label: it.title,
+                  }))}
+                />
+              )}
+            </FormGroup>
+          </Col>
+          <Col sm={4}>
+            <FormGroup
+              validationState={
+                !objective.id &&
+                mode !== 'view' &&
+                ((fieldsTouched.get(
+                  `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.bcsf_id`
+                ) ||
+                  showAllStepErrors) &&
+                  fieldsErrors.get(
                     `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.bcsf_id`
-                  ) ||
-                    showAllStepErrors) &&
-                    fieldsErrors.get(
-                      `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.bcsf_id`
-                    ))
-                    ? 'error'
-                    : null
-                }
-              >
-                <ControlLabel>BRAND CRITICAL SUCCESS FACTOR</ControlLabel>
-                {hcpItem.removed_at || objective.id || mode === 'view' ? (
-                  <div className="selection">
-                    {(objective.bcsf_id &&
-                      bcsfs.getIn([objective.bcsf_id, 'name'])) ||
-                      '-'}
-                  </div>
-                ) : (
-                  <SearchSelect
-                    input={{
-                      value: objective.bcsf_id || '',
-                      onChange: (val) =>
-                        updateHCPObjective(hcpItem.hcp_id, objectiveIdx, {
-                          bcsf_id: +val || '',
-                        }),
-                    }}
-                    disabled={mode === 'update' && objective.id}
-                    options={Array.from(bcsfs.values()).map((it) => ({
-                      value: it.id,
-                      label: it.name,
-                    }))}
-                  />
-                )}
-              </FormGroup>
-            </Col>
-          </Row>
-        </EPFormObjective>
-      ))}
+                  ))
+                  ? 'error'
+                  : null
+              }
+            >
+              <ControlLabel>BRAND CRITICAL SUCCESS FACTOR</ControlLabel>
+              {hcpItem.removed_at || objective.id || mode === 'view' ? (
+                <div className="selection">
+                  {(objective.bcsf_id &&
+                    bcsfs.getIn([objective.bcsf_id, 'name'])) ||
+                    '-'}
+                </div>
+              ) : (
+                <SearchSelect
+                  input={{
+                    value: objective.bcsf_id || '',
+                    onChange: (val) =>
+                      updateHCPObjective(hcpItem.hcp_id, objectiveIdx, {
+                        bcsf_id: +val || '',
+                      }),
+                  }}
+                  disabled={mode === 'update' && objective.id}
+                  options={Array.from(bcsfs.values()).map((it) => ({
+                    value: it.id,
+                    label: it.name,
+                  }))}
+                />
+              )}
+            </FormGroup>
+          </Col>
+        </Row>
+      </EPFormObjective>
+    ))}
 
-      {(mode === 'create' || !hcpItem.id) && (
+    {mode !== 'view' &&
+      (mode === 'create' || !hcpItem.id) && (
         <Row className="text-center EPForm__PlanItem__addObjective">
           <Button onClick={() => addHCPObjective(hcpItem.hcp_id)}>
             <span className="icon-button-new-objective" /> New Objective
           </Button>
         </Row>
       )}
-    </EPFormPlanItem>
-  );
-};
+  </EPFormPlanItem>
+);

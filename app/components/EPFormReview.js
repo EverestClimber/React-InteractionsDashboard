@@ -10,6 +10,8 @@ const EPFormReview = ({
   projects,
   bcsfs,
   fieldsTouched,
+  hcpItemsStatuses,
+  projectItemsStatuses,
 }) => (
   <div className="EPFormReview EPForm__step">
     <h2 className="EPForm__step__title">
@@ -24,6 +26,7 @@ const EPFormReview = ({
           currentQuarter,
           hcpItem,
           hcpItemIdx,
+          itemStatuses: hcpItemsStatuses[hcpItemIdx],
           medicalPlanObjectives,
           projects,
           bcsfs,
@@ -44,6 +47,7 @@ const EPFormReview = ({
           currentQuarter,
           projectItem,
           projectItemIdx,
+          itemStatuses: projectItemsStatuses[projectItemIdx],
           medicalPlanObjectives,
           projects,
           bcsfs,

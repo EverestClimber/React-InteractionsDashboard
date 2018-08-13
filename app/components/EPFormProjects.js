@@ -8,6 +8,7 @@ import {
   FormGroup,
   Row,
 } from 'react-bootstrap';
+import * as classNames from 'classnames';
 import { EPFormObjective } from 'components/EPFormObjective';
 import { ProjectDeliverable } from 'records/ProjectObjective';
 import { EPFormPlanItem } from 'components/EPFormPlanItem';
@@ -27,6 +28,7 @@ const EPFormProjects = ({
   selectProjects,
   removeProject,
   updateProjectItem,
+  itemsStatuses,
   // objectives:
   medicalPlanObjectives,
   bcsfs,
@@ -66,6 +68,7 @@ const EPFormProjects = ({
               currentQuarter,
               projectItem,
               projectItemIdx,
+              itemStatuses: itemsStatuses[projectItemIdx],
               medicalPlanObjectives,
               bcsfs,
               // for create/edit mode:
@@ -99,6 +102,7 @@ EPFormProjects.propTypes = {
   selectProjects: PropTypes.func,
   removeProject: PropTypes.func,
   updateProjectItem: PropTypes.func,
+  itemsStatuses: PropTypes.object,
   // objectives:
   addProjectObjective: PropTypes.func,
   updateProjectObjective: PropTypes.func,
@@ -119,6 +123,7 @@ export const EPProjectItem = ({
   currentQuarter,
   projectItem,
   projectItemIdx,
+  itemStatuses,
   medicalPlanObjectives,
   bcsfs,
   // for create/edit mode:
@@ -143,6 +148,17 @@ export const EPProjectItem = ({
       title: (
         <div className="EPForm__ProjectItem__title">
           {projectItem.project.title}
+          {itemStatuses.map((status) => (
+            <Badge
+              key={status}
+              className={classNames({
+                status: true,
+                [`status--${status}`]: true,
+              })}
+            >
+              {status.toUpperCase()}
+            </Badge>
+          ))}
           <Badge className="objscount">
             {projectItem.objectives.size} OBJECTIVES
           </Badge>
@@ -285,12 +301,14 @@ export const EPProjectItem = ({
         </Row>
       </EPFormObjective>
     ))}
-    {(mode === 'create' || !projectItem.id) && (
-      <Row className="text-center">
-        <Button onClick={() => addProjectObjective(projectItem.project_id)}>
-          Add Objective
-        </Button>
-      </Row>
-    )}
+
+    {mode !== 'view' &&
+      (mode === 'create' || !projectItem.id) && (
+        <Row className="text-center">
+          <Button onClick={() => addProjectObjective(projectItem.project_id)}>
+            Add Objective
+          </Button>
+        </Row>
+      )}
   </EPFormPlanItem>
 );

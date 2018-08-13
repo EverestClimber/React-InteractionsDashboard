@@ -116,6 +116,31 @@ class EPForm extends React.Component {
     }));
   };
 
+  getPlanItemStatuses(items, fieldsTouched, fieldsPrefix) {
+    const out = {};
+    for (const [i, item] of items.entries()) {
+      const statuses = {};
+      if (!item.id) statuses.new = 1;
+      if (!statuses.new) {
+        if (item.removed_at) {
+          statuses.removed = 1;
+        } else if (
+          fieldsTouched
+            .keySeq()
+            .find(
+              (fieldName) => fieldName.indexOf(`${fieldsPrefix}.${i}`) !== -1
+            )
+        ) {
+          statuses.updated = 1;
+        }
+      }
+      if (item.approved) statuses.approved = 1;
+      if (item.comments.size) statuses.commented = 1;
+      out[i] = Object.keys(statuses);
+    }
+    return out;
+  }
+
   render() {
     console.log('% EPForm.render');
 
@@ -134,6 +159,11 @@ class EPForm extends React.Component {
           stepsPristine={this.props.stepsPristine.get('0')}
           showAllStepErrors={showAllStepErrors}
           currentQuarter={currentQuarter}
+          itemsStatuses={this.getPlanItemStatuses(
+            this.props.engagementPlan.hcp_items,
+            this.props.fieldsTouched.get('0'),
+            'hcp_items'
+          )}
         />
       ),
       1: (
@@ -144,9 +174,29 @@ class EPForm extends React.Component {
           stepsPristine={this.props.stepsPristine.get('1')}
           showAllStepErrors={showAllStepErrors}
           currentQuarter={currentQuarter}
+          itemsStatuses={this.getPlanItemStatuses(
+            this.props.engagementPlan.project_items,
+            this.props.fieldsTouched.get('1'),
+            'project_items'
+          )}
         />
       ),
-      2: <EPFormReview {...this.props} currentQuarter={currentQuarter} />,
+      2: (
+        <EPFormReview
+          {...this.props}
+          currentQuarter={currentQuarter}
+          hcpItemsStatuses={this.getPlanItemStatuses(
+            this.props.engagementPlan.hcp_items,
+            this.props.fieldsTouched.get('0'),
+            'hcp_items'
+          )}
+          projectItemsStatuses={this.getPlanItemStatuses(
+            this.props.engagementPlan.project_items,
+            this.props.fieldsTouched.get('1'),
+            'project_items'
+          )}
+        />
+      ),
     };
     const renderedStep = steps[this.state.activeStep];
 

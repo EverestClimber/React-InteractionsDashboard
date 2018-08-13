@@ -1,9 +1,6 @@
 import React from 'react';
 import { FormControl, FormGroup, ControlLabel, Button } from 'react-bootstrap';
 import Comment from 'components/Comment';
-import { Options } from './forms';
-
-const makeKey = (obj, idx) => `${obj.id || ''}.${idx}`;
 
 export const EPFormObjective = ({
   mode,
@@ -156,7 +153,7 @@ export const EPFormObjective = ({
                       <div className="EPFormDeliverable__deliverableMain">
                         <div className="EPFormDeliverable__deliverableMain__removeBtn">
                           {(mode === 'create' || !objective.id) &&
-                            deliverablesByQuarter[quarterN].length > 1 && (
+                            objective.deliverables.size > 1 && (
                               <div
                                 className="icon-delete"
                                 onClick={() =>
@@ -177,7 +174,7 @@ export const EPFormObjective = ({
                             // make roon for remove btn. when shown
                             width:
                               (mode === 'create' || !objective.id) &&
-                              deliverablesByQuarter[quarterN].length > 1
+                              objective.deliverables.size > 1
                                 ? 'calc(100% - 25px)'
                                 : '100%',
                           }}
@@ -220,8 +217,9 @@ export const EPFormObjective = ({
                           )}
                         </div>
                         {// when to have deliverable status editable
-                        // never in 'view' mode
+                        // never in 'view' or 'create' mode
                         mode !== 'view' &&
+                          mode !== 'create' &&
                           // editable when freshly added
                           (!deliverable.id ||
                             // or it didn't have status set
@@ -290,217 +288,3 @@ export const EPFormObjective = ({
     </div>
   );
 };
-
-export const EPFormDeliverable = ({
-  mode,
-  hideRemove,
-  // currentQuarter,
-  itemObjectId,
-  objective,
-  objectiveIdx,
-  deliverable,
-  deliverableIdx,
-  deliverableStatusChoices,
-  updateDeliverable,
-  removeDeliverable,
-  fieldPrefix,
-  fieldsErrors,
-  fieldsTouched,
-  showAllStepErrors,
-}) => (
-  <div key={makeKey(deliverable, deliverableIdx)} className="EPFormDeliverable">
-    {[1, 2, 3, 4].map((quarterN) => (
-      <div key={quarterN} className="EPFormDeliverable__quarter">
-        <div className="EPFormDeliverable__quarterLabel">Q{quarterN}</div>
-
-        <div className="EPFormDeliverable__deliverables">
-          <div className="EPFormDeliverable__deliverable">
-            <div className="EPFormDeliverable__deliverableLabel">
-              <div
-                className={`EPFormDeliverable__deliverableLabel__label EPFormDeliverable__deliverableLabel__label--${
-                  deliverable.status
-                }`}
-              >
-                Q{quarterN} / DELIVERABLE {deliverableIdx + 1}
-              </div>
-              <div className="EPFormDeliverable__deliverableLabel__status">
-                {deliverable.status}
-              </div>
-            </div>
-
-            <div className="EPFormDeliverable__deliverableMain">
-              <div className="EPFormDeliverable__deliverableMain__description">
-                <FormGroup
-                  validationState={
-                    (fieldsTouched.get(
-                      `${fieldPrefix}.objectives.${objectiveIdx}.deliverables` +
-                        `.${deliverableIdx}.description`
-                    ) ||
-                      showAllStepErrors) &&
-                    fieldsErrors.get(
-                      `${fieldPrefix}.objectives.${objectiveIdx}.deliverables` +
-                        `.${deliverableIdx}.description`
-                    )
-                      ? 'error'
-                      : null
-                  }
-                >
-                  <FormControl
-                    type="text"
-                    placeholder="Deliverable description"
-                    value={deliverable.description}
-                    onChange={(ev) =>
-                      updateDeliverable(
-                        itemObjectId,
-                        objectiveIdx,
-                        deliverableIdx,
-                        {
-                          description: ev.target.value,
-                        }
-                      )
-                    }
-                    disabled={deliverable.quarter_type === 'past'}
-                  />
-                </FormGroup>
-              </div>
-              <div className="EPFormDeliverable__deliverableMain__status">
-                {deliverable.id && (
-                  <FormControl
-                    componentClass="select"
-                    value={deliverable.status}
-                    onChange={(ev) =>
-                      updateDeliverable(
-                        itemObjectId,
-                        objectiveIdx,
-                        deliverableIdx,
-                        {
-                          status: ev.target.value,
-                        }
-                      )
-                    }
-                    disabled={
-                      deliverable.quarter_type === 'past' &&
-                      deliverable.status !== ''
-                    }
-                  >
-                    <option value="">- Pick Status -</option>
-                    <Options
-                      choices={Object.entries(deliverableStatusChoices)}
-                    />
-                  </FormControl>
-                )}
-              </div>
-              <div className="EPFormDeliverable__deliverableMain__removeBtn">
-                {(mode === 'create' || !objective.id) &&
-                  !hideRemove && (
-                    <Button
-                      onClick={() =>
-                        removeDeliverable(
-                          itemObjectId,
-                          objectiveIdx,
-                          deliverableIdx
-                        )
-                      }
-                    >
-                      ✖
-                    </Button>
-                  )}
-              </div>
-              <div className="EPFormDeliverable__deliverableMain__comments" />
-            </div>
-          </div>
-          <Button className="EPFormDeliverable__addDeliverableBtn">
-            + DELIVERABLE
-          </Button>
-        </div>
-      </div>
-    ))}
-
-    {/* <div>
-      <FormControl
-        componentClass="select"
-        value={deliverable.quarter}
-        onChange={(ev) =>
-          updateDeliverable(itemObjectId, objectiveIdx, deliverableIdx, {
-            quarter: +ev.target.value,
-          })
-        }
-        disabled={mode === 'update' && objective.id}
-      >
-        <option value={1} disabled={currentQuarter > 1}>
-          1
-        </option>
-        <option value={2} disabled={currentQuarter > 2}>
-          2
-        </option>
-        <option value={3} disabled={currentQuarter > 3}>
-          3
-        </option>
-        <option value={4}>4</option>
-      </FormControl>
-    </div> */}
-
-    {/* <Col xs={8}>
-      <FormGroup
-        validationState={
-          (fieldsTouched.get(
-            `${fieldPrefix}.objectives.${objectiveIdx}.deliverables` +
-              `.${deliverableIdx}.description`
-          ) ||
-            showAllStepErrors) &&
-          fieldsErrors.get(
-            `${fieldPrefix}.objectives.${objectiveIdx}.deliverables` +
-              `.${deliverableIdx}.description`
-          )
-            ? 'error'
-            : null
-        }
-      >
-        <FormControl
-          type="text"
-          placeholder="Deliverable description"
-          value={deliverable.description}
-          onChange={(ev) =>
-            updateDeliverable(itemObjectId, objectiveIdx, deliverableIdx, {
-              description: ev.target.value,
-            })
-          }
-          disabled={deliverable.quarter_type === 'past'}
-        />
-      </FormGroup>
-    </Col> */}
-
-    {/* <Col xs={2}>
-      {deliverable.id && (
-        <FormControl
-          componentClass="select"
-          value={deliverable.status}
-          onChange={(ev) =>
-            updateDeliverable(itemObjectId, objectiveIdx, deliverableIdx, {
-              status: ev.target.value,
-            })
-          }
-          disabled={
-            deliverable.quarter_type === 'past' && deliverable.status !== ''
-          }
-        >
-          <option value="">- Pick Status -</option>
-          <Options choices={Object.entries(deliverableStatusChoices)} />
-        </FormControl>
-      )}
-    </Col> */}
-
-    {/* <Col xs={1}>
-      {(mode === 'create' || !objective.id) &&
-        !hideRemove && (
-          <Button
-            onClick={() =>
-              removeDeliverable(itemObjectId, objectiveIdx, deliverableIdx)
-            }
-          >
-            ✖
-          </Button>
-        )}
-    </Col> */}
-  </div>
-);

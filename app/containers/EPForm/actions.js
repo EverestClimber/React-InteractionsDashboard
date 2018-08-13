@@ -124,7 +124,9 @@ export const removeProjectObjectiveAction = makeActionCreator(
 
 export const addProjectObjectiveDeliverableAction = makeActionCreator(
   'EP_FORM/ADD_PROJECT_OBJECTIVE_DELIVERABLE',
-  (projectId, objectiveIdx) => ({ payload: { projectId, objectiveIdx } })
+  (projectId, objectiveIdx, quarter) => ({
+    payload: { projectId, objectiveIdx, quarter },
+  })
 );
 
 export const updateProjectObjectiveDeliverableAction = makeActionCreator(

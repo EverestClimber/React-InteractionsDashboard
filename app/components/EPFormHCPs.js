@@ -294,7 +294,19 @@ export const EPHCPItem = ({
         >
           <Row>
             <Col sm={4}>
-              <FormGroup>
+              <FormGroup
+                validationState={
+                  (fieldsTouched.get(
+                    `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.medical_plan_objective_id`
+                  ) ||
+                    showAllStepErrors) &&
+                  fieldsErrors.get(
+                    `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.medical_plan_objective_id`
+                  )
+                    ? 'error'
+                    : null
+                }
+              >
                 <ControlLabel>MEDICAL PLAN OBJECTIVE</ControlLabel>
                 {objective.id || mode === 'view' ? (
                   <div className="selection">
@@ -323,7 +335,19 @@ export const EPHCPItem = ({
               </FormGroup>
             </Col>
             <Col sm={4}>
-              <FormGroup>
+              <FormGroup
+                validationState={
+                  (fieldsTouched.get(
+                    `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.project_id`
+                  ) ||
+                    showAllStepErrors) &&
+                  fieldsErrors.get(
+                    `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.project_id`
+                  )
+                    ? 'error'
+                    : null
+                }
+              >
                 <ControlLabel>PROJECT</ControlLabel>
                 {objective.id || mode === 'view' ? (
                   <div className="selection">
@@ -350,7 +374,19 @@ export const EPHCPItem = ({
               </FormGroup>
             </Col>
             <Col sm={4}>
-              <FormGroup>
+              <FormGroup
+                validationState={
+                  (fieldsTouched.get(
+                    `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.bcsf_id`
+                  ) ||
+                    showAllStepErrors) &&
+                  fieldsErrors.get(
+                    `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.bcsf_id`
+                  )
+                    ? 'error'
+                    : null
+                }
+              >
                 <ControlLabel>BRAND CRITICAL SUCCESS FACTOR</ControlLabel>
                 {objective.id || mode === 'view' ? (
                   <div className="selection">

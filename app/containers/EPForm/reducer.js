@@ -69,6 +69,21 @@ function validateFields(state) {
           `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.description`
         ] = ['A description is required for HCP objective'];
       }
+      if (!objective.medical_plan_objective_id) {
+        fieldsErrors[0][
+          `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.medical_plan_objective_id`
+        ] = ['A medical plan objective is required for HCP objective'];
+      }
+      if (!objective.bcsf_id) {
+        fieldsErrors[0][
+          `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.bcsf_id`
+        ] = ['A brand critical success factor is required for HCP objective'];
+      }
+      if (!objective.project_id) {
+        fieldsErrors[0][
+          `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.project_id`
+        ] = ['A project is required for HCP objective'];
+      }
       for (const [
         deliverableIdx,
         deliverable,
@@ -140,9 +155,7 @@ function updateInEPlanForHCP(state, hcpId, pathStr, update) {
   return validateFields(newState);
 }
 
-// function updateFieldInEPlanForHCP()
-
-function updateInEPlanForProject(state, projectId, pathStr, updateCb) {
+function updateInEPlanForProject(state, projectId, pathStr, update) {
   const ePlan = state.get('engagementPlan');
   const projectItemIdx = ePlan.project_items.findIndex(
     (it) => it.project_id === projectId
@@ -150,11 +163,30 @@ function updateInEPlanForProject(state, projectId, pathStr, updateCb) {
   const path = pathStr
     .split('.')
     .map((s) => (s === 'PROJECT_ITEM_IDX' ? projectItemIdx : s));
-  return validateFields(
-    state
-      .set('engagementPlan', ePlan.updateIn(path, updateCb))
-      .setIn(['fieldsTouched', '1', path.join('.')], true)
-  );
+  let newState = state;
+
+  // either A. update with a function
+  if (typeof update === 'function') {
+    newState = newState
+      .set('engagementPlan', ePlan.updateIn(path, update))
+      .setIn(['fieldsTouched', '1', path.join('.')], true);
+  } else {
+    // ...or B. update with a dict
+    for (const field of Object.keys(update)) {
+      newState = newState.setIn(
+        ['fieldsTouched', '1', [...path, field].join('.')],
+        true
+      );
+    }
+    newState = newState
+      .set(
+        'engagementPlan',
+        ePlan.updateIn(path, (fields) => fields.merge(update))
+      )
+      .setIn(['fieldsTouched', '1', path.join('.')], true);
+  }
+
+  return validateFields(newState);
 }
 
 function createEpReducer(state = initialState, action) {
@@ -345,12 +377,13 @@ function createEpReducer(state = initialState, action) {
     }
 
     case actions.addProjectObjectiveDeliverableAction.type: {
-      const { projectId, objectiveIdx } = action.payload;
+      const { projectId, objectiveIdx, quarter } = action.payload;
       return updateInEPlanForProject(
         state,
         projectId,
         `project_items.PROJECT_ITEM_IDX.objectives.${objectiveIdx}.deliverables`,
-        (deliverables) => deliverables.push(ProjectDeliverable.fromApiData())
+        (deliverables) =>
+          deliverables.push(ProjectDeliverable.fromApiData({ quarter }))
       );
     }
 

@@ -9,6 +9,7 @@ import { Grid, Button } from 'react-bootstrap';
 import routes from 'routes';
 
 import injectReducer from 'utils/injectReducer';
+import { MSLUserDashboard } from 'containers/MSLUserDashboard';
 // import injectSaga from 'utils/injectSaga';
 import reducer from './reducer';
 
@@ -16,17 +17,23 @@ import reducer from './reducer';
 
 export class Dashboard extends React.PureComponent {
   render() {
-    const { engagementPlans } = this.props;
+    const { engagementPlans, user } = this.props;
+
+    // debugger;
+
     return (
       <Grid>
         <Helmet>
           <title>OTSK - Dashboard</title>
         </Helmet>
 
+        {user.group_names.contains('Role MSL') && <MSLUserDashboard />}
+
         <h2>Dashboard</h2>
-
+        <br />
+        <br />
+        <hr />
         <h4>WIP:</h4>
-
         <p>
           <Link to={routes.RECORD_INTERACTION.path}>
             <Button>Record Interaction</Button>
@@ -71,7 +78,7 @@ export class Dashboard extends React.PureComponent {
 
 Dashboard.propTypes = {
   user: PropTypes.object,
-  engagementPlan: PropTypes.object,
+  engagementPlans: PropTypes.object,
 };
 
 export function mapDispatchToProps() {

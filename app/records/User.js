@@ -12,8 +12,8 @@ export class User extends Record({
   email: '',
   first_name: '',
   last_name: '',
-  group_names: [],
-  permissions: [],
+  group_names: new List(),
+  permissions: new List(),
 }) {
   static READ_ONLY_FIELDS = [
     'created_at',
@@ -32,6 +32,7 @@ export class User extends Record({
 
   static fromApiData(data, tasById = null, affiliateGroupsById = null) {
     let user = new User(data);
+    user = user.set('group_names', new List(user.group_names));
     user = user.set('affiliate_groups', new List(user.affiliate_groups));
     user = user.set('tas', new List(user.tas));
     if (tasById) {

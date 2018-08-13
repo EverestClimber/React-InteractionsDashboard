@@ -152,7 +152,8 @@ export const EPFormObjective = ({
 
                       <div className="EPFormDeliverable__deliverableMain">
                         <div className="EPFormDeliverable__deliverableMain__removeBtn">
-                          {(mode === 'create' || !objective.id) &&
+                          {mode !== 'view' &&
+                            (mode === 'create' || !objective.id) &&
                             objective.deliverables.size > 1 && (
                               <div
                                 className="icon-delete"
@@ -173,6 +174,7 @@ export const EPFormObjective = ({
                           style={{
                             // make roon for remove btn. when shown
                             width:
+                              mode !== 'view' &&
                               (mode === 'create' || !objective.id) &&
                               objective.deliverables.size > 1
                                 ? 'calc(100% - 25px)'

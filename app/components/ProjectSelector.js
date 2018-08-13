@@ -2,12 +2,11 @@ import React from 'react';
 import { Checkbox } from 'react-bootstrap';
 import SmartSelector from './SmartSelector';
 
-
 const ProjectSelector = (props) => (
   <SmartSelector
     {...props}
     placeholder={props.placeholder || 'Search Projects ...'}
-    btnLabel={props.btnLabel || 'Add New'}
+    btnLabel={props.btnLabel || 'New Project'}
     renderItem={HCPItem}
   />
 );
@@ -16,7 +15,9 @@ ProjectSelector.propTypes = SmartSelector.propTypes;
 
 export default ProjectSelector;
 
-const HCPItem = ({ multiple, item, handleSelect, selectedItems }) => ( // eslint-disable-line react/prop-types
+const HCPItem = (
+  { multiple, item, handleSelect, selectedItems } // eslint-disable-line react/prop-types
+) => (
   <div
     key={item.id}
     className="SmartSelector__ListItems__Item ProjectSelector__ListItems__Item"
@@ -30,9 +31,7 @@ const HCPItem = ({ multiple, item, handleSelect, selectedItems }) => ( // eslint
       </div>
     )}
 
-    <div className="ProjectSelector__ListItems__Item__title">
-      {item.title}
-    </div>
+    <div className="ProjectSelector__ListItems__Item__title">{item.title}</div>
 
     <div className="ProjectSelector__ListItems__Item__tas">
       {item.ta_names.join(', ')}

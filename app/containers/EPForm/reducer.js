@@ -106,6 +106,18 @@ function validateFields(state) {
           `project_items.${projectItemIdx}.objectives.${objectiveIdx}.description`
         ] = ['A description is required for Project objective'];
       }
+      if (!objective.medical_plan_objective_id) {
+        fieldsErrors[1][
+          `project_items.${projectItemIdx}.objectives.${objectiveIdx}.medical_plan_objective_id`
+        ] = ['A medical plan objective is required for Project objective'];
+      }
+      if (!objective.bcsf_id) {
+        fieldsErrors[1][
+          `project_items.${projectItemIdx}.objectives.${objectiveIdx}.bcsf_id`
+        ] = [
+          'A brand critical success factor is required for Project objective',
+        ];
+      }
       for (const [
         deliverableIdx,
         deliverable,

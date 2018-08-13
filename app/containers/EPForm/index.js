@@ -147,12 +147,6 @@ class EPForm extends React.Component {
         />
       ),
       2: <EPFormReview {...this.props} currentQuarter={currentQuarter} />,
-      20: (
-        <div>
-          <h2>Step 3: Review Plan</h2>
-          <pre>{JSON.stringify(this.props.engagementPlan.toJS(), null, 2)}</pre>
-        </div>
-      ),
     };
     const renderedStep = steps[this.state.activeStep];
 
@@ -223,7 +217,7 @@ class EPForm extends React.Component {
                 bsStyle="primary"
               >
                 {this.props.mode === 'create'
-                  ? 'Create Engagemen Plan'
+                  ? 'Create Engagement Plan'
                   : 'Update Engagement Plan'}
               </Button>
             )}

@@ -190,7 +190,21 @@ export const EPProjectItem = ({
       >
         <Row>
           <Col sm={6}>
-            <FormGroup>
+            <FormGroup
+              validationState={
+                !objective.id &&
+                mode !== 'view' &&
+                ((fieldsTouched.get(
+                  `project_items.${projectItemIdx}.objectives.${objectiveIdx}.medical_plan_objective_id`
+                ) ||
+                  showAllStepErrors) &&
+                  fieldsErrors.get(
+                    `project_items.${projectItemIdx}.objectives.${objectiveIdx}.medical_plan_objective_id`
+                  ))
+                  ? 'error'
+                  : null
+              }
+            >
               <ControlLabel>MEDICAL PLAN OBJECTIVE</ControlLabel>
               {objective.id || mode === 'view' ? (
                 <div className="selection">
@@ -223,7 +237,21 @@ export const EPProjectItem = ({
             </FormGroup>
           </Col>
           <Col sm={6}>
-            <FormGroup>
+            <FormGroup
+              validationState={
+                !objective.id &&
+                mode !== 'view' &&
+                ((fieldsTouched.get(
+                  `project_items.${projectItemIdx}.objectives.${objectiveIdx}.bcsf_id`
+                ) ||
+                  showAllStepErrors) &&
+                  fieldsErrors.get(
+                    `project_items.${projectItemIdx}.objectives.${objectiveIdx}.bcsf_id`
+                  ))
+                  ? 'error'
+                  : null
+              }
+            >
               <ControlLabel>BRAND CRITICAL SUCCESS FACTOR</ControlLabel>
               {objective.id || mode === 'view' ? (
                 <div className="selection">

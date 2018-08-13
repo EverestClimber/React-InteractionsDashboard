@@ -263,7 +263,7 @@ export const EPHCPItem = ({
             {hcpItem.reason === 'other' ? ' (OTHER)' : ''}
           </div>
           <div className="EPForm__PlanItem__section__body">
-            {hcpItem.reason === 'other' ? hcpItem.reasonOther : hcpItem.reason}
+            {hcpItem.reason === 'other' ? hcpItem.reason_other : hcpItem.reason}
           </div>
         </div>
       )}
@@ -296,13 +296,15 @@ export const EPHCPItem = ({
             <Col sm={4}>
               <FormGroup
                 validationState={
-                  (fieldsTouched.get(
+                  !objective.id &&
+                  mode !== 'view' &&
+                  ((fieldsTouched.get(
                     `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.medical_plan_objective_id`
                   ) ||
                     showAllStepErrors) &&
-                  fieldsErrors.get(
-                    `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.medical_plan_objective_id`
-                  )
+                    fieldsErrors.get(
+                      `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.medical_plan_objective_id`
+                    ))
                     ? 'error'
                     : null
                 }
@@ -337,13 +339,15 @@ export const EPHCPItem = ({
             <Col sm={4}>
               <FormGroup
                 validationState={
-                  (fieldsTouched.get(
+                  !objective.id &&
+                  mode !== 'view' &&
+                  ((fieldsTouched.get(
                     `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.project_id`
                   ) ||
                     showAllStepErrors) &&
-                  fieldsErrors.get(
-                    `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.project_id`
-                  )
+                    fieldsErrors.get(
+                      `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.project_id`
+                    ))
                     ? 'error'
                     : null
                 }
@@ -376,13 +380,15 @@ export const EPHCPItem = ({
             <Col sm={4}>
               <FormGroup
                 validationState={
-                  (fieldsTouched.get(
+                  !objective.id &&
+                  mode !== 'view' &&
+                  ((fieldsTouched.get(
                     `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.bcsf_id`
                   ) ||
                     showAllStepErrors) &&
-                  fieldsErrors.get(
-                    `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.bcsf_id`
-                  )
+                    fieldsErrors.get(
+                      `hcp_items.${hcpItemIdx}.objectives.${objectiveIdx}.bcsf_id`
+                    ))
                     ? 'error'
                     : null
                 }

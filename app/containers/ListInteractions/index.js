@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
 import { Grid, Panel } from 'react-bootstrap';
+import moment from 'moment';
 
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
@@ -46,10 +47,14 @@ export class ListInteractions extends React.PureComponent {
     });
   };
 
-  handleSort = (field) => {
+  handleSort = (field, direction) => {
     console.log('=== sort by:', field);
     this.setState({
-      interactions: this.sortInteractions(this.props.interactions, field),
+      interactions: this.sortInteractions(
+        this.props.interactions,
+        field,
+        direction
+      ),
     });
   };
 
@@ -59,15 +64,28 @@ export class ListInteractions extends React.PureComponent {
     );
   }
 
-  sortInteractions(interactions, field) {
+  getField(interaction, field, sorting) {
+    if (typeof field === 'string') {
+      return interaction[field];
+    } else if (typeof field === 'function') {
+      return field(interaction);
+    }
+    return this.getField(
+      interaction,
+      sorting ? field.sortBy || field.render : field.render
+    );
+  }
+
+  sortInteractions(interactions, field, direction) {
     return interactions
       .sort((i1, i2) => {
-        const [f1, f2] =
-          typeof field === 'string'
-            ? [i1[field], i2[field]]
-            : [field(i1), field(i2)];
-        if (f1 === f2) return 0;
-        return f1 < f2 ? -1 : 1;
+        const f1 = this.getField(i1, field, true);
+        const f2 = this.getField(i2, field);
+        console.log(`comparing ${f1} <> ${f2}`);
+        if (f1 === f2) {
+          return i1.time_of_interaction <= i2.time_of_interaction ? 1 : -1;
+        }
+        return f1 < f2 ? -1 * direction : 1 * direction;
       })
       .slice();
   }
@@ -104,20 +122,23 @@ export class ListInteractions extends React.PureComponent {
     return (
       <Grid>
         <h2>Interactions</h2>
-
+        field.render
         {serverError && (
           <CenteredAlert bsStyle="danger">
             An error has occurred. Please refresh the page or try again later.
             <pre>{serverError}</pre>
           </CenteredAlert>
         )}
-
         <Panel>
           <Panel.Body>
             <SmartTable
               items={this.state.interactions}
               fields={{
-                'Date / Time': (it) => new Date(it.created_at).toLocaleString(),
+                'Date / Time': {
+                  render: (it) =>
+                    moment(it.time_of_interaction).format('D MMM Y, h:mm A'),
+                  sortField: 'time_of_interaction',
+                },
                 'MSL Name': (it) =>
                   it.user ? `${it.user.first_name} ${it.user.last_name}` : '',
                 'HCP Name': (it) =>
@@ -127,7 +148,7 @@ export class ListInteractions extends React.PureComponent {
                 'Interaction Type': (it) =>
                   Interaction.type_of_interaction_choices[
                     it.type_of_interaction
-                  ],
+                  ] || '',
                 'Adverse Event': (it) => (it.is_adverse_event ? 'Yes' : 'No'),
                 'PV Followed': (it) =>
                   it.appropriate_pv_procedures_followed ? 'Yes' : 'No',

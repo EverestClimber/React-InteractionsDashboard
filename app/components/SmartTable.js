@@ -7,6 +7,7 @@ import {
   InputGroup,
 } from 'react-bootstrap';
 import PropTypes from 'prop-types';
+import * as classNames from 'classnames';
 
 export default class SmartTable extends React.Component {
   static propTypes = {
@@ -22,6 +23,7 @@ export default class SmartTable extends React.Component {
     this.state = {
       searchText: '',
       sortBy: null,
+      sortDirection: 1,
     };
   }
 
@@ -31,24 +33,45 @@ export default class SmartTable extends React.Component {
     this.props.searchItems(searchText);
   };
 
+  handleSort = (fieldName, field) => {
+    this.setState((prevState) => {
+      let direction = 1;
+      // when clicking same column header...
+      if (fieldName === prevState.sortBy) {
+        // if it was sorted in reverse we cancel sorting
+        if (prevState.sortDirection === -1) {
+          this.props.sortItems('created_at', -1);
+          return { sortBy: null, sortDirection: 1 };
+        }
+        // otherwise we sort in reverse
+        direction = -1;
+      }
+      this.props.sortItems(field, direction);
+      return {
+        sortBy: fieldName,
+        sortDirection: direction,
+      };
+    });
+  };
+
   renderField(item, field) {
     if (typeof field === 'string') {
       return item[field];
     } else if (typeof field === 'function') {
       return field(item);
-    } else if (Array.isArray(field)) {
-      // field = [field, sortParamName]
-      return this.renderField(item, field[0]);
     }
-    return null;
+    // field = {field, render, sortBy, sortParamName}
+    return this.renderField(item, field.render || field.field);
   }
 
   render() {
+    const baseClass = 'SmartTable';
+
     const { items, fields } = this.props;
     console.log('\n--- rending');
 
     return (
-      <React.Fragment>
+      <div className={baseClass}>
         <FormGroup>
           <InputGroup>
             <InputGroup.Addon>
@@ -66,12 +89,31 @@ export default class SmartTable extends React.Component {
           </InputGroup>
         </FormGroup>
 
+        <pre>
+          sort by: {this.state.sortBy} {this.state.sortDirection}
+        </pre>
+
         <Table striped bordered hover>
           <thead>
             <tr>
               {Object.entries(fields).map(([fieldName, field]) => (
-                <th key={fieldName} onClick={() => this.props.sortItems(field)}>
-                  {fieldName}
+                <th
+                  key={fieldName}
+                  onClick={() => this.handleSort(fieldName, field)}
+                  className={classNames({
+                    [`${baseClass}__tblHead`]: true,
+                    [`${baseClass}__tblHead--active`]:
+                      this.state.sortBy === fieldName,
+                    [`${baseClass}__tblHead--asc`]:
+                      this.state.sortDirection === 1,
+                    [`${baseClass}__tblHead--desc`]:
+                      this.state.sortDirection === -1,
+                  })}
+                >
+                  {fieldName}{' '}
+                  {this.state.sortBy &&
+                    this.state.sortBy === fieldName &&
+                    (this.state.sortDirection === 1 ? '▲' : '▼')}
                 </th>
               ))}
             </tr>
@@ -86,7 +128,7 @@ export default class SmartTable extends React.Component {
             ))}
           </tbody>
         </Table>
-      </React.Fragment>
+      </div>
     );
   }
 }

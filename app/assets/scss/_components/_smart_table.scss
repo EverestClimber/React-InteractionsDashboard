@@ -1,0 +1,8 @@
+.SmartTable {
+  &__tblHead {
+    cursor: pointer;
+    &--active {
+      background: $n-grey-light;
+    }
+  }
+}

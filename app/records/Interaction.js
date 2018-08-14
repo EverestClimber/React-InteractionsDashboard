@@ -77,7 +77,13 @@ class Interaction extends Record({
   }
 
   static fromApiData(data) {
-    let interaction = new Interaction(data);
+    let interaction = new Interaction({
+      ...data,
+      created_at: data.created_at ? new Date(data.created_at) : undefined,
+      time_of_interaction: data.time_of_interaction
+        ? new Date(data.time_of_interaction)
+        : undefined,
+    });
     interaction = interaction.set('resources', new List(interaction.resources));
     interaction = interaction.set('hcp', HCP.fromApiData(interaction.hcp));
     interaction = interaction.set(

@@ -1,13 +1,6 @@
 import React from 'react';
-import {
-  Grid,
-  Col,
-  Row,
-  FormControl,
-  Button,
-} from 'react-bootstrap';
+import { Grid, Col, Row, FormControl, Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
-
 
 export default class SmartSelector extends React.Component {
   static propTypes = {
@@ -40,7 +33,6 @@ export default class SmartSelector extends React.Component {
   }
 
   componentDidMount() {
-
     document.body.addEventListener('click', this.handleBodyClick);
 
     // when value is received from outside
@@ -62,12 +54,12 @@ export default class SmartSelector extends React.Component {
       this.setState({ showList: true });
     } else {
       // when clicking inside leave time at lease for event to propagate
-      if (this.containerRef.current && this.containerRef.current.contains(event.target)) {
+      if (
+        this.containerRef.current &&
+        this.containerRef.current.contains(event.target)
+      ) {
         // TODO: replace this hack with toggling visibility instead of existence based on showList
-        setTimeout(
-          () => this.setState({ showList: false }),
-          250
-        );
+        setTimeout(() => this.setState({ showList: false }), 250);
       } else {
         this.setState({ showList: false });
       }
@@ -96,7 +88,10 @@ export default class SmartSelector extends React.Component {
     } else {
       const newSelectedItems = this.props.selectedItems.get(itemId)
         ? this.props.selectedItems.delete(itemId)
-        : this.props.selectedItems.set(itemId, this.props.items.find((hcp) => hcp.id === itemId));
+        : this.props.selectedItems.set(
+            itemId,
+            this.props.items.find((hcp) => hcp.id === itemId)
+          );
       this.props.input.onChange(newSelectedItems);
     }
   };
@@ -113,10 +108,7 @@ export default class SmartSelector extends React.Component {
   showAll = () => {
     this.setState({ searchText: '' });
     this.props.searchItems('');
-    setTimeout(
-      () => this.setState({ showList: true }),
-      500
-    );
+    setTimeout(() => this.setState({ showList: true }), 500);
   };
 
   render() {
@@ -134,15 +126,14 @@ export default class SmartSelector extends React.Component {
 
     return (
       <div
-        className={`SmartSelector ${(meta && meta.touched && meta.error) ? 'SmartSelector--error' : ''} ${multiple ? 'SmartSelector--multiple' : ''}`}
+        className={`SmartSelector ${
+          meta && meta.touched && meta.error ? 'SmartSelector--error' : ''
+        } ${multiple ? 'SmartSelector--multiple' : ''}`}
         ref={this.containerRef}
       >
         <Row>
           <Col sm={10}>
-            <div
-              className="SmartSelector__Search"
-              ref={this.inputRef}
-            >
+            <div className="SmartSelector__Search" ref={this.inputRef}>
               <FormControl
                 type="text"
                 placeholder={placeholder}
@@ -163,27 +154,28 @@ export default class SmartSelector extends React.Component {
           </Col>
           <Col sm={2}>
             <Button type="submit" block>
-              <span className="fi-icon icon-nav-hcps" />
-              {' '}{btnLabel}
+              <span className="fi-icon icon-nav-hcps" /> {btnLabel}
             </Button>
           </Col>
         </Row>
         <br />
 
-        {(this.state.showList && items && items.length) ? (
+        {this.state.showList && items && items.length ? (
           <Grid className="SmartSelector__ListItems__container">
             <Row>
               <Col sm={10}>
                 <div className="SmartSelector__ListItems__content">
                   <div className="SmartSelector__ListItems__box">
                     <div className="SmartSelector__ListItems__list">
-                      {items.map((item) => renderItem({
-                        key: item.id,
-                        multiple,
-                        item,
-                        handleSelect: this.handleItemSelection,
-                        selectedItems,
-                      }))}
+                      {items.map((item) =>
+                        renderItem({
+                          key: item.id,
+                          multiple,
+                          item,
+                          handleSelect: this.handleItemSelection,
+                          selectedItems,
+                        })
+                      )}
                     </div>
                   </div>
                 </div>
@@ -192,11 +184,15 @@ export default class SmartSelector extends React.Component {
           </Grid>
         ) : null}
 
-        {(renderSelectedItem && selectedItems && selectedItems.size) ? (
+        {renderSelectedItem && selectedItems && selectedItems.size ? (
           <div className="SelectedHCPs">
-            {Array.from(selectedItems.values()).map((hcp) =>
-              <RenderSelectedHCP key={hcp.id} hcp={hcp} handleRemove={this.handleItemRemoval} />
-            )}
+            {Array.from(selectedItems.values()).map((hcp) => (
+              <RenderSelectedHCP
+                key={hcp.id}
+                hcp={hcp}
+                handleRemove={this.handleItemRemoval}
+              />
+            ))}
           </div>
         ) : null}
       </div>

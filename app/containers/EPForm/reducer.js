@@ -58,6 +58,11 @@ function validateFields(state) {
         'A reason must be specified for adding HCP to the plan',
       ];
     }
+    if (hcpItem.removed_at && !hcpItem.reason_removed) {
+      fieldsErrors[0][`hcp_items.${hcpItemIdx}.reason_removed`] = [
+        'A reason for removal must be provided',
+      ];
+    }
     if (
       !hcpItem.removed_at &&
       hcpItem.reason === 'other' &&

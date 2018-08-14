@@ -39,6 +39,10 @@ export class EPFormPlanItem extends React.PureComponent {
       onReasonRemovedChange,
       className,
       children,
+      fieldPrefix,
+      fieldsTouched,
+      fieldsErrors,
+      showAllStepErrors,
     } = this.props;
 
     const baseClassName = 'EPForm__PlanItem';
@@ -79,7 +83,15 @@ export class EPFormPlanItem extends React.PureComponent {
             <div className={`${baseClassName}__body__content`}>
               {this.state.removed &&
                 mode !== 'view' && (
-                  <FormGroup>
+                  <FormGroup
+                    validationState={
+                      (fieldsTouched.get(`${fieldPrefix}.reason_removed`) ||
+                        showAllStepErrors) &&
+                      fieldsErrors.get(`${fieldPrefix}.reason_removed`)
+                        ? 'error'
+                        : null
+                    }
+                  >
                     <br />
                     <FormControl
                       componentClass="input"

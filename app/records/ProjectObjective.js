@@ -72,6 +72,7 @@ export class ProjectDeliverable extends Record({
     on_track: 'On Track',
     slightly_behind: 'Slightly Behind',
     major_issue: 'Major Issue',
+    '': 'No Status',
   };
 
   static quarter_type_choices = {

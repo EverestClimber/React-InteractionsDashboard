@@ -151,6 +151,10 @@ export const EPHCPItem = ({
       mode,
       className: 'EPForm__HCPItem',
       planItem: hcpItem,
+      fieldPrefix: `hcp_items.${hcpItemIdx}`,
+      fieldsTouched,
+      fieldsErrors,
+      showAllStepErrors,
       title: (
         <div className="EPForm__HCPItem__title">
           {hcpItem.hcp.first_name} {hcpItem.hcp.last_name}

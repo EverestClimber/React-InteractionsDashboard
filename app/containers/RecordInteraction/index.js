@@ -52,6 +52,7 @@ export class RecordInteraction extends React.Component {
     resources: PropTypes.array,
     originOfInteraction: PropTypes.string,
     isJointVisit: PropTypes.bool,
+    jointVisitReason: PropTypes.string,
     isAdverseEvent: PropTypes.bool,
     noFollowUpRequired: PropTypes.bool,
     allFormErrors: PropTypes.any,
@@ -97,6 +98,7 @@ export class RecordInteraction extends React.Component {
       resources,
       originOfInteraction,
       isJointVisit,
+      jointVisitReason,
       isAdverseEvent,
       noFollowUpRequired,
       allFormErrors,
@@ -338,34 +340,54 @@ export class RecordInteraction extends React.Component {
                         disabled={formDisabled}
                       >
                         {isJointVisit && (
-                          <Row>
-                            <Col md={6}>
-                              <Field
-                                name="joint_visit_with"
-                                component={LabeledFormControl}
-                                type="text"
-                                placeholder="Joint visit with"
-                                disabled={formDisabled}
-                              />
-                            </Col>
-                            <Col md={6}>
-                              <Field
-                                name="joint_visit_reason"
-                                component={LabeledFormControl}
-                                type="select"
-                                disabled={formDisabled}
-                              >
-                                <option disabled value="">
-                                  Reason
-                                </option>
-                                <Options
-                                  choices={Object.entries(
-                                    Interaction.joint_visit_reason_choices
-                                  )}
+                          <React.Fragment>
+                            <Field
+                              name="is_joint_visit_manager_approved"
+                              component={ChoiceSelector}
+                              choices={[[false, 'No'], [true, 'Yes']]}
+                              label="MSL Manager Approval Received"
+                              disabled={formDisabled}
+                            />
+                            <Row>
+                              <Col md={6}>
+                                <Field
+                                  name="joint_visit_with"
+                                  component={LabeledFormControl}
+                                  type="text"
+                                  placeholder="Joint visit with"
+                                  disabled={formDisabled}
                                 />
-                              </Field>
-                            </Col>
-                          </Row>
+                              </Col>
+                              <Col md={6}>
+                                <Field
+                                  name="joint_visit_reason"
+                                  component={LabeledFormControl}
+                                  type="select"
+                                  disabled={formDisabled}
+                                >
+                                  <option disabled value="">
+                                    Reason
+                                  </option>
+                                  <Options
+                                    choices={Object.entries(
+                                      Interaction.joint_visit_reason_choices
+                                    )}
+                                  />
+                                </Field>
+                              </Col>
+                            </Row>
+                            {jointVisitReason === 'other' && (
+                              <Row>
+                                <Field
+                                  name="joint_visit_reason_other"
+                                  component={LabeledFormControl}
+                                  type="text"
+                                  placeholder="Other reason for joint visit"
+                                  disabled={formDisabled}
+                                />
+                              </Row>
+                            )}
+                          </React.Fragment>
                         )}
                       </Field>
                     </Col>
@@ -387,6 +409,7 @@ export class RecordInteraction extends React.Component {
                         component={FlatpickrDateTime}
                         className="form-control"
                         placeholder="Follow-up Date"
+                        options={{ dateFormat: 'j M Y' }}
                         disabled={noFollowUpRequired || formDisabled}
                       />
                     </Col>
@@ -543,6 +566,7 @@ function mapStateToProps(state, ownProps) {
     isJointVisit: selector(state, 'is_joint_visit'),
     isAdverseEvent: selector(state, 'is_adverse_event'),
     noFollowUpRequired: selector(state, 'no_follow_up_required'),
+    jointVisitReason: selector(state, 'joint_visit_reason'),
   };
 }
 

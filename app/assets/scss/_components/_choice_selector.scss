@@ -1,16 +1,13 @@
-
 .ChoiceSelector {
   min-height: 36px;
   background: $n-grey-lighter;
   border: 1px solid $n-grey-light;
   border-radius: 4px;
   overflow: hidden;
-
   &--error {
     background: $s-error-bg;
     border-color: $s-error-border;
   }
-
   &--withSecondary &__primary {
     padding: 15px;
     overflow: hidden;
@@ -18,7 +15,9 @@
       padding-left: 0
     }
   }
-
+  .control-label {
+    font-size: rem(14);
+  }
   label.checkbox-inline {
     display: block;
     float: left;
@@ -27,24 +26,22 @@
       margin-right: 0;
     }
   }
-
   &__secondary {
     clear: both;
     border-top: 1px solid $n-grey-light;
     label.control-label {
       padding-left: 0
     }
-    > * {
+    >* {
       border: 0;
     }
     > :last-child {
       margin-bottom: 0;
     }
-    > .row {
+    >.row {
       margin: 12px 7px 0 7px;
     }
   }
-
   &--labeled {
     label.control-label {
       float: left;

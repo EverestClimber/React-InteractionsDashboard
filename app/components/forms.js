@@ -4,10 +4,11 @@ import Select from 'react-select';
 import PropTypes from 'prop-types';
 import Flatpickr from 'react-flatpickr';
 
-
-export const FormControl = ({ input, type, ...rest }) => { // eslint-disable-line react/prop-types
+export const FormControl = ({ input, type, ...rest }) => {
+  // eslint-disable-line react/prop-types
   const componentClassByType = {
-    select: 'select', textarea: 'textarea',
+    select: 'select',
+    textarea: 'textarea',
   };
   return (
     <React.Fragment>
@@ -21,28 +22,40 @@ export const FormControl = ({ input, type, ...rest }) => { // eslint-disable-lin
   );
 };
 
-export const Checkbox = ({ input, children, ...rest }) => ( // eslint-disable-line react/prop-types
+export const Checkbox = (
+  { input, children, ...rest } // eslint-disable-line react/prop-types
+) => (
   <BS.Checkbox {...input} {...rest}>
     {children}
   </BS.Checkbox>
 );
 
-
-export const Radio = ({ input, children, ...rest }) => ( // eslint-disable-line react/prop-types
+export const Radio = (
+  { input, children, ...rest } // eslint-disable-line react/prop-types
+) => (
   <BS.Radio {...input} {...rest}>
     {children}
   </BS.Radio>
 );
 
+export const Options = ({ choices }) =>
+  choices.map((
+    [val, text] // eslint-disable-line react/prop-types
+  ) => (
+    <option key={val} value={val}>
+      {text}
+    </option>
+  ));
 
-export const Options = ({ choices }) => choices.map(([val, text]) => ( // eslint-disable-line react/prop-types
-  <option key={val} value={val}>
-    {text}
-  </option>
-));
-
-
-export const SearchSelect = ({ input, meta = {}, options, label, isMulti, ...rest }) => { // eslint-disable-line
+export const SearchSelect = ({
+  input,
+  meta = {},
+  options,
+  label,
+  isMulti,
+  ...rest
+}) => {
+  // eslint-disable-line
   // NOTE: react-select's Select expects the value to be of form
   //  `{label, value}` or `null` (NOT undefined! if it receives undefined, it keeps
   //  showing the old selected value instead!)
@@ -57,11 +70,12 @@ export const SearchSelect = ({ input, meta = {}, options, label, isMulti, ...res
 
   let selectValue;
   if (!isMulti) {
-    selectValue = options.find((opt) => String(opt.value) === String(input.value)) || null;
+    selectValue =
+      options.find((opt) => String(opt.value) === String(input.value)) || null;
   } else {
-    selectValue = input.value.map((v) => options.find(
-      (opt) => String(opt.value) === String(v)
-    )).filter((x) => x);
+    selectValue = input.value
+      .map((v) => options.find((opt) => String(opt.value) === String(v)))
+      .filter((x) => x);
     if (!selectValue.length) {
       selectValue = null;
     }
@@ -70,12 +84,10 @@ export const SearchSelect = ({ input, meta = {}, options, label, isMulti, ...res
   return (
     <BS.FormGroup
       controlId={input.id || input.name}
-      validationState={(meta.touched && meta.error) ? 'error' : null}
+      validationState={meta.touched && meta.error ? 'error' : null}
       className="SearchSelect"
     >
-      {label && (
-        <BS.ControlLabel>{label}</BS.ControlLabel>
-      )}
+      {label && <BS.ControlLabel>{label}</BS.ControlLabel>}
       <Select
         value={selectValue}
         onChange={onSelectChange}
@@ -87,26 +99,25 @@ export const SearchSelect = ({ input, meta = {}, options, label, isMulti, ...res
   );
 };
 
-
-export const FlatpickrDateTime = ({ input, meta, options, label, className, ...rest }) => ( // eslint-disable-line react/prop-types
+export const FlatpickrDateTime = (
+  { input, meta, options, label, className, ...rest } // eslint-disable-line react/prop-types
+) => (
   <BS.FormGroup
     controlId={input.id || input.name}
-    validationState={(meta.touched && meta.error) ? 'error' : null}
+    validationState={meta.touched && meta.error ? 'error' : null}
     className="FlatpickrDateTime"
   >
-    {label && (
-      <BS.ControlLabel>{label}</BS.ControlLabel>
-    )}
+    {label && <BS.ControlLabel>{label}</BS.ControlLabel>}
     <Flatpickr
       value={input.value}
       onChange={(val) => input.onChange(val[0])}
       className={className}
+      options={Object.assign({ dateFormat: 'j M Y, h:i K' }, options)}
       {...rest}
     />
     <span className="FlatpickrDateTime__icon icon-calendar" />
   </BS.FormGroup>
 );
-
 
 export class LabeledFormControl extends React.PureComponent {
   static propTypes = {
@@ -131,17 +142,9 @@ export class LabeledFormControl extends React.PureComponent {
 
     let field;
     if (type === 'checkbox') {
-      field = (
-        <BS.Checkbox {...input}>
-          {label}
-        </BS.Checkbox>
-      );
+      field = <BS.Checkbox {...input}>{label}</BS.Checkbox>;
     } else if (type === 'radio') {
-      field = (
-        <BS.Radio {...input}>
-          {label}
-        </BS.Radio>
-      );
+      field = <BS.Radio {...input}>{label}</BS.Radio>;
     } else {
       const componentClassByType = {
         select: 'select',
@@ -150,9 +153,7 @@ export class LabeledFormControl extends React.PureComponent {
 
       field = (
         <React.Fragment>
-          {label && (
-            <BS.ControlLabel>{label}</BS.ControlLabel>
-          )}
+          {label && <BS.ControlLabel>{label}</BS.ControlLabel>}
           <BS.FormControl
             {...input}
             componentClass={componentClassByType[type] || 'input'}
@@ -170,7 +171,7 @@ export class LabeledFormControl extends React.PureComponent {
     return (
       <BS.FormGroup
         controlId={input.id || input.name}
-        validationState={(meta.touched && meta.error) ? 'error' : null}
+        validationState={meta.touched && meta.error ? 'error' : null}
       >
         {field}
         <BS.HelpBlock>{helpText}</BS.HelpBlock>
@@ -182,8 +183,9 @@ export class LabeledFormControl extends React.PureComponent {
   }
 }
 
-
-export const CenteredAlert = (props) => ( // eslint-disable-line react/prop-types
+export const CenteredAlert = (
+  props // eslint-disable-line react/prop-types
+) => (
   <div className="CenteredAlert">
     <BS.Alert {...props} />
   </div>

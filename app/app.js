@@ -16,7 +16,7 @@ import { ConnectedRouter, push } from 'react-router-redux';
 import createHistory from 'history/createBrowserHistory';
 
 // import 'sanitize.css/sanitize.css';
-import 'flatpickr/dist/themes/material_red.css';
+import 'flatpickr/dist/themes/material_blue.css';
 import 'assets/scss/index.scss';
 
 // Import root app
@@ -71,12 +71,10 @@ if (module.hot) {
 
 // Chunked polyfill for browsers without Intl support
 if (!window.Intl) {
-  (new Promise((resolve) => {
+  new Promise((resolve) => {
     resolve(import('intl'));
-  }))
-    .then(() => Promise.all([
-      import('intl/locale-data/jsonp/en.js'),
-    ]))
+  })
+    .then(() => Promise.all([import('intl/locale-data/jsonp/en.js')]))
     .then(() => render(translationMessages))
     .catch((err) => {
       throw err;

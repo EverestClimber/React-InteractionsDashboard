@@ -4,7 +4,6 @@ import HCP from './HCP';
 import { HCPObjective } from './HCPObjective';
 import Project from './Project';
 
-
 class Interaction extends Record({
   id: undefined,
   // relationships
@@ -22,8 +21,10 @@ class Interaction extends Record({
   description: '',
   purpose: 'purpose',
   is_joint_visit: false,
+  is_joint_visit_manager_approved: false,
   joint_visit_with: '',
   joint_visit_reason: '',
+  joint_visit_reason_other: '',
   origin_of_interaction: '',
   origin_of_interaction_other: '',
   type_of_interaction: '',
@@ -64,6 +65,7 @@ class Interaction extends Record({
   static joint_visit_reason_choices = {
     option1: 'Option 1',
     option2: 'Option 2',
+    other: 'Other',
   };
 
   toApiData() {
@@ -78,8 +80,14 @@ class Interaction extends Record({
     let interaction = new Interaction(data);
     interaction = interaction.set('resources', new List(interaction.resources));
     interaction = interaction.set('hcp', HCP.fromApiData(interaction.hcp));
-    interaction = interaction.set('hcp_objective', HCPObjective.fromApiData(interaction.hcp_objective));
-    interaction = interaction.set('project', Project.fromApiData(interaction.project));
+    interaction = interaction.set(
+      'hcp_objective',
+      HCPObjective.fromApiData(interaction.hcp_objective)
+    );
+    interaction = interaction.set(
+      'project',
+      Project.fromApiData(interaction.project)
+    );
     return interaction;
   }
 }

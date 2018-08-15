@@ -137,8 +137,11 @@ export class ListInteractions extends React.PureComponent {
           items={this.state.interactions}
           fields={{
             'Date / Time': {
-              render: (it) =>
-                moment(it.time_of_interaction).format('D MMM Y, h:mm A'),
+              render: (it) => (
+                <span style={{ 'white-space': 'nowrap' }}>
+                  {moment(it.time_of_interaction).format('D MMM Y, h:mm A')}
+                </span>
+              ),
               sortField: 'time_of_interaction',
             },
             'MSL Name': (it) =>

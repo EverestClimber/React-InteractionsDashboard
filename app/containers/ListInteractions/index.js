@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
-import { Grid, Panel } from 'react-bootstrap';
+import { Grid } from 'react-bootstrap';
 import moment from 'moment';
 import * as _ from 'underscore';
 
@@ -131,38 +131,34 @@ export class ListInteractions extends React.PureComponent {
             <pre>{serverError}</pre>
           </CenteredAlert>
         )}
-        <Panel>
-          <Panel.Body>
-            <SmartTable
-              title="Recorded Interactions"
-              items={this.state.interactions}
-              fields={{
-                'Date / Time': {
-                  render: (it) =>
-                    moment(it.time_of_interaction).format('D MMM Y, h:mm A'),
-                  sortField: 'time_of_interaction',
-                },
-                'MSL Name': (it) =>
-                  it.user ? `${it.user.first_name} ${it.user.last_name}` : '',
-                'HCP Name': (it) =>
-                  it.hcp ? `${it.hcp.first_name} ${it.hcp.last_name}` : '',
-                Consent: (it) => (it.has_consented ? 'Yes' : 'No'),
-                Project: (it) => it.project.title,
-                'Joint Visit': (it) => (it.is_joint_visit ? 'Yes' : 'No'),
-                'Interaction Type': (it) =>
-                  Interaction.type_of_interaction_choices[
-                    it.type_of_interaction
-                  ] || '',
-                'Adverse Event': (it) => (it.is_adverse_event ? 'Yes' : 'No'),
-                'PV Followed': (it) =>
-                  it.appropriate_pv_procedures_followed ? 'Yes' : 'No',
-              }}
-              searchItems={this.handleSearchChange}
-              sortItems={this.handleSort}
-              onItemClick={this.handleInteractionClick}
-            />
-          </Panel.Body>
-        </Panel>
+
+        <SmartTable
+          title="Recorded Interactions"
+          items={this.state.interactions}
+          fields={{
+            'Date / Time': {
+              render: (it) =>
+                moment(it.time_of_interaction).format('D MMM Y, h:mm A'),
+              sortField: 'time_of_interaction',
+            },
+            'MSL Name': (it) =>
+              it.user ? `${it.user.first_name} ${it.user.last_name}` : '',
+            'HCP Name': (it) =>
+              it.hcp ? `${it.hcp.first_name} ${it.hcp.last_name}` : '',
+            Consent: (it) => (it.has_consented ? 'Yes' : 'No'),
+            Project: (it) => it.project.title,
+            'Joint Visit': (it) => (it.is_joint_visit ? 'Yes' : 'No'),
+            'Interaction Type': (it) =>
+              Interaction.type_of_interaction_choices[it.type_of_interaction] ||
+              '',
+            'Adverse Event': (it) => (it.is_adverse_event ? 'Yes' : 'No'),
+            'PV Followed': (it) =>
+              it.appropriate_pv_procedures_followed ? 'Yes' : 'No',
+          }}
+          searchItems={this.handleSearchChange}
+          sortItems={this.handleSort}
+          onItemClick={this.handleInteractionClick}
+        />
       </Grid>
     );
   }

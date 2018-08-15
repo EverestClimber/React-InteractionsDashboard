@@ -32,6 +32,8 @@ $ctrl-height: 36px;
 }
 
 .input-group {
+  background: $n-white;
+  border-radius: 4px;
   .input-group-addon {
     background: transparent;
     border-color: $s-border-light;

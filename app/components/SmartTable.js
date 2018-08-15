@@ -1,7 +1,8 @@
 import React from 'react';
 import {
   Badge,
-  Button,
+  // Button,
+  Panel,
   Table,
   FormControl,
   FormGroup,
@@ -77,7 +78,6 @@ export default class SmartTable extends React.Component {
           {this.props.title}
           <Badge>{this.props.items.length}</Badge>
         </h3>
-        <br />
 
         <FormGroup>
           <InputGroup>
@@ -90,47 +90,50 @@ export default class SmartTable extends React.Component {
               value={this.state.searchText}
               onChange={this.handleSearchChange}
             />
-            <InputGroup.Button>
+            {/* <InputGroup.Button>
               <Button>Search</Button>
-            </InputGroup.Button>
+            </InputGroup.Button> */}
           </InputGroup>
         </FormGroup>
 
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              {Object.entries(fields).map(([fieldName, field]) => (
-                <th
-                  key={fieldName}
-                  onClick={() => this.handleSort(fieldName, field)}
-                  className={classNames({
-                    [`${baseClass}__tblHead`]: true,
-                    [`${baseClass}__tblHead--active`]:
-                      this.state.sortBy === fieldName,
-                    [`${baseClass}__tblHead--asc`]:
-                      this.state.sortDirection === 1,
-                    [`${baseClass}__tblHead--desc`]:
-                      this.state.sortDirection === -1,
-                  })}
-                >
-                  {fieldName}{' '}
-                  {this.state.sortBy &&
-                    this.state.sortBy === fieldName &&
-                    (this.state.sortDirection === 1 ? '▲' : '▼')}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((item) => (
-              <tr key={item.id} onClick={() => this.props.onItemClick(item)}>
+        <Panel>
+          <Table hover>
+            <thead>
+              <tr>
                 {Object.entries(fields).map(([fieldName, field]) => (
-                  <td key={fieldName}>{this.renderField(item, field)}</td>
+                  <th
+                    key={fieldName}
+                    onClick={() => this.handleSort(fieldName, field)}
+                    className={classNames({
+                      [`${baseClass}__tblHead`]: true,
+                      active: this.state.sortBy === fieldName,
+                      [`${baseClass}__tblHead--asc`]:
+                        this.state.sortDirection === 1,
+                      [`${baseClass}__tblHead--desc`]:
+                        this.state.sortDirection === -1,
+                    })}
+                  >
+                    {fieldName}
+                    <div className={`${baseClass}__tblHead__sortIcon`}>
+                      {this.state.sortBy &&
+                        this.state.sortBy === fieldName &&
+                        (this.state.sortDirection === 1 ? '▲' : '▼')}
+                    </div>
+                  </th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody>
+              {items.map((item) => (
+                <tr key={item.id} onClick={() => this.props.onItemClick(item)}>
+                  {Object.entries(fields).map(([fieldName, field]) => (
+                    <td key={fieldName}>{this.renderField(item, field)}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Panel>
       </div>
     );
   }

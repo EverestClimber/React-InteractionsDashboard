@@ -61,7 +61,7 @@ export class App extends React.PureComponent {
 
     return (
       <React.Fragment>
-        {user && <TopBar />}
+        <TopBar />
         <Loader />
         {/* <pre>{JSON.stringify(queryString.parse(this.props.location.search), null, 2)}</pre> */}
         {loadedCommonData || window.location.pathname === '/login' ? (

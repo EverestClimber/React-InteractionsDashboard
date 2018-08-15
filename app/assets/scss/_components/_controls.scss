@@ -69,6 +69,12 @@ $ctrl-height: 36px;
     float: left;
     margin: -1px 5px 0 0;
   }
+  &.btn-lg {
+    padding: 8px 20px;
+    height: auto;
+    min-width: 255px;
+    font-size: rem(16);
+  }
 }
 
 .form-control {

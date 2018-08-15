@@ -3,15 +3,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { Link, withRouter } from 'react-router-dom';
-import {
-  Button,
-  Grid,
-} from 'react-bootstrap';
+import { Button, Grid } from 'react-bootstrap';
 
 import routes from 'routes';
 import { logout } from 'containers/App/actions';
 
-export class TopBar extends React.PureComponent { // eslint-disable-line react/prefer-stateless-function
+export class TopBar extends React.PureComponent {
+  // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     user: PropTypes.object,
     location: PropTypes.object,
@@ -20,7 +18,8 @@ export class TopBar extends React.PureComponent { // eslint-disable-line react/p
 
   renderRoute(title, path, icon) {
     const currentLocation = this.props.location.pathname;
-    const activeClass = currentLocation === path ? 'topbar-nav__item--active' : '';
+    const activeClass =
+      currentLocation === path ? 'topbar-nav__item--active' : '';
 
     return (
       <Link to={path} className={`topbar-nav__item ${activeClass}`}>
@@ -32,38 +31,52 @@ export class TopBar extends React.PureComponent { // eslint-disable-line react/p
 
   render() {
     const { user } = this.props;
-    const email = user.get('email');
 
     return (
       <div className="topbar">
         <Grid className="topbar__container">
           <div className="topbar__section">
             <div className="topbar__logo" />
-            <div className="topbar__nav topbar-nav">
-              {this.renderRoute('MSL Dashboard', routes.DASHBOARD.path, 'nav-dashboard')}
-              {this.renderRoute('HCP Directory', routes.HCP_DIRECTORY.path, 'nav-hcps')}
-              {this.renderRoute('Record Interaction', routes.RECORD_INTERACTION.path, 'nav-record')}
-              {this.renderRoute('Report', routes.REPORT.path, 'nav-report')}
+            {user && (
+              <div className="topbar__nav topbar-nav">
+                {this.renderRoute(
+                  'MSL Dashboard',
+                  routes.DASHBOARD.path,
+                  'nav-dashboard'
+                )}
+                {this.renderRoute(
+                  'HCP Directory',
+                  routes.HCP_DIRECTORY.path,
+                  'nav-hcps'
+                )}
+                {this.renderRoute(
+                  'Record Interaction',
+                  routes.RECORD_INTERACTION.path,
+                  'nav-record'
+                )}
+                {this.renderRoute('Report', routes.REPORT.path, 'nav-report')}
+              </div>
+            )}
+          </div>
+          <div className="topbar__section" />
+          {user && (
+            <div className="topbar__section">
+              <div className="topbar__user topbar-user">
+                <Link to={routes.PROFILE} className="topbar-user__name">
+                  {user.email}
+                </Link>
+                <p className="topbar-user__ta">{user.ta_names.join(', ')}</p>
+              </div>
+              <Button
+                className="topbar__logout"
+                bsStyle="link"
+                onClick={this.props.logout}
+              >
+                <i className="nav-icon nav-icon__logout nav-icon--left" />
+                Log Out
+              </Button>
             </div>
-          </div>
-          <div className="topbar__section">
-          </div>
-          <div className="topbar__section">
-            <div className="topbar__user topbar-user">
-              <Link to={routes.PROFILE} className="topbar-user__name">
-                {email}
-              </Link>
-              <p className="topbar-user__ta">{user.ta_names.join(', ')}</p>
-            </div>
-            <Button
-              className="topbar__logout"
-              bsStyle="link"
-              onClick={this.props.logout}
-            >
-              <i className="nav-icon nav-icon__logout nav-icon--left" />
-              Log Out
-            </Button>
-          </div>
+          )}
         </Grid>
       </div>
     );
@@ -82,9 +95,12 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-const withConnect = connect(mapStateToProps, mapDispatchToProps);
+const withConnect = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
 
 export default compose(
   withRouter,
-  withConnect,
+  withConnect
 )(TopBar);

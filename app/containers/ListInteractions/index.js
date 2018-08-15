@@ -144,10 +144,16 @@ export class ListInteractions extends React.PureComponent {
               ),
               sortField: 'time_of_interaction',
             },
-            'MSL Name': (it) =>
-              it.user ? `${it.user.first_name} ${it.user.last_name}` : '',
-            'HCP Name': (it) =>
-              it.hcp ? `${it.hcp.first_name} ${it.hcp.last_name}` : '',
+            'MSL Name': (it) => (
+              <span style={{ 'white-space': 'nowrap' }}>
+                {it.user ? `${it.user.first_name} ${it.user.last_name}` : ''}
+              </span>
+            ),
+            'HCP Name': (it) => (
+              <span style={{ 'white-space': 'nowrap' }}>
+                {it.hcp ? `${it.hcp.first_name} ${it.hcp.last_name}` : ''}{' '}
+              </span>
+            ),
             Consent: (it) => (it.has_consented ? 'Yes' : 'No'),
             Project: (it) => it.project.title,
             'Joint Visit': (it) => (it.is_joint_visit ? 'Yes' : 'No'),

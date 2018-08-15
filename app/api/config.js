@@ -1,11 +1,12 @@
 import axios from 'axios';
 import routes from '../routes';
 
-
 function createAxiosInstance(unauthorizedCallback) {
-  const baseURL = process.env.NODE_ENV === 'development'
-    ? 'http://localhost:8000/api/v1'
-    : 'https://interactions.dev.deepsine.com/api/v1';
+  const baseURL =
+    {
+      development: 'https://interactions.dev.deepsine.com/api/v1',
+      production: 'https://interactions.otsuka.deepsine.com/api/v1',
+    }[process.env.NODE_ENV] || 'http://localhost:8000/api/v1';
 
   return axios.create({
     baseURL,
@@ -22,7 +23,6 @@ function createAxiosInstance(unauthorizedCallback) {
   });
 }
 
-
 function logout() {
   localStorage.removeItem('token');
   if (window.location.pathname !== routes.LOGIN.path) {
@@ -30,9 +30,7 @@ function logout() {
   }
 }
 
-
 export const axiosInstance = createAxiosInstance(logout);
-
 
 export default function request(params) {
   const token = localStorage.getItem('token');

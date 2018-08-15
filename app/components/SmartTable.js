@@ -74,10 +74,10 @@ export default class SmartTable extends React.Component {
 
     return (
       <div className={baseClass}>
-        <h3 className="align-left">
+        <p>
           {this.props.title}
           <Badge>{this.props.items.length}</Badge>
-        </h3>
+        </p>
 
         <FormGroup>
           <InputGroup>

@@ -66,24 +66,25 @@ export class ListInteractions extends React.PureComponent {
     );
   }
 
-  getField(interaction, field, sorting) {
+  getFieldForSorting(interaction, field) {
     if (typeof field === 'string') {
       return interaction[field];
     } else if (typeof field === 'function') {
       return field(interaction);
+    } else if (field.sortField) {
+      return typeof field.sortField === 'string'
+        ? interaction[field.sortField]
+        : field.sortField(interaction);
     }
-    return this.getField(
-      interaction,
-      sorting ? field.sortBy || field.render : field.render
-    );
+    return field.render(interaction);
   }
 
   sortInteractions(interactions, field, direction) {
     return interactions
       .sort((i1, i2) => {
-        const f1 = this.getField(i1, field, true);
-        const f2 = this.getField(i2, field);
-        console.log(`comparing ${f1} <> ${f2}`);
+        const f1 = this.getFieldForSorting(i1, field);
+        const f2 = this.getFieldForSorting(i2, field);
+        // console.log(`comparing ${f1} <> ${f2} ~ ${direction}`);
         if (f1 === f2) {
           return i1.time_of_interaction <= i2.time_of_interaction ? 1 : -1;
         }
@@ -138,23 +139,23 @@ export class ListInteractions extends React.PureComponent {
           fields={{
             'Date / Time': {
               render: (it) => (
-                <span style={{ 'white-space': 'nowrap' }}>
+                <span style={{ whiteSpace: 'nowrap' }}>
                   {moment(it.time_of_interaction).format('D MMM Y, h:mm A')}
                 </span>
               ),
               sortField: 'time_of_interaction',
             },
             'MSL Name': (it) => (
-              <span style={{ 'white-space': 'nowrap' }}>
+              <span style={{ whiteSpace: 'nowrap' }}>
                 {it.user ? `${it.user.first_name} ${it.user.last_name}` : ''}
               </span>
             ),
             'HCP Name': (it) => (
-              <span style={{ 'white-space': 'nowrap' }}>
+              <span style={{ whiteSpace: 'nowrap' }}>
                 {it.hcp ? `${it.hcp.first_name} ${it.hcp.last_name}` : ''}{' '}
               </span>
             ),
-            Consent: (it) => (it.has_consented ? 'Yes' : 'No'),
+            Consent: (it) => (it.hcp && it.hcp.has_consented ? 'Yes' : 'No'),
             Project: (it) => it.project.title,
             'Joint Visit': (it) => (it.is_joint_visit ? 'Yes' : 'No'),
             'Interaction Type': (it) =>

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
 import { Grid, Panel } from 'react-bootstrap';
 import moment from 'moment';
+import * as _ from 'underscore';
 
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
@@ -59,8 +60,9 @@ export class ListInteractions extends React.PureComponent {
   };
 
   filterInteractions(interactions, searchText) {
-    return interactions.filter(
-      (inter) => this.interactionToText(inter).indexOf(searchText) !== -1
+    const words = searchText.split(/[,\s]+/).filter((s) => s);
+    return interactions.filter((inter) =>
+      _.every(words.map((w) => this.interactionToText(inter).indexOf(w) !== -1))
     );
   }
 
@@ -121,8 +123,8 @@ export class ListInteractions extends React.PureComponent {
 
     return (
       <Grid>
-        <h2>Interactions</h2>
-        field.render
+        <h2>Interactions Report</h2>
+
         {serverError && (
           <CenteredAlert bsStyle="danger">
             An error has occurred. Please refresh the page or try again later.
@@ -132,6 +134,7 @@ export class ListInteractions extends React.PureComponent {
         <Panel>
           <Panel.Body>
             <SmartTable
+              title="Recorded Interactions"
               items={this.state.interactions}
               fields={{
                 'Date / Time': {
@@ -144,6 +147,7 @@ export class ListInteractions extends React.PureComponent {
                 'HCP Name': (it) =>
                   it.hcp ? `${it.hcp.first_name} ${it.hcp.last_name}` : '',
                 Consent: (it) => (it.has_consented ? 'Yes' : 'No'),
+                Project: (it) => it.project.title,
                 'Joint Visit': (it) => (it.is_joint_visit ? 'Yes' : 'No'),
                 'Interaction Type': (it) =>
                   Interaction.type_of_interaction_choices[

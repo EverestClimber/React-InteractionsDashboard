@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,700');
-
 body {
   font-family: 'Open Sans', sans-serif;
   font-size: 14px;
@@ -10,4 +9,9 @@ h2 {
   font-size: rem(16);
   text-align: center;
   margin: rem(25) auto rem(20) auto;
+}
+
+h3 {
+  font-size: rem(16);
+  text-align: left;
 }

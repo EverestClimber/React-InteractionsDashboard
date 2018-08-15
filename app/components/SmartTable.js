@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Badge,
   Button,
   Table,
   FormControl,
@@ -72,6 +73,12 @@ export default class SmartTable extends React.Component {
 
     return (
       <div className={baseClass}>
+        <h3 className="align-left">
+          {this.props.title}
+          <Badge>{this.props.items.length}</Badge>
+        </h3>
+        <br />
+
         <FormGroup>
           <InputGroup>
             <InputGroup.Addon>
@@ -88,10 +95,6 @@ export default class SmartTable extends React.Component {
             </InputGroup.Button>
           </InputGroup>
         </FormGroup>
-
-        <pre>
-          sort by: {this.state.sortBy} {this.state.sortDirection}
-        </pre>
 
         <Table striped bordered hover>
           <thead>

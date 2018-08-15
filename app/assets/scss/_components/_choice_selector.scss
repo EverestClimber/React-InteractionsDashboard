@@ -12,7 +12,7 @@
     padding: 15px;
     overflow: hidden;
     label.control-label {
-      padding-left: 0
+      padding-left: 0;
     }
   }
   .control-label {
@@ -30,7 +30,7 @@
     clear: both;
     border-top: 1px solid $n-grey-light;
     label.control-label {
-      padding-left: 0
+      padding-left: 0;
     }
     >* {
       border: 0;
@@ -48,6 +48,7 @@
       padding: 6px 0 6px 15px;
       margin: 0;
       font-weight: normal;
+      color: $n-darkest;
     }
     label.checkbox-inline {
       float: right;

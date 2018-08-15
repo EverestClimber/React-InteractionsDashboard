@@ -247,19 +247,18 @@ export class RecordInteraction extends React.Component {
                         />
                       )}
 
-                      <Field
-                        name="hcp_objective_id"
-                        placeholder="Select HCP Objective"
-                        component={SearchSelect}
-                        options={hcpObjectives.map((it) => ({
-                          value: it.id,
-                          label: it.description,
-                        }))}
-                        isDisabled={
-                          formDisabled ||
-                          originOfInteraction !== 'engagement_plan'
-                        }
-                      />
+                      {originOfInteraction === 'engagement_plan' && (
+                        <Field
+                          name="hcp_objective_id"
+                          placeholder="Select HCP Objective"
+                          component={SearchSelect}
+                          options={hcpObjectives.map((it) => ({
+                            value: it.id,
+                            label: it.description,
+                          }))}
+                          isDisabled={formDisabled}
+                        />
+                      )}
                     </Col>
                     <Col xs={6}>
                       <Row>
@@ -551,6 +550,7 @@ function mapStateToProps(state, ownProps) {
     allFormErrors:
       state.get('form') &&
       state.get('form').recordInteraction &&
+      state.get('form').recordInteraction.anyTouched &&
       state.get('form').recordInteraction.syncErrors,
     // local
     serverError: recordInteractionState.get('serverError'),

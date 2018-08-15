@@ -5,24 +5,22 @@
   $s-consent-yes-border: $n-green;
   $s-consent-no-text: $n-red;
   $s-consent-no-border: $n-red;
-
   position: relative;
   border: 1px solid;
   color: $s-text;
-
   &--consentYes {
     border-color: $s-consent-yes-border;
   }
   &--consentNo {
     border-color: $s-consent-no-border;
   }
-  &__heading {
-    margin: 5px 0 0 0;
+  &__details {
+    margin: 3px 0 0 0;
   }
   &__remove {
     font-size: rem(30);
     position: absolute;
-    top: 5px;
+    top: 14px;
     right: 5px;
     cursor: pointer;
   }
@@ -55,7 +53,7 @@
     }
   }
   &__institution_name {
-    padding-top: rem(20);
+    float: right;
     [class^="icon-"] {
       font-size: rem(26);
       position: relative;
@@ -65,16 +63,12 @@
     }
   }
   &__location {
-    text-align: right;
     float: right;
-    clear: right;
+    margin: 0 30px 0 15px;
   }
   &__tas {
-    text-align: right;
-    float: right;
-    clear: right;
+    margin-top: 10px;
   }
-
   &__location {
     [class^="icon-"] {
       font-size: rem(28);
@@ -87,7 +81,6 @@
     &__country {
     }
   }
-
   &__children {
     margin: 15px 0 5px 0;
   }

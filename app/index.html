@@ -1,35 +1,49 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- The first thing in any HTML file should be the charset -->
-    <meta charset="utf-8">
 
-    <!-- Make the page mobile compatible -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+  <!-- The first thing in any HTML file should be the charset -->
+  <meta charset="utf-8">
 
-    <!-- Allow installing the app to the homescreen -->
-    <link rel="manifest" href="/manifest.json">
-    <meta name="mobile-web-app-capable" content="yes">
+  <!-- Make the page mobile compatible -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- iOS home screen icons -->
-    <meta name="apple-mobile-web-app-title" content="react boilerplate">
+  <!-- Allow installing the app to the homescreen -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+
+  <!-- iOS home screen icons -->
+  <!-- <meta name="apple-mobile-web-app-title" content="react boilerplate">
     <link rel="apple-touch-icon" sizes="120x120" href="/icon-120x120.png">
     <link rel="apple-touch-icon" sizes="152x152" href="/icon-152x152.png">
     <link rel="apple-touch-icon" sizes="167x167" href="/icon-167x167.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/icon-180x180.png"> -->
 
-    <link rel="icon" href="/favicon.ico" />
-    <title>Otsuka Interactions</title>
+  <link rel="shortcut icon" href="/imgs/favicon.ico" />
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+  <link rel="apple-touch-icon" sizes="180x180" href="/imgs/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/imgs/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/x-icon" href="/imgs/favicon-16x16.png" sizes="16x16">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="apple-mobile-web-app-title" content="Interactions">
 
-  </head>
-  <body>
-    <!-- Display a message if JS has been disabled on the browser. -->
-    <noscript>If you're seeing this message, that means <strong>JavaScript has been disabled on your browser</strong>, please <strong>enable JS</strong> to make this app work.</noscript>
+  <link rel="icon" href="/favicon.ico" />
+  <title>Otsuka Interactions</title>
 
-    <!-- The app hooks into this div -->
-    <div id="app"></div>
-    <!-- A lot of magic happens in this file. HtmlWebpackPlugin automatically includes all assets (e.g. bundle.js, main.css) with the correct HTML tags, which is why they are missing in this HTML file. Don't add any assets here! (Check out the webpack config files in internals/webpack for details) -->
-  </body>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"
+    crossorigin="anonymous">
+
+</head>
+
+<body>
+  <!-- Display a message if JS has been disabled on the browser. -->
+  <noscript>If you're seeing this message, that means
+    <strong>JavaScript has been disabled on your browser</strong>, please
+    <strong>enable JS</strong> to make this app work.</noscript>
+
+  <!-- The app hooks into this div -->
+  <div id="app"></div>
+  <!-- A lot of magic happens in this file. HtmlWebpackPlugin automatically includes all assets (e.g. bundle.js, main.css) with the correct HTML tags, which is why they are missing in this HTML file. Don't add any assets here! (Check out the webpack config files in internals/webpack for details) -->
+</body>
+
 </html>

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
+import { Helmet } from 'react-helmet';
 import { Grid } from 'react-bootstrap';
 import moment from 'moment';
 import * as _ from 'underscore';
@@ -124,6 +125,10 @@ export class ListInteractions extends React.PureComponent {
 
     return (
       <Grid>
+        <Helmet>
+          <title>OTSK - Interactions Report</title>
+        </Helmet>
+
         <h2>Interactions Report</h2>
 
         {serverError && (

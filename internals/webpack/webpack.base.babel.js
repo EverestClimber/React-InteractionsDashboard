@@ -13,11 +13,18 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 process.noDeprecation = true;
 
 module.exports = (options) => ({
+  node: {
+    fs: 'empty',
+  },
   entry: options.entry,
-  output: Object.assign({ // Compile into js/build.js
-    path: path.resolve(process.cwd(), 'build'),
-    publicPath: '/',
-  }, options.output), // Merge with env dependent settings
+  output: Object.assign(
+    {
+      // Compile into js/build.js
+      path: path.resolve(process.cwd(), 'build'),
+      publicPath: '/',
+    },
+    options.output
+  ), // Merge with env dependent settings
   module: {
     rules: [
       {
@@ -39,7 +46,9 @@ module.exports = (options) => ({
       {
         test: /\.scss$/,
         exclude: /node_modules/,
-        loader: ['css-hot-loader'].concat(ExtractTextPlugin.extract(['css-loader', 'sass-loader'])),
+        loader: ['css-hot-loader'].concat(
+          ExtractTextPlugin.extract(['css-loader', 'sass-loader'])
+        ),
       },
       {
         // Preprocess 3rd party .css files located in node_modules
@@ -107,16 +116,8 @@ module.exports = (options) => ({
   ]),
   resolve: {
     modules: ['app', 'node_modules'],
-    extensions: [
-      '.js',
-      '.jsx',
-      '.react.js',
-    ],
-    mainFields: [
-      'browser',
-      'jsnext:main',
-      'main',
-    ],
+    extensions: ['.js', '.jsx', '.react.js'],
+    mainFields: ['browser', 'jsnext:main', 'main'],
   },
   devtool: options.devtool,
   target: 'web', // Make web variables accessible to webpack, e.g. window

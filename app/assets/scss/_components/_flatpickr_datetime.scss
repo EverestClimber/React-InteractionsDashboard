@@ -1,5 +1,4 @@
 .FlatpickrDateTime {
-
   &__icon {
     position: absolute;
     top: 1px;
@@ -10,8 +9,8 @@
     border-radius: 0 4px 4px 0;
     line-height: 35px;
     background: $n-grey-lighter;
+    pointer-events: none;
   }
-
   &.has-error {
     input.form-control[readonly] {
       background: $s-error-bg;

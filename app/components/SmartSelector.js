@@ -153,7 +153,7 @@ export default class SmartSelector extends React.Component {
             </div>
           </Col>
           <Col sm={2}>
-            <Button type="submit" block>
+            <Button block>
               <span className="fi-icon icon-nav-hcps" /> {btnLabel}
             </Button>
           </Col>

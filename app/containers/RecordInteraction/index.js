@@ -377,13 +377,15 @@ export class RecordInteraction extends React.Component {
                             </Row>
                             {jointVisitReason === 'other' && (
                               <Row>
-                                <Field
-                                  name="joint_visit_reason_other"
-                                  component={LabeledFormControl}
-                                  type="text"
-                                  placeholder="Other reason for joint visit"
-                                  disabled={formDisabled}
-                                />
+                                <Col md={12}>
+                                  <Field
+                                    name="joint_visit_reason_other"
+                                    component={LabeledFormControl}
+                                    type="text"
+                                    placeholder="Other reason for joint visit"
+                                    disabled={formDisabled}
+                                  />
+                                </Col>
                               </Row>
                             )}
                           </React.Fragment>

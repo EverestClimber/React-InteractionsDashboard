@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { createStructuredSelector } from 'reselect';
 import { compose, bindActionCreators } from 'redux';
 import { Field, reduxForm } from 'redux-form/immutable';
 import { Button, Grid } from 'react-bootstrap';
 import { Helmet } from 'react-helmet';
 
+import routes from 'routes';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
 import { LabeledFormControl } from 'components/forms';
@@ -36,18 +38,10 @@ export const Login = (props) => {
               placeholder="Email"
               label="EMAIL*"
             />
-            {/* <Field
-            type="email"
-            name="email"
-            placeholder="Email"
-            component="input"
-          /> */}
-            {/* <Field
-            type="password"
-            name="password"
-            placeholder="Password"
-            component="input"
-          /> */}
+            <Link to={routes.PASSWORD_RESET.path} className="pull-right">
+              Forgot your password?
+            </Link>
+            <br />
             <Field
               name="password"
               component={LabeledFormControl}
@@ -61,7 +55,6 @@ export const Login = (props) => {
                 Sign In
               </Button>
             </div>
-            {/* <button type="submit">Submit</button> */}
           </form>
         </div>
       </Grid>

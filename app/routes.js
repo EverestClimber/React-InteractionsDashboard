@@ -1,6 +1,7 @@
 const routes = {
   DASHBOARD: { path: '/' },
   LOGIN: { path: '/login' },
+  PASSWORD_RESET: { path: '/password/reset' },
   PROFILE: { path: '/profile' },
   HCP_DIRECTORY: { path: '/hcp-directory' },
   LIST_INTERACTIONS: { path: '/interactions' },

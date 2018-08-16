@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import Loader from 'containers/Loader';
 import Dashboard from 'containers/Dashboard';
 import Login from 'containers/Login';
+import PasswordReset from 'containers/PasswordReset';
 import RecordInteraction from 'containers/RecordInteraction';
 import ListInteractions from 'containers/ListInteractions';
 import NotFound from 'containers/NotFound';
@@ -63,10 +64,15 @@ export class App extends React.PureComponent {
       <React.Fragment>
         <TopBar />
         <Loader />
-        {/* <pre>{JSON.stringify(queryString.parse(this.props.location.search), null, 2)}</pre> */}
-        {loadedCommonData || window.location.pathname === '/login' ? (
+        {/* <pre>{JSON.stringify(queryStringLogin.parse(this.props.location.search), null, 2)}</pre> */}
+        {loadedCommonData || ['/login', '/password/reset'].indexOf(window.location.pathname) !== -1 ? (
           <Switch>
             <Route exact path={routes.LOGIN.path} component={Login} />
+            <Route
+              exact
+              path={routes.PASSWORD_RESET.path}
+              component={PasswordReset}
+            />
             {user && (
               <Switch>
                 <Route

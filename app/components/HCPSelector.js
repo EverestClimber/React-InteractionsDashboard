@@ -45,8 +45,8 @@ const HCPItem = (
       {item.first_name} {item.last_name}
     </div>
 
-    <div className="SmartSelector__ListItems__Item__institution HCPSelector__ListItems__Item__institution">
-      {item.institution_name}
+    <div className="SmartSelector__ListItems__Item__institution SmartSelector__location HCPSelector__ListItems__Item__institution">
+      <span className="icon-hcp-hospital" /> {item.institution_name}
     </div>
 
     <div className="SmartSelector__ListItems__Item__location SmartSelector__location HCPSelector__ListItems__Item__location">

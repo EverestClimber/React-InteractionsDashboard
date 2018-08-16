@@ -57,7 +57,7 @@ export const Login = (props) => {
             />
             <br />
             <div className="text-center">
-              <Button type="submit" bsStyle="primary block" bsSize="large">
+              <Button type="submit" bsStyle="primary" bsSize="large">
                 Sign In
               </Button>
             </div>

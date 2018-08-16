@@ -25,15 +25,23 @@
     }
   }
   &__location {
+    &__city {
+    }
+    &__country {
+    }
+  }
+  &__location,
+  &__institution {
     [class^="icon-"] {
       font-size: rem(28);
       position: relative;
       top: 4px;
       line-height: 10px;
     }
-    &__city {
-    }
-    &__country {
+  }
+  &__location {
+    [class^="icon-"] {
+      font-size: rem(26);
     }
   }
   &__ListItems {

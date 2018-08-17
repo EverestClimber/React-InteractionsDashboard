@@ -10,9 +10,21 @@
 (function() {
 	function addIcon(el, entity) {
 		var html = el.innerHTML;
-		el.innerHTML = '<span style="font-family: \'otsk-interactions-20180808\'">' + entity + '</span>' + html;
+		el.innerHTML = '<span style="font-family: \'otsk-interactions-20180816\'">' + entity + '</span>' + html;
 	}
 	var icons = {
+		'icon-arrow-down': '&#xe92b;',
+		'icon-arrow-up': '&#xe92c;',
+		'icon-archive': '&#xe921;',
+		'icon-button-new-project': '&#xe922;',
+		'icon-edit': '&#xe923;',
+		'icon-nav-data-factors': '&#xe924;',
+		'icon-nav-manage': '&#xe925;',
+		'icon-nav-objectives': '&#xe926;',
+		'icon-nav-projects': '&#xe927;',
+		'icon-nav-resources': '&#xe928;',
+		'icon-zinc-global': '&#xe929;',
+		'icon-zinc-local': '&#xe92a;',
 		'icon-add-plus': '&#xe913;',
 		'icon-button-approve': '&#xe914;',
 		'icon-button-comment-off': '&#xe915;',

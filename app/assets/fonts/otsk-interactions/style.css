@@ -1,17 +1,17 @@
 @font-face {
-  font-family: 'otsk-interactions-20180808';
-  src:  url('fonts/otsk-interactions-20180808.eot?m32woq');
-  src:  url('fonts/otsk-interactions-20180808.eot?m32woq#iefix') format('embedded-opentype'),
-    url('fonts/otsk-interactions-20180808.ttf?m32woq') format('truetype'),
-    url('fonts/otsk-interactions-20180808.woff?m32woq') format('woff'),
-    url('fonts/otsk-interactions-20180808.svg?m32woq#otsk-interactions-20180808') format('svg');
+  font-family: 'otsk-interactions-20180816';
+  src:  url('fonts/otsk-interactions-20180816.eot?7cxzti');
+  src:  url('fonts/otsk-interactions-20180816.eot?7cxzti#iefix') format('embedded-opentype'),
+    url('fonts/otsk-interactions-20180816.ttf?7cxzti') format('truetype'),
+    url('fonts/otsk-interactions-20180816.woff?7cxzti') format('woff'),
+    url('fonts/otsk-interactions-20180816.svg?7cxzti#otsk-interactions-20180816') format('svg');
   font-weight: normal;
   font-style: normal;
 }
 
 [class^="icon-"], [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'otsk-interactions-20180808' !important;
+  font-family: 'otsk-interactions-20180816' !important;
   speak: none;
   font-style: normal;
   font-weight: normal;
@@ -24,6 +24,42 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-arrow-down:before {
+  content: "\e92b";
+}
+.icon-arrow-up:before {
+  content: "\e92c";
+}
+.icon-archive:before {
+  content: "\e921";
+}
+.icon-button-new-project:before {
+  content: "\e922";
+}
+.icon-edit:before {
+  content: "\e923";
+}
+.icon-nav-data-factors:before {
+  content: "\e924";
+}
+.icon-nav-manage:before {
+  content: "\e925";
+}
+.icon-nav-objectives:before {
+  content: "\e926";
+}
+.icon-nav-projects:before {
+  content: "\e927";
+}
+.icon-nav-resources:before {
+  content: "\e928";
+}
+.icon-zinc-global:before {
+  content: "\e929";
+}
+.icon-zinc-local:before {
+  content: "\e92a";
+}
 .icon-add-plus:before {
   content: "\e913";
 }

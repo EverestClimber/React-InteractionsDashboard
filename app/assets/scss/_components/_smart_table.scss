@@ -30,9 +30,9 @@ html body .SmartTable {
     padding-right: 30px;
     &__sortIcon {
       position: absolute;
-      position: absolute;
-      bottom: 13px;
-      right: 10px;
+      bottom: 3px;
+      right: 0px;
+      font-size: rem(36);
     }
   }
 }

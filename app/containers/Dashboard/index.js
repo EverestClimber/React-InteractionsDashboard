@@ -3,10 +3,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { Helmet } from 'react-helmet';
-import { Link } from 'react-router-dom';
-import { Grid, Button } from 'react-bootstrap';
+// import { Link } from 'react-router-dom';
+import {
+  Grid,
+  // Button
+} from 'react-bootstrap';
 
-import routes from 'routes';
+// import routes from 'routes';
 import injectReducer from 'utils/injectReducer';
 import { MSLUserDashboard } from 'containers/MSLUserDashboard';
 // import injectSaga from 'utils/injectSaga';
@@ -16,19 +19,22 @@ import reducer from './reducer';
 
 export class Dashboard extends React.PureComponent {
   render() {
-    const { engagementPlans, user } = this.props;
+    const {
+      // engagementPlans,
+      user,
+    } = this.props;
 
     // debugger;
 
     return (
       <Grid>
         <Helmet>
-          <title>OTSK - Dashboard</title>
+          <title>MSL Interactactions - Dashboard</title>
         </Helmet>
 
         {user.group_names.contains('Role MSL') && <MSLUserDashboard />}
 
-        <h2>Dashboard</h2>
+        {/*
         <br />
         <br />
         <hr />
@@ -69,7 +75,7 @@ export class Dashboard extends React.PureComponent {
               <Link to={routes.UPDATE_EP.makePath(ep.id)}>EP #{ep.id}</Link>
             </li>
           ))}
-        </ul>
+        </ul> */}
       </Grid>
     );
   }

@@ -54,7 +54,11 @@ export class TopBar extends React.PureComponent {
                   routes.RECORD_INTERACTION.path,
                   'nav-record'
                 )}
-                {this.renderRoute('Report', routes.REPORT.path, 'nav-report')}
+                {this.renderRoute(
+                  'Report',
+                  routes.LIST_INTERACTIONS.path,
+                  'nav-report'
+                )}
               </div>
             )}
           </div>

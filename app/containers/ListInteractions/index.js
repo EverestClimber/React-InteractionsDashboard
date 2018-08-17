@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
 import { Helmet } from 'react-helmet';
-import { Grid } from 'react-bootstrap';
 import moment from 'moment';
+import { Grid } from 'react-bootstrap';
 import * as _ from 'underscore';
 
 import injectSaga from 'utils/injectSaga';
@@ -150,16 +150,24 @@ export class ListInteractions extends React.PureComponent {
               ),
               sortField: 'time_of_interaction',
             },
-            'MSL Name': (it) => (
-              <span style={{ whiteSpace: 'nowrap' }}>
-                {it.user ? `${it.user.first_name} ${it.user.last_name}` : ''}
-              </span>
-            ),
-            'HCP Name': (it) => (
-              <span style={{ whiteSpace: 'nowrap' }}>
-                {it.hcp ? `${it.hcp.first_name} ${it.hcp.last_name}` : ''}{' '}
-              </span>
-            ),
+            'MSL Name': {
+              render: (it) => (
+                <span style={{ whiteSpace: 'nowrap' }}>
+                  {it.user ? `${it.user.first_name} ${it.user.last_name}` : ''}
+                </span>
+              ),
+              sortField: (it) =>
+                it.user ? `${it.user.first_name} ${it.user.last_name}` : '',
+            },
+            'HCP Name': {
+              render: (it) => (
+                <span style={{ whiteSpace: 'nowrap' }}>
+                  {it.hcp ? `${it.hcp.first_name} ${it.hcp.last_name}` : ''}{' '}
+                </span>
+              ),
+              sortField: (it) =>
+                it.hcp ? `${it.hcp.first_name} ${it.hcp.last_name}` : '',
+            },
             Consent: (it) => (it.hcp && it.hcp.has_consented ? 'Yes' : 'No'),
             Project: (it) => it.project.title,
             'Joint Visit': (it) => (it.is_joint_visit ? 'Yes' : 'No'),

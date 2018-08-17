@@ -114,11 +114,15 @@ export default class SmartTable extends React.Component {
                     })}
                   >
                     {fieldName}
-                    <div className={`${baseClass}__tblHead__sortIcon`}>
-                      {this.state.sortBy &&
-                        this.state.sortBy === fieldName &&
-                        (this.state.sortDirection === 1 ? '▲' : '▼')}
-                    </div>
+                    {this.state.sortBy === fieldName && (
+                      <div
+                        className={classNames({
+                          [`${baseClass}__tblHead__sortIcon`]: true,
+                          'icon-arrow-up': this.state.sortDirection === 1,
+                          'icon-arrow-down': this.state.sortDirection === -1,
+                        })}
+                      />
+                    )}
                   </th>
                 ))}
               </tr>

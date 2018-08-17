@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
+import { Grid, Row, Panel } from 'react-bootstrap';
 
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
@@ -11,7 +12,18 @@ import * as actions from './actions';
 
 export class MSLUserDashboard extends React.PureComponent {
   render() {
-    return <div>MSLUserDashboard</div>;
+    return (
+      <Grid>
+        <Row>
+          <h2>MSL Interactions - Dashboard</h2>
+          <Panel>
+            <Panel.Body>
+              <p>Coming soon...</p>
+            </Panel.Body>
+          </Panel>
+        </Row>
+      </Grid>
+    );
   }
 }
 

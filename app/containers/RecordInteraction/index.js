@@ -70,6 +70,7 @@ export class RecordInteraction extends React.Component {
       origin_of_interaction: this.props.urlQuery.origin_of_interaction,
       hcp_id: this.props.urlQuery.hcp ? +this.props.urlQuery.hcp : undefined,
     });
+    this.props.fetchHCP(null);
     this.props.fetchInteractionRecordingRequiredData();
     const hcpId = parseInt(this.props.urlQuery.hcp, 10);
     console.log('--- urlQuery:', this.props.urlQuery);

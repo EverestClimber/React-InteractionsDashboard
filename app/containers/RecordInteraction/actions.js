@@ -1,12 +1,13 @@
-import { makeActionCreators } from 'utils/actions';
+import { makeActionCreators, makeActionCreator } from 'utils/actions';
 
-
-export const recordInteractionActions = makeActionCreators('RECORD_INTERACTION', {
-  request: (interaction) => ({ interaction }),
-  success: () => ({}),
-  error: (message) => ({ message }),
-});
-
+export const recordInteractionActions = makeActionCreators(
+  'RECORD_INTERACTION',
+  {
+    request: (interaction) => ({ interaction }),
+    success: () => ({}),
+    error: (message) => ({ message }),
+  }
+);
 
 export const fetchInteractionRecordingRequiredDataActions = makeActionCreators(
   'RECORD_INTERACTION/FETCH_REQUIRED_DATA',
@@ -17,7 +18,6 @@ export const fetchInteractionRecordingRequiredDataActions = makeActionCreators(
   }
 );
 
-
 export const fetchHCPObjectivesActions = makeActionCreators(
   'RECORD_INTERACTION/FETCH_HCPOBJECTIVES',
   {
@@ -26,7 +26,6 @@ export const fetchHCPObjectivesActions = makeActionCreators(
     error: (message) => ({ message }),
   }
 );
-
 
 export const searchHCPsActions = makeActionCreators(
   'RECORD_INTERACTION/SEARCH_HCPS',
@@ -37,7 +36,6 @@ export const searchHCPsActions = makeActionCreators(
   }
 );
 
-
 export const fetchHCPActions = makeActionCreators(
   'RECORD_INTERACTION/FETCH_HCP',
   {
@@ -45,4 +43,9 @@ export const fetchHCPActions = makeActionCreators(
     success: (hcp) => ({ hcp }),
     error: (message) => ({ message }),
   }
+);
+
+export const setSuccessAction = makeActionCreator(
+  'RECORD_INTERACTION/SET_SUCCESS',
+  (success) => ({ success })
 );

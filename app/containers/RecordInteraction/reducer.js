@@ -5,8 +5,8 @@ import {
   recordInteractionActions,
   searchHCPsActions,
   fetchHCPActions,
+  setSuccessAction,
 } from './actions';
-
 
 const initialState = fromJS({
   serverError: null,
@@ -15,15 +15,13 @@ const initialState = fromJS({
   hcpObjectives: new List(),
   projects: new List(),
   resources: new List(),
+  success: false,
 });
 
 function recordInteractionReducer(state = initialState, action) {
   switch (action.type) {
     case fetchInteractionRecordingRequiredDataActions.success.type: {
-      const {
-        projects,
-        resources,
-      } = action.payload;
+      const { projects, resources } = action.payload;
       return state.merge({
         projects,
         resources,
@@ -47,6 +45,9 @@ function recordInteractionReducer(state = initialState, action) {
 
     case fetchHCPObjectivesActions.success.type:
       return state.merge({ hcpObjectives: action.hcpObjectives });
+
+    case setSuccessAction.type:
+      return state.set('success', action.success);
 
     default:
       return state;

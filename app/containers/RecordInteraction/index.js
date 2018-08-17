@@ -4,10 +4,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { compose, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import { push } from 'react-router-redux';
 import { Helmet } from 'react-helmet';
 import { reduxForm, formValueSelector, Field } from 'redux-form/immutable';
 import { Grid, Col, Row, Button, Panel } from 'react-bootstrap';
 
+import routes from 'routes';
 import Interaction from 'records/Interaction';
 import injectSaga from 'utils/injectSaga';
 import injectReducer from 'utils/injectReducer';
@@ -32,6 +34,7 @@ import {
   fetchHCPObjectivesActions,
   recordInteractionActions,
   fetchInteractionRecordingRequiredDataActions,
+  setSuccessAction,
 } from './actions';
 
 export class RecordInteraction extends React.Component {
@@ -41,6 +44,8 @@ export class RecordInteraction extends React.Component {
     urlQuery: PropTypes.object,
     submitting: PropTypes.bool,
     handleSubmit: PropTypes.func,
+    setSuccess: PropTypes.func,
+    success: PropTypes.bool,
     searchHCPs: PropTypes.func,
     fetchHCP: PropTypes.func,
     fetchHCPObjectives: PropTypes.func,
@@ -65,12 +70,7 @@ export class RecordInteraction extends React.Component {
   };
 
   componentDidMount() {
-    this.props.initialize({
-      resources: [], // to quench warning
-      origin_of_interaction: this.props.urlQuery.origin_of_interaction,
-      hcp_id: this.props.urlQuery.hcp ? +this.props.urlQuery.hcp : undefined,
-    });
-    this.props.fetchHCP(null);
+    this.clearForm();
     this.props.fetchInteractionRecordingRequiredData();
     const hcpId = parseInt(this.props.urlQuery.hcp, 10);
     console.log('--- urlQuery:', this.props.urlQuery);
@@ -81,40 +81,24 @@ export class RecordInteraction extends React.Component {
     }
   }
 
+  clearForm() {
+    this.props.initialize({
+      resources: [], // to quench warning
+      origin_of_interaction: this.props.urlQuery.origin_of_interaction,
+      hcp_id: this.props.urlQuery.hcp ? +this.props.urlQuery.hcp : undefined,
+    });
+    this.props.fetchHCP(null);
+    this.props.searchHCPs('');
+  }
+
   setRecordWithoutConsent = () => this.setState({ recordWithoutConsent: true });
 
   render() {
-    const {
-      therapeuticAreas,
-      affiliateGroups,
-      submitting,
-      handleSubmit,
-      searchHCPs,
-      fetchHCP,
-      fetchHCPObjectives,
-      hcps,
-      hcp,
-      hcpObjectives,
-      projects,
-      resources,
-      originOfInteraction,
-      isJointVisit,
-      jointVisitReason,
-      isAdverseEvent,
-      noFollowUpRequired,
-      allFormErrors,
-      serverError,
-    } = this.props;
+    const { therapeuticAreas, affiliateGroups, serverError } = this.props;
 
     if (!therapeuticAreas || !affiliateGroups) {
       return 'Loading...';
     }
-
-    const formDisabled =
-      hcp && !hcp.has_consented ? !this.state.recordWithoutConsent : false;
-
-    // console.log('DISABLED=', formDisabled, (hcp && !hcp.has_consented), this.state.recordWithoutConsent);
-    // console.log('SUBMIT DISABLED=', pristine, submitting, formDisabled, !!allFormErrors);
 
     return (
       <Grid>
@@ -131,338 +115,412 @@ export class RecordInteraction extends React.Component {
           </CenteredAlert>
         )}
 
-        <form onSubmit={handleSubmit}>
-          <Field
-            name="hcp_id"
-            component={HCPSelector}
-            items={hcps}
-            selectedItems={new OrderedMap(hcp ? [[hcp.id, hcp]] : [])}
-            searchItems={searchHCPs}
-            fetchItem={fetchHCP}
-            removeItem={() => fetchHCP(null)}
-            onItemSelected={fetchHCPObjectives}
-            renderSelectedItem={SelectedHCP}
-          />
-
-          {hcp &&
-            !hcp.has_consented &&
-            !this.state.recordWithoutConsent && (
-              <React.Fragment>
-                <CenteredAlert bsStyle="danger" className="centered">
-                  No interaction can be recorded for this HCP without their
-                  consent.
-                </CenteredAlert>
-                <p className="text-center">
-                  <a
-                    role="button"
-                    tabIndex={0}
-                    onClick={this.setRecordWithoutConsent}
-                  >
-                    Click here to Record Interaction without HCP consent
-                  </a>
-                  <br />
-                  <br />
-                </p>
-              </React.Fragment>
-            )}
-
-          <Row>
-            <Col xs={12}>
-              <Panel>
-                <Panel.Heading>Interaction</Panel.Heading>
-                <Panel.Body>
-                  <Row>
-                    <Col xs={6}>
-                      <Field
-                        name="type_of_interaction"
-                        component={ButtonsSelector}
-                        options={[
-                          {
-                            icon: 'icon-interaction-phone',
-                            label: 'Phone',
-                            value: 'phone',
-                          },
-                          {
-                            icon: 'icon-interaction-face',
-                            label: 'Face',
-                            value: 'face_to_face',
-                          },
-                          {
-                            icon: 'icon-interaction-email',
-                            label: 'Email',
-                            value: 'email',
-                          },
-                        ]}
-                        disabled={formDisabled}
-                      />
-                    </Col>
-                    <Col xs={6}>
-                      <Row>
-                        <Col xs={6}>
-                          <Field
-                            name="is_proactive"
-                            component={ChoiceSelector}
-                            choices={[[true, 'Proactive'], [false, 'Reactive']]}
-                            disabled={formDisabled}
-                          />
-                        </Col>
-                        <Col xs={6}>
-                          <Field
-                            name="time_of_interaction"
-                            component={FlatpickrDateTime}
-                            placeholder="Time of interaction"
-                            className="form-control"
-                            data-enable-time
-                            disabled={formDisabled}
-                          />
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
-
-                  <Row>
-                    <Col xs={6}>
-                      <Field
-                        name="origin_of_interaction"
-                        component={LabeledFormControl}
-                        type="select"
-                        disabled={formDisabled}
-                      >
-                        <option disabled value="">
-                          Select Origin of Interaction
-                        </option>
-                        <Options
-                          choices={Object.entries(
-                            Interaction.origin_of_interaction_choices
-                          )}
-                        />
-                      </Field>
-
-                      {originOfInteraction === 'other' && (
-                        <Field
-                          name="origin_of_interaction_other"
-                          component={LabeledFormControl}
-                          type="text"
-                          placeholder="Other origin of interaction"
-                          disabled={formDisabled}
-                        />
-                      )}
-
-                      {originOfInteraction === 'engagement_plan' && (
-                        <Field
-                          name="hcp_objective_id"
-                          placeholder="Select HCP Objective"
-                          component={SearchSelect}
-                          options={hcpObjectives.map((it) => ({
-                            value: it.id,
-                            label: it.description,
-                          }))}
-                          isDisabled={formDisabled}
-                        />
-                      )}
-                    </Col>
-                    <Col xs={6}>
-                      <Row>
-                        <Col xs={12}>
-                          <Field
-                            name="purpose"
-                            component={LabeledFormControl}
-                            type="text"
-                            placeholder="Enter purpose of interaction"
-                            disabled={formDisabled}
-                          />
-
-                          <Field
-                            name="project_id"
-                            placeholder="Select Project"
-                            component={SearchSelect}
-                            options={projects.map((it) => ({
-                              value: it.id,
-                              label: it.title,
-                            }))}
-                            isDisabled={formDisabled}
-                          />
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
-                </Panel.Body>
-              </Panel>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col xs={12}>
-              <Panel>
-                <Panel.Heading>Resources</Panel.Heading>
-                <Panel.Body>
-                  <Row>
-                    <Col xs={12}>
-                      <Field
-                        name="resources"
-                        placeholder="Resources Used"
-                        component={SearchSelect}
-                        options={resources.map((it) => ({
-                          value: it.id,
-                          label: it.title,
-                        }))}
-                        isMulti
-                        isDisabled={formDisabled}
-                      />
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col xs={6}>
-                      <Field
-                        name="is_adverse_event"
-                        component={ChoiceSelector}
-                        choices={[[false, 'No'], [true, 'Yes']]}
-                        label="Adverse Event"
-                        disabled={formDisabled}
-                      >
-                        {isAdverseEvent && (
-                          <Field
-                            name="appropriate_pv_procedures_followed"
-                            component={ChoiceSelector}
-                            choices={[[false, 'No'], [true, 'Yes']]}
-                            label="Appropriate PV Procedures Followed"
-                            disabled={formDisabled}
-                          />
-                        )}
-                      </Field>
-                    </Col>
-                    <Col xs={6}>
-                      <Field
-                        name="is_joint_visit"
-                        component={ChoiceSelector}
-                        choices={[[false, 'No'], [true, 'Yes']]}
-                        label="Joint Visit"
-                        disabled={formDisabled}
-                      >
-                        {isJointVisit && (
-                          <React.Fragment>
-                            <Field
-                              name="is_joint_visit_manager_approved"
-                              component={ChoiceSelector}
-                              choices={[[false, 'No'], [true, 'Yes']]}
-                              label="MSL Manager Approval Received"
-                              disabled={formDisabled}
-                            />
-                            <Row>
-                              <Col md={6}>
-                                <Field
-                                  name="joint_visit_with"
-                                  component={LabeledFormControl}
-                                  type="text"
-                                  placeholder="Joint visit with"
-                                  disabled={formDisabled}
-                                />
-                              </Col>
-                              <Col md={6}>
-                                <Field
-                                  name="joint_visit_reason"
-                                  component={LabeledFormControl}
-                                  type="select"
-                                  disabled={formDisabled}
-                                >
-                                  <option disabled value="">
-                                    Reason
-                                  </option>
-                                  <Options
-                                    choices={Object.entries(
-                                      Interaction.joint_visit_reason_choices
-                                    )}
-                                  />
-                                </Field>
-                              </Col>
-                            </Row>
-                            {jointVisitReason === 'other' && (
-                              <Row>
-                                <Col md={12}>
-                                  <Field
-                                    name="joint_visit_reason_other"
-                                    component={LabeledFormControl}
-                                    type="text"
-                                    placeholder="Other reason for joint visit"
-                                    disabled={formDisabled}
-                                  />
-                                </Col>
-                              </Row>
-                            )}
-                          </React.Fragment>
-                        )}
-                      </Field>
-                    </Col>
-                  </Row>
-                </Panel.Body>
-              </Panel>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col xs={12}>
-              <Panel>
-                <Panel.Heading>Outcome & Follow-up</Panel.Heading>
-                <Panel.Body>
-                  <Row>
-                    <Col xs={3}>
-                      <Field
-                        name="follow_up_date"
-                        component={FlatpickrDateTime}
-                        className="form-control"
-                        placeholder="Follow-up Date"
-                        options={{ dateFormat: 'j M Y' }}
-                        disabled={noFollowUpRequired || formDisabled}
-                      />
-                    </Col>
-                    <Col xs={6}>
-                      <Field
-                        name="follow_up_notes"
-                        component={LabeledFormControl}
-                        type="text"
-                        placeholder="Follow-up notes"
-                        disabled={noFollowUpRequired || formDisabled}
-                      />
-                    </Col>
-                    <Col xs={3}>
-                      <Field
-                        name="no_follow_up_required"
-                        component={LabeledFormControl}
-                        type="checkbox"
-                        label="No follow up required"
-                      />
-                    </Col>
-                  </Row>
-                </Panel.Body>
-              </Panel>
-            </Col>
-          </Row>
-
-          {allFormErrors && (
-            <CenteredAlert bsStyle="danger" className="centered">
-              Please fill in all the fields above.
-              {/* <pre>{JSON.stringify(allFormErrors, null, 2)}</pre> */}
-            </CenteredAlert>
-          )}
-
-          <Row>
-            <Col xs={12} className="text-center">
-              <Button>Back</Button>{' '}
-              <Button
-                type="submit"
-                disables=""
-                bsStyle="primary"
-                disabled={submitting || formDisabled}
-              >
-                Save
-              </Button>
-            </Col>
-          </Row>
-        </form>
+        {this.props.success ? this.renderSuccess() : this.renderForm()}
 
         <br />
         <br />
       </Grid>
+    );
+  }
+
+  renderForm() {
+    const {
+      submitting,
+      handleSubmit,
+      searchHCPs,
+      fetchHCP,
+      fetchHCPObjectives,
+      hcps,
+      hcp,
+      hcpObjectives,
+      projects,
+      resources,
+      originOfInteraction,
+      isJointVisit,
+      jointVisitReason,
+      isAdverseEvent,
+      noFollowUpRequired,
+      allFormErrors,
+    } = this.props;
+
+    const formDisabled =
+      hcp && !hcp.has_consented ? !this.state.recordWithoutConsent : false;
+
+    return (
+      <form onSubmit={handleSubmit}>
+        <Field
+          name="hcp_id"
+          component={HCPSelector}
+          items={hcps}
+          selectedItems={new OrderedMap(hcp ? [[hcp.id, hcp]] : [])}
+          searchItems={searchHCPs}
+          fetchItem={fetchHCP}
+          removeItem={() => fetchHCP(null)}
+          onItemSelected={fetchHCPObjectives}
+          renderSelectedItem={SelectedHCP}
+        />
+
+        {hcp &&
+          !hcp.has_consented &&
+          !this.state.recordWithoutConsent && (
+            <React.Fragment>
+              <CenteredAlert bsStyle="danger" className="centered">
+                No interaction can be recorded for this HCP without their
+                consent.
+              </CenteredAlert>
+              <p className="text-center">
+                <a
+                  role="button"
+                  tabIndex={0}
+                  onClick={this.setRecordWithoutConsent}
+                >
+                  Click here to Record Interaction without HCP consent
+                </a>
+                <br />
+                <br />
+              </p>
+            </React.Fragment>
+          )}
+
+        <Row>
+          <Col xs={12}>
+            <Panel>
+              <Panel.Heading>Interaction</Panel.Heading>
+              <Panel.Body>
+                <Row>
+                  <Col xs={6}>
+                    <Field
+                      name="type_of_interaction"
+                      component={ButtonsSelector}
+                      options={[
+                        {
+                          icon: 'icon-interaction-phone',
+                          label: 'Phone',
+                          value: 'phone',
+                        },
+                        {
+                          icon: 'icon-interaction-face',
+                          label: 'Face',
+                          value: 'face_to_face',
+                        },
+                        {
+                          icon: 'icon-interaction-email',
+                          label: 'Email',
+                          value: 'email',
+                        },
+                      ]}
+                      disabled={formDisabled}
+                    />
+                  </Col>
+                  <Col xs={6}>
+                    <Row>
+                      <Col xs={6}>
+                        <Field
+                          name="is_proactive"
+                          component={ChoiceSelector}
+                          choices={[[true, 'Proactive'], [false, 'Reactive']]}
+                          disabled={formDisabled}
+                        />
+                      </Col>
+                      <Col xs={6}>
+                        <Field
+                          name="time_of_interaction"
+                          component={FlatpickrDateTime}
+                          placeholder="Time of interaction"
+                          className="form-control"
+                          data-enable-time
+                          disabled={formDisabled}
+                        />
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+
+                <Row>
+                  <Col xs={6}>
+                    <Field
+                      name="origin_of_interaction"
+                      component={LabeledFormControl}
+                      type="select"
+                      disabled={formDisabled}
+                    >
+                      <option disabled value="">
+                        Select Origin of Interaction
+                      </option>
+                      <Options
+                        choices={Object.entries(
+                          Interaction.origin_of_interaction_choices
+                        )}
+                      />
+                    </Field>
+
+                    {originOfInteraction === 'other' && (
+                      <Field
+                        name="origin_of_interaction_other"
+                        component={LabeledFormControl}
+                        type="text"
+                        placeholder="Other origin of interaction"
+                        disabled={formDisabled}
+                      />
+                    )}
+
+                    {originOfInteraction === 'engagement_plan' && (
+                      <Field
+                        name="hcp_objective_id"
+                        placeholder="Select HCP Objective"
+                        component={SearchSelect}
+                        options={hcpObjectives.map((it) => ({
+                          value: it.id,
+                          label: it.description,
+                        }))}
+                        isDisabled={formDisabled}
+                      />
+                    )}
+                  </Col>
+                  <Col xs={6}>
+                    <Row>
+                      <Col xs={12}>
+                        <Field
+                          name="purpose"
+                          component={LabeledFormControl}
+                          type="text"
+                          placeholder="Enter purpose of interaction"
+                          disabled={formDisabled}
+                        />
+
+                        <Field
+                          name="project_id"
+                          placeholder="Select Project"
+                          component={SearchSelect}
+                          options={projects.map((it) => ({
+                            value: it.id,
+                            label: it.title,
+                          }))}
+                          isDisabled={formDisabled}
+                        />
+                      </Col>
+                    </Row>
+                  </Col>
+                </Row>
+              </Panel.Body>
+            </Panel>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col xs={12}>
+            <Panel>
+              <Panel.Heading>Resources</Panel.Heading>
+              <Panel.Body>
+                <Row>
+                  <Col xs={12}>
+                    <Field
+                      name="resources"
+                      placeholder="Resources Used"
+                      component={SearchSelect}
+                      options={resources.map((it) => ({
+                        value: it.id,
+                        label: `${it.title} (${it.zinc_number_country} ${
+                          it.zinc_number_global
+                        })`,
+                      }))}
+                      isMulti
+                      isDisabled={formDisabled}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={6}>
+                    <Field
+                      name="is_adverse_event"
+                      component={ChoiceSelector}
+                      choices={[[false, 'No'], [true, 'Yes']]}
+                      label="Adverse Event"
+                      disabled={formDisabled}
+                    >
+                      {isAdverseEvent && (
+                        <Field
+                          name="appropriate_pv_procedures_followed"
+                          component={ChoiceSelector}
+                          choices={[[false, 'No'], [true, 'Yes']]}
+                          label="Appropriate PV Procedures Followed"
+                          disabled={formDisabled}
+                        />
+                      )}
+                    </Field>
+                  </Col>
+                  <Col xs={6}>
+                    <Field
+                      name="is_joint_visit"
+                      component={ChoiceSelector}
+                      choices={[[false, 'No'], [true, 'Yes']]}
+                      label="Joint Visit"
+                      disabled={formDisabled}
+                    >
+                      {isJointVisit && (
+                        <React.Fragment>
+                          <Field
+                            name="is_joint_visit_manager_approved"
+                            component={ChoiceSelector}
+                            choices={[[false, 'No'], [true, 'Yes']]}
+                            label="MSL Manager Approval Received"
+                            disabled={formDisabled}
+                          />
+                          <Row>
+                            <Col md={6}>
+                              <Field
+                                name="joint_visit_with"
+                                component={LabeledFormControl}
+                                type="text"
+                                placeholder="Joint visit with"
+                                disabled={formDisabled}
+                              />
+                            </Col>
+                            <Col md={6}>
+                              <Field
+                                name="joint_visit_reason"
+                                component={LabeledFormControl}
+                                type="select"
+                                disabled={formDisabled}
+                              >
+                                <option disabled value="">
+                                  Reason
+                                </option>
+                                <Options
+                                  choices={Object.entries(
+                                    Interaction.joint_visit_reason_choices
+                                  )}
+                                />
+                              </Field>
+                            </Col>
+                          </Row>
+                          {jointVisitReason === 'other' && (
+                            <Row>
+                              <Col md={12}>
+                                <Field
+                                  name="joint_visit_reason_other"
+                                  component={LabeledFormControl}
+                                  type="text"
+                                  placeholder="Other reason for joint visit"
+                                  disabled={formDisabled}
+                                />
+                              </Col>
+                            </Row>
+                          )}
+                        </React.Fragment>
+                      )}
+                    </Field>
+                  </Col>
+                </Row>
+              </Panel.Body>
+            </Panel>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col xs={12}>
+            <Panel>
+              <Panel.Heading>Outcome & Follow-up</Panel.Heading>
+              <Panel.Body>
+                <Row>
+                  <Col xs={3}>
+                    <Field
+                      name="follow_up_date"
+                      component={FlatpickrDateTime}
+                      className="form-control"
+                      placeholder="Follow-up Date"
+                      options={{ dateFormat: 'j M Y' }}
+                      disabled={noFollowUpRequired || formDisabled}
+                    />
+                  </Col>
+                  <Col xs={6}>
+                    <Field
+                      name="follow_up_notes"
+                      component={LabeledFormControl}
+                      type="text"
+                      placeholder="Follow-up notes"
+                      disabled={noFollowUpRequired || formDisabled}
+                    />
+                  </Col>
+                  <Col xs={3}>
+                    <Field
+                      name="no_follow_up_required"
+                      component={LabeledFormControl}
+                      type="checkbox"
+                      label="No follow up required"
+                    />
+                  </Col>
+                </Row>
+              </Panel.Body>
+            </Panel>
+          </Col>
+        </Row>
+
+        {allFormErrors && (
+          <CenteredAlert bsStyle="danger" className="centered">
+            Please fill in all the fields above.
+            {/* <pre>{JSON.stringify(allFormErrors, null, 2)}</pre> */}
+          </CenteredAlert>
+        )}
+
+        <Row>
+          <Col xs={12} className="text-center">
+            <Button>Back</Button>{' '}
+            <Button
+              type="submit"
+              disables=""
+              bsStyle="primary"
+              disabled={submitting || formDisabled}
+            >
+              Save
+            </Button>
+          </Col>
+        </Row>
+      </form>
+    );
+  }
+
+  renderSuccess() {
+    return (
+      <Row>
+        <Col md={12}>
+          <Panel>
+            <Panel.Heading>Interaction successfully recorded!</Panel.Heading>
+            <Panel.Body>
+              <Row>
+                <Col md={6}>
+                  {/* <Link to={routes.RECORD_INTERACTION.path}> */}
+                  <Button
+                    onClick={() => {
+                      this.clearForm();
+                      this.props.setSuccess(false);
+                      push(routes.RECORD_INTERACTION.path);
+                    }}
+                    block
+                  >
+                    <span className="fi-icon icon-nav-record" /> Record New
+                    Interaction
+                  </Button>
+                  {/* </Link> */}
+                </Col>
+                <Col md={6}>
+                  {/* <Link to={routes.LIST_INTERACTIONS.path}> */}
+                  <Button
+                    onClick={() =>
+                      this.props.history.push(routes.LIST_INTERACTIONS.path)
+                    }
+                    block
+                  >
+                    <span className="fi-icon icon-nav-report" /> Show
+                    Interactions Report
+                  </Button>
+                  {/* </Link> */}
+                </Col>
+              </Row>
+            </Panel.Body>
+          </Panel>
+        </Col>
+      </Row>
     );
   }
 }
@@ -564,6 +622,7 @@ function mapStateToProps(state, ownProps) {
     hcpObjectives: recordInteractionState.get('hcpObjectives').toJS(),
     projects: recordInteractionState.get('projects').toJS(),
     resources: recordInteractionState.get('resources').toJS(),
+    success: recordInteractionState.get('success'),
     // form selectors
     originOfInteraction: selector(state, 'origin_of_interaction'),
     isJointVisit: selector(state, 'is_joint_visit'),
@@ -582,6 +641,7 @@ function mapDispatchToProps(dispatch) {
         fetchInteractionRecordingRequiredDataActions.request,
       recordInteraction: recordInteractionActions.request,
       fetchHCPObjectives: fetchHCPObjectivesActions.request,
+      setSuccess: setSuccessAction,
     },
     dispatch
   );

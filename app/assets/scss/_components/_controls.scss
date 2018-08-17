@@ -6,9 +6,13 @@ $ctrl-height: 36px;
   &:hover {
     border-color: $s-btn-border;
     color: $s-btn-text-color;
-  }
-  &:hover {
     background: $n-white;
+    text-decoration: none;
+  }
+  *:hover &,
+  &:hover,
+  &:hover * {
+    text-decoration: none;
   }
   &:not(.btn-block):not(.btn-default) {
     margin-right: 15px;
@@ -38,11 +42,11 @@ $ctrl-height: 36px;
     background: transparent;
     border-color: $s-border-light;
     border-right: transparent;
-    & + input {
+    &+input {
       border-left: transparent;
     }
   }
-  input + .input-group-btn {
+  input+.input-group-btn {
     button {
       border-color: $s-border-light;
       background: $n-grey-lighter;
@@ -57,7 +61,7 @@ $ctrl-height: 36px;
 .btn-primary {
   background: $s-btn-primary-bg;
   color: $s-btn-primary-text-color;
-  .text-center > &:last-child {
+  .text-center>&:last-child {
     margin-right: 0;
   }
 }

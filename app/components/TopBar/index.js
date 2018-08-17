@@ -46,7 +46,7 @@ export class TopBar extends React.PureComponent {
                 )}
                 {this.renderRoute(
                   'HCP Directory',
-                  routes.HCP_DIRECTORY.path,
+                  routes.LIST_HCPS.path,
                   'nav-hcps'
                 )}
                 {this.renderRoute(

@@ -11,6 +11,7 @@ import PasswordReset from 'containers/PasswordReset';
 import PasswordResetConfirm from 'containers/PasswordResetConfirm';
 import RecordInteraction from 'containers/RecordInteraction';
 import ListInteractions from 'containers/ListInteractions';
+import ListHCPs from 'containers/ListHCPs';
 import NotFound from 'containers/NotFound';
 import TopBar from 'components/TopBar';
 import { CenteredAlert } from 'components/forms';
@@ -106,6 +107,11 @@ export class App extends React.PureComponent {
                   exact
                   path={routes.LIST_INTERACTIONS.path}
                   component={ListInteractions}
+                />
+                <Route
+                  exact
+                  path={routes.LIST_HCPS.path}
+                  component={ListHCPs}
                 />
                 <Route
                   exact

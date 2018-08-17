@@ -1,0 +1,10 @@
+.auth-form {
+  &__form {
+    width: 600px;
+    margin: 0 auto;
+  }
+  .control-label {
+    color: $n-darkest;
+    font-size: rem(14);
+  }
+}

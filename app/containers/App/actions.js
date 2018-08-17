@@ -1,5 +1,5 @@
 import { SET_USER, LOADING, REFRESH_TOKEN, LOGOUT } from './constants';
-import { makeActionCreators } from '../../utils/actions';
+import { makeActionCreators, makeActionCreator } from '../../utils/actions';
 
 export const setUser = (user) => ({ type: SET_USER, payload: { user } });
 export const setLoading = (loading) => ({ type: LOADING, loading });
@@ -16,3 +16,8 @@ export const fetchCommonDataActions = makeActionCreators('FETCH_COMMON_DATA', {
   success: (payload) => ({ payload }),
   error: (message) => ({ message }),
 });
+
+export const setFlashMessage = makeActionCreator(
+  'SET_FLASH_MESSAGE',
+  (text, type) => ({ payload: { text, type } })
+);

@@ -14,6 +14,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ConnectedRouter, push } from 'react-router-redux';
 import createHistory from 'history/createBrowserHistory';
+import { pageDoesNotRequireLogin } from 'routes';
 
 // import 'sanitize.css/sanitize.css';
 import 'flatpickr/dist/themes/material_blue.css';
@@ -42,7 +43,8 @@ const history = createHistory();
 export const store = configureStore(initialState, history);
 const MOUNT_NODE = document.getElementById('app');
 
-if (!localStorage.getItem('token')) {
+if (!pageDoesNotRequireLogin() && !localStorage.getItem('token')) {
+  console.log('REDIRECTING 2 LOGIN!!!');
   store.dispatch(push('/login'));
 }
 

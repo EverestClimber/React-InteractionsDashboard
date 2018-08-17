@@ -8,12 +8,14 @@ import Loader from 'containers/Loader';
 import Dashboard from 'containers/Dashboard';
 import Login from 'containers/Login';
 import PasswordReset from 'containers/PasswordReset';
+import PasswordResetConfirm from 'containers/PasswordResetConfirm';
 import RecordInteraction from 'containers/RecordInteraction';
 import ListInteractions from 'containers/ListInteractions';
 import NotFound from 'containers/NotFound';
 import TopBar from 'components/TopBar';
+import { CenteredAlert } from 'components/forms';
 
-import routes from 'routes';
+import routes, { pageDoesNotRequireLogin } from 'routes';
 import injectSaga from 'utils/injectSaga';
 import CreateEP from 'containers/CreateEP';
 import UpdateEP from 'containers/UpdateEP';
@@ -43,7 +45,7 @@ export class App extends React.PureComponent {
       this.props.refreshToken();
     }, fiveMinutes);
 
-    if (window.location.pathname !== '/login') {
+    if (!pageDoesNotRequireLogin() && localStorage.getItem('token')) {
       this.props.getCurrentUser();
       this.props.fetchCommonData();
     }
@@ -53,10 +55,6 @@ export class App extends React.PureComponent {
     clearInterval(this.interval);
   }
 
-  // get tokenExist() {
-  //   return !!localStorage.getItem('token');
-  // }
-
   render() {
     const { user, loadedCommonData } = this.props;
 
@@ -64,14 +62,33 @@ export class App extends React.PureComponent {
       <React.Fragment>
         <TopBar />
         <Loader />
-        {/* <pre>{JSON.stringify(queryStringLogin.parse(this.props.location.search), null, 2)}</pre> */}
-        {loadedCommonData || ['/login', '/password/reset'].indexOf(window.location.pathname) !== -1 ? (
+
+        {this.props.flashMessage.get('text') && (
+          <div>
+            <br />
+            <CenteredAlert
+              bsStyle={
+                { error: 'danger', success: 'success' }[
+                  this.props.flashMessage.get('type')
+                ] || 'info'
+              }
+            >
+              {this.props.flashMessage.get('text')}
+            </CenteredAlert>
+          </div>
+        )}
+
+        {pageDoesNotRequireLogin() || loadedCommonData ? (
           <Switch>
             <Route exact path={routes.LOGIN.path} component={Login} />
             <Route
               exact
               path={routes.PASSWORD_RESET.path}
               component={PasswordReset}
+            />
+            <Route
+              path={routes.PASSWORD_RESET_CONFIRM.path}
+              component={PasswordResetConfirm}
             />
             {user && (
               <Switch>
@@ -121,6 +138,7 @@ function mapStateToProps(state) {
       .get('ui')
       .get('loading'),
     loadedCommonData: state.get('global').get('loadedCommonData'),
+    flashMessage: state.get('global').get('flashMessage'),
   };
 }
 

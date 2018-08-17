@@ -20,13 +20,15 @@ import { loginActions } from './actions';
 export const Login = (props) => {
   const { handleSubmit } = props;
 
+  // debugger;
+
   return (
-    <div className="Login">
+    <div className="Login auth-form">
       <Helmet>
         <title>OTSK - Login</title>
       </Helmet>
       <Grid>
-        <div className="Login__form">
+        <div className="Login__form auth-form__form">
           <form onSubmit={handleSubmit}>
             <h2>
               Sign in to <strong>Interactions</strong>

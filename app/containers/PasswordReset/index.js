@@ -16,18 +16,22 @@ import * as actions from './actions';
 export const PasswordReset = (props) => {
   const { handleSubmit } = props;
 
+  // debugger;
+
+  console.log('--- PasswordReset.render');
+
   return (
-    <div className="PasswordReset">
+    <div className="PasswordReset auth-form">
       <Helmet>
         <title>Otsuka - MSL Interactions</title>
       </Helmet>
       <Grid>
-        <div className="PasswordReset__form">
+        <div className="PasswordReset__form auth-form__form">
           <form onSubmit={handleSubmit}>
             <h2>Password Reset</h2>
             <p>
-              {`Forgotten your password? Enter your e-mail address below, and we
-              ll send you an e-mail allowing you to reset it.`}
+              {`Forgotten your password? Enter your e-mail address below, and
+              we'll send you an e-mail allowing you to reset it.`}
             </p>
             <Field
               name="email"
@@ -42,12 +46,7 @@ export const PasswordReset = (props) => {
                 Reset My Password
               </Button>
             </div>
-            {`Forgotten your password? EForgotten your password? Enter your e-mail
-            address below, and we'll send you an e-mail allowing you to reset
-            it.nter your e-mail address below, and we'll send you an e-mail
-            allowing you to reset it.`}
           </form>
-          Login
         </div>
       </Grid>
     </div>

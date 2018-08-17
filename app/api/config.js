@@ -24,8 +24,13 @@ function createAxiosInstance(unauthorizedCallback) {
 }
 
 function logout() {
+  console.log('=== logout');
   localStorage.removeItem('token');
-  if (window.location.pathname !== routes.LOGIN.path) {
+  if (
+    window.location.pathname !== routes.LOGIN.path &&
+    window.location.pathname !== routes.PASSWORD_RESET.path
+  ) {
+    console.log('LOGOUT REDIRECT ATTEMPT!!!!!');
     window.location.pathname = routes.LOGIN.path;
   }
 }

@@ -44,3 +44,24 @@ export function postPasswordReset(email) {
 
   return axios(config);
 }
+
+export function postPasswordResetConfirm(
+  uid,
+  token,
+  new_password1,
+  new_password2
+) {
+  const config = {
+    method: 'POST',
+    url: '/rest-auth/password/reset/confirm/',
+    data: {
+      postPasswordResetConfirm,
+      uid,
+      token,
+      new_password1,
+      new_password2,
+    },
+  };
+
+  return axios(config);
+}

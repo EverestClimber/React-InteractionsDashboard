@@ -1,8 +1,9 @@
 import { fromJS, Map, OrderedMap } from 'immutable';
+import { LOCATION_CHANGE } from 'react-router-redux';
 
 import User from 'records/User';
 import { SET_USER, LOGOUT, LOADING } from './constants';
-import { fetchCommonDataActions } from './actions';
+import { fetchCommonDataActions, setFlashMessage } from './actions';
 
 const initialState = new Map({
   user: null,
@@ -14,6 +15,10 @@ const initialState = new Map({
   therapeuticAreas: null,
   affiliateGroups: null,
   loadedCommonData: false,
+  flashMessage: fromJS({
+    text: 'default',
+    type: '',
+  }),
 });
 
 function appReducer(state = initialState, action) {
@@ -70,6 +75,19 @@ function appReducer(state = initialState, action) {
         loadedCommonData: !!state.get('user'),
       });
     }
+
+    case setFlashMessage.type:
+      return state.set(
+        'flashMessage',
+        fromJS({
+          text: action.payload.text,
+          type: action.payload.type,
+        })
+      );
+
+    case LOCATION_CHANGE:
+      console.log('### LOCATION_CHANGE');
+      return state.set('flashMessage', fromJS({}));
 
     default:
       return state;

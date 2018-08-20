@@ -11,7 +11,7 @@ function listHCPsReducer(state = initialState, action) {
     case listHCPsActions.success.type:
       return state.merge({
         serverError: '',
-        interactions: action.interactions,
+        hcps: action.hcps,
       });
 
     case listHCPsActions.error.type:

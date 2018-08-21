@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { compose, bindActionCreators } from 'redux';
 import { Helmet } from 'react-helmet';
-// import moment from 'moment';
+import moment from 'moment';
 import { Grid } from 'react-bootstrap';
 import * as _ from 'underscore';
 
@@ -85,10 +85,10 @@ export class ListHCPs extends React.PureComponent {
         const f1 = this.getFieldForSorting(i1, field);
         const f2 = this.getFieldForSorting(i2, field);
         // console.log(`comparing ${f1} <> ${f2} ~ ${direction}`);
-        // if (f1 === f2) {
-        //   return i1.time_of_interaction <= i2.time_of_interaction ? 1 : -1;
-        // }
-        return f1 <= f2 ? -1 * direction : 1 * direction;
+        if (f1 === f2) {
+          return i1.last_interaction <= i2.last_interaction ? 1 : -1;
+        }
+        return f1 < f2 ? -1 * direction : 1 * direction;
       })
       .slice();
   }
@@ -140,8 +140,25 @@ export class ListHCPs extends React.PureComponent {
         { <SmartTable
           title="HCPs"
           items={this.state.hcps}
+          btnLabel="New HCP"
           fields={{
-            Name: {
+            '': {
+              render: (it) => (
+                <span
+                  className={`SelectedHCP__consent SelectedHCP__consent--${
+                    it.has_consented ? 'yes' : 'no'
+                  }`}
+                >
+                  <span
+                    className={
+                      it.has_consented ? 'icon-consent-yes' : 'icon-consent-no'
+                    }
+                  />
+                </span>
+              ),
+              sortField: (it) => it.has_consented,
+            },
+            'HCP Name': {
               render: (it) => (
                 <span style={{ whiteSpace: 'nowrap' }}>
                   {`${it.first_name} ${it.last_name}`}
@@ -150,15 +167,22 @@ export class ListHCPs extends React.PureComponent {
               sortField: (it) =>
                 it ? `${it.first_name} ${it.last_name}` : '',
             },
+            Interactions: (it) => it.interactions_count,
             Organisation: (it) => it.institution_name,
-            Location: {
-              render: (it) => (
-                <span>
-                  {`${it.city}, ${it.country}`}
-                </span>
-              ),
+            City: {
+              render: (it) => it.city,
             },
-            'Contact Preference': (it) => (it.contact_preference === 'Email' ? it.email : it.phone),
+            TA: (it) => it.tas_names,
+            'Last Interaction': {
+              render: (it) => (
+                it.last_interaction ?
+                  <span style={{ whiteSpace: 'nowrap' }}>
+                    {moment(it.last_interaction, 'YYYY-MM-DDTHH:mm:ss.T').format('D MMM Y, h:mm A')}
+                  </span>
+                : ''
+              ),
+              sortField: (it) => it.last_interaction,
+            },
           }}
           searchItems={this.handleSearchChange}
           sortItems={this.handleSort}

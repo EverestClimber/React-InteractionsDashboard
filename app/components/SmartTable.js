@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Badge,
-  // Button,
+  Button,
   Panel,
   Table,
   FormControl,
@@ -18,6 +18,7 @@ export default class SmartTable extends React.Component {
     searchItems: PropTypes.func.isRequired,
     sortItems: PropTypes.func.isRequired,
     onItemClick: PropTypes.func,
+    btnLabel: PropTypes.string,
   };
 
   constructor(props) {
@@ -90,9 +91,13 @@ export default class SmartTable extends React.Component {
               value={this.state.searchText}
               onChange={this.handleSearchChange}
             />
-            {/* <InputGroup.Button>
-              <Button>Search</Button>
-            </InputGroup.Button> */}
+            {this.props.btnLabel && (
+              <InputGroup.Button>
+                <Button>
+                  <span className="fi-icon icon-nav-hcps" /> {this.props.btnLabel}
+                </Button>
+              </InputGroup.Button>
+            )}
           </InputGroup>
         </FormGroup>
 

@@ -5,7 +5,7 @@ Running locally while watching filesystem for changes, for development.
 1. Run `npm i` to install dependencies.
 2. To run and auto-rebuild when changes occur, use:
    - `npm start` if you want to **run frontend locally, but use staging server backend for API calls** (https://interactions.dev.deepsine.com/api/)
-   - `npm start-local` if you **are also running the backend locally** (http://localhost:8000/)
+   - `npm run start-local` if you **are also running the backend locally** (http://localhost:8000/)
 3. Go to `localhost:3000`
 
 ## Building

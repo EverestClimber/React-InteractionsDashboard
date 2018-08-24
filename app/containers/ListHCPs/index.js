@@ -108,7 +108,7 @@ export class ListHCPs extends React.PureComponent {
       .toLowerCase();
   }
 
-  // handleInteractionClick = (interaction) => {
+  handleInteractionClick = () => {
   //   // DEBUG
   //   const prefix =
   //     window.location.host.indexOf('localhost:') !== -1
@@ -117,7 +117,7 @@ export class ListHCPs extends React.PureComponent {
   //   window.open(
   //     `${prefix}/djadmin/interactionscore/interaction/${interaction.id}/change/`
   //   );
-  // };
+  };
 
   render() {
     const { serverError } = this.props;

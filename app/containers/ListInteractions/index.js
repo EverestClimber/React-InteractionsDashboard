@@ -109,15 +109,15 @@ export class ListInteractions extends React.PureComponent {
       .toLowerCase();
   }
 
-  handleInteractionClick = (interaction) => {
+  handleInteractionClick = () => {
     // DEBUG
-    const prefix =
-      window.location.host.indexOf('localhost:') !== -1
-        ? 'http://localhost:8000'
-        : '';
-    window.open(
-      `${prefix}/djadmin/interactionscore/interaction/${interaction.id}/change/`
-    );
+    // const prefix =
+    //   window.location.host.indexOf('localhost:') !== -1
+    //     ? 'http://localhost:8000'
+    //     : '';
+    // window.open(
+    //   `${prefix}/djadmin/interactionscore/interaction/${interaction.id}/change/`
+    // );
   };
 
   render() {
